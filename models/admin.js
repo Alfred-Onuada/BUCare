@@ -35,6 +35,6 @@ const adminSchema = mongoose.Schema({
     },
 }, { timestamps: true });
 
-const admin = mongoose.model('admin', adminSchema); // table initializatiion, the name of the table will be admin
+const admin = mongoose.model('admin', adminSchema); // table initializatiion, the name of the table will be admins
 
-module.exports = admin
+module.exports = admin;

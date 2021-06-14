@@ -15,23 +15,42 @@ const server = http.createServer(app);
 // when you start working with socket this will be used to export the server socket to other controllers
 // module.exports = io;
 
-const uri = "";
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
-    // this request above is an asynchronous code using the then am waiting for when it finishes before I start the app
-    .then((result) => {
+// const uri = "";
+// mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
+//     // this request above is an asynchronous code using the then am waiting for when it finishes before I start the app
+//     .then((result) => {
 
-        const port = process.env.PORT || 3000; 
-        console.log("Starting app...");
+//         const port = process.env.PORT || 3000; 
+//         console.log("Starting app...");
 
-        server.listen(port);
-        console.log(`App is now active on port ${port}`);
+//         server.listen(port);
+//         console.log(`App is now active on port ${port}`);
 
-        console.log("Database Connection Succesful.");
+//         console.log("Database Connection Succesful.");
 
-    })
-    .catch((err) => {
-        console.log(err);
-    })
+//     })
+//     .catch((err) => {
+//         console.log(err);
+//     })
+
+
+/*
+
+    REMOVE ME
+
+*/
+
+const port = process.env.PORT || 3000; 
+console.log("Starting app...");
+
+server.listen(port);
+console.log(`App is now active on port ${port}`);
+
+/*
+
+    REMOVE ME
+
+*/
 
 // set a template engine
 app.set('view engine', 'ejs');

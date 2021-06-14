@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const clientSchema = mongoose.Schema({
+const userSchema = mongoose.Schema({
     'First_Name' : {
         type: String,
         required: true
@@ -21,8 +21,16 @@ const clientSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    'Date_of_Birth' : {
-        type: String,
+    'isAdmin' : {
+        type: Boolean,
+        required: true
+    },
+    'isTherapist' : {
+        type: Boolean,
+        required: true
+    },
+    'isClient' : {
+        type: Boolean,
         required: true
     },
     'Unique_Code' : {
@@ -31,6 +39,6 @@ const clientSchema = mongoose.Schema({
     },
 }, { timestamps: true });
 
-const client = mongoose.model('client', clientSchema); // table initializatiion, the name of the table will be clients
+const user = mongoose.model('user', userSchema); // table initializatiion, the name of the table will be users
 
-module.exports = client;
+module.exports = user;

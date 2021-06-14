@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const adminSchema = mongoose.Schema({
+const therapistSchema = mongoose.Schema({
     'First_Name' : {
         type: String,
         required: true
@@ -26,7 +26,7 @@ const adminSchema = mongoose.Schema({
         required: true
     },
     'Specialization' : {
-        type: String,
+        type: Array,
         required: true
     },
     'isVerified' : {
@@ -43,6 +43,6 @@ const adminSchema = mongoose.Schema({
     },
 }, { timestamps: true });
 
-const admin = mongoose.model('admin', adminSchema); // table initializatiion, the name of the table will be admin
+const therapist = mongoose.model('therapist', therapistSchema); // table initializatiion, the name of the table will be therapists
 
-module.exports = admin
+module.exports = therapist;
