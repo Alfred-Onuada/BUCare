@@ -1,3 +1,3 @@
 # bu_sss
 
-Add a detailed decription
+Add a detailed description
