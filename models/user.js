@@ -19,19 +19,20 @@ const userSchema = mongoose.Schema({
     },
     'Password' : {
         type: String,
+        min: 8,
         required: true
     },
     'isAdmin' : {
         type: Boolean,
-        required: true
+        default: false,
     },
     'isTherapist' : {
         type: Boolean,
-        required: true
+        default: false,
     },
     'isClient' : {
         type: Boolean,
-        required: true
+        default: false,
     },
     'Unique_Code' : {
         type: String,
