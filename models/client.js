@@ -3,9 +3,11 @@ const mongoose = require('mongoose');
 const clientSchema = mongoose.Schema({
     'First_Name' : {
         type: String,
-        required: true
     },
     'Last_Name' : {
+        type: String,
+    },
+    'Username' : {
         type: String,
         required: true
     },
@@ -15,13 +17,22 @@ const clientSchema = mongoose.Schema({
     },
     'Telephone' : {
         type: String,
-        required: true
     },
     'Password' : {
         type: String,
         required: true
     },
     'Date_of_Birth' : {
+        type: String,
+    },
+    'Age' : {
+        type: Number,
+    },
+    'Case' : {
+        type: String,
+        required: true
+    },
+    'Assigned_Therapist' : {
         type: String,
         required: true
     },

@@ -3,11 +3,9 @@ const mongoose = require('mongoose');
 const userSchema = mongoose.Schema({
     'First_Name' : {
         type: String,
-        required: true
     },
     'Last_Name' : {
         type: String,
-        required: true
     },
     'Email' : {
         type: String,
@@ -15,7 +13,6 @@ const userSchema = mongoose.Schema({
     },
     'Telephone' : {
         type: String,
-        required: true
     },
     'Password' : {
         type: String,
@@ -24,15 +21,15 @@ const userSchema = mongoose.Schema({
     },
     'isAdmin' : {
         type: Boolean,
-        default: false,
+        default: false
     },
     'isTherapist' : {
         type: Boolean,
-        default: false,
+        default: false
     },
     'isClient' : {
         type: Boolean,
-        default: false,
+        default: false
     },
     'Unique_Code' : {
         type: String,

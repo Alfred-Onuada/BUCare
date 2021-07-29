@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat rooms</title>
+
+    <!-- BootStrap CSS Links -->
+    <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css">
+</head>
+<body onload="init()">
+    
+    <div class="container">
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <% for( let index = 0; index < rooms_info.length; index++ ) { %>
+                    <% if (index == 0) { %>
+                        <button class="nav-link active" id="<%= rooms_info[index]._id %>-tab" data-bs-toggle="tab" data-bs-target="#tab-for-<%= rooms_info[index]._id %>" type="button" role="tab" aria-controls="<%= rooms_info[index]._id %>" aria-selected="true"><%= rooms_info[index]._id %></button>     
+                    <% } else { %>
+                        <button class="nav-link" id="<%= rooms_info[index]._id %>-tab" data-bs-toggle="tab" data-bs-target="#tab-for-<%= rooms_info[index]._id %>" type="button" role="tab" aria-controls="<%= rooms_info[index]._id %>" aria-selected="false"><%= rooms_info[index]._id %></button> 
+                    <% } %> 
+                <% } %>
+            </div>
+        </nav>
+
+
+        <div class="tab-content" id="nav-tabContent">
+            <% for( let index = 0; index < rooms_info.length; index++ ) { %>
+                <% if (index == 0) { %>
+                    <div class="tab-pane fade show active" id="tab-for-<%= rooms_info[index]._id %>" role="tabpanel" aria-labelledby="<%= rooms_info[index]._id %>-tab">
+                        <h4>ClientId: <%= rooms_info[index].ClientId %> </h4>
+                        <h4>TherapistId: <%= rooms_info[index].TherapistId %> </h4>
+
+                        <ul id="chatsIn-<%= rooms_info[index]._id %>">
+                            
+                        </ul>
+
+                        <input type="text" name="msg" id="msgIn-<%= rooms_info[index]._id %>" placeholder="Type a message">
+                        <button name="<%= rooms_info[index]._id %>, <%= user %>" type="submit" class="msgbtn">Send</button>
+                    </div>
+                <% } else { %>
+                    <div class="tab-pane fade" id="tab-for-<%= rooms_info[index]._id %>" role="tabpanel" aria-labelledby="<%= rooms_info[index]._id %>-tab">
+                        <h4>ClientId: <%= rooms_info[index].ClientId %> </h4>
+                        <h4>TherapistId: <%= rooms_info[index].TherapistId %> </h4>
+
+                        <ul id="chatsIn-<%= rooms_info[index]._id %>">
+                            
+                        </ul>
+
+                        <input type="text" name="msg" id="msgIn-<%= rooms_info[index]._id %>" placeholder="Type a message">
+                        <button name="<%= rooms_info[index]._id %>, <%= user %>" type="submit" class="msgbtn">Send</button>
+                    </div>
+                <% } %>
+
+            <% } %>
+        </div>
+
+    </div>
+
+    <!-- This has to come first so the socket variable is available before the script calls it -->
+    <script src="/socket.io/socket.io.js"></script>
+
+    <!-- My JS Links -->
+    <script src="/js/script.js"></script>
+
+    <!-- Bootstrap JS Links -->
+    <script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

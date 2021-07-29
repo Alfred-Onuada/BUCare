@@ -1,4 +1,5 @@
 const Users = require('./../../models/user');
+const Clients = require('./../../models/client');
 
 // Initialize Packages
 const Router = require('express').Router();
@@ -14,19 +15,27 @@ const Joi = require('@hapi/joi');
     use abstract api to validate if an email and phone is legit before sending unique code
     and check if some fields are optional
     phone number must be specified using the international number format '+'
-    also can add expiration date fro unique code and code should be delete after registration
+    also can add expiration date for unique code and code should be delete after registration
 
 */
 
-// creating a register schema with Hapi Joi
-const registerSchema = Joi.object({
-    First_Name: Joi.string().min(2).required(),
-    Last_Name: Joi.string().min(2).required(),
-    Email: Joi.string().min(6).required().email(),
-    Telephone: Joi.string().min(6).required(),
-    Password: Joi.string().min(8).required(),
-});
+// Note: only client registrations hit this schema
 
+// creating a register schema with Hapi Joi
+const usersRegisterSchema = Joi.object({
+    First_Name: Joi.string().min(2),
+    Last_Name: Joi.string().min(2),
+    Username: Joi.string().min(2).required(),
+    Email: Joi.string().min(6).required().email(),
+    Telephone: Joi.string().min(6),
+    Password: Joi.string().min(8).required(),
+    ConfirmPassword: Joi.string().min(8),
+    Date_of_Birth: Joi.string().min(10).max(10), // 12-12-2021 makes 10 characters
+    Age: Joi.number().min(1),
+    Case: Joi.string().required(),
+    Assigned_Therapist: Joi.string().required(),
+    Unique_Code: Joi.string()
+});
 
 Router.post('/register', async (req, res)=> {
 
@@ -42,7 +51,7 @@ Router.post('/register', async (req, res)=> {
             try {
 
                 // Now verify user input using hapi/joi
-                const { error } = await registerSchema.validateAsync(req.body);
+                const { error } = await usersRegisterSchema.validateAsync(req.body);
 
                 if (error) {
                     return res.status(400).send(error.details[0].message); // AJAX will inteprete the result and find what fields on the form has an issue
@@ -57,17 +66,41 @@ Router.post('/register', async (req, res)=> {
 
                     // generate random code for user
                     req.body.Unique_Code = crypto.randomBytes(6).toString('hex');
+                    
+                    // this variable holds only the fields that are available on the users model
+                    var unwanted = ['Date_of_Birth', 'Case', 'Assigned_Therapist', 'Age', 'ConfirmPassword'];
+                    var userData = Object.keys(req.body)
+                        .filter(key => unwanted.includes(key) == false)
+                        .reduce((obj, key) => {
+                            obj[key] = req.body[key];
+                            return obj;
+                        }, {});
 
-                    var newUser = Users(req.body).save((err, data) => {
+                    // make user a client
+                    userData['isClient'] = true;
+
+                    var newUser = Users(userData).save((err, data) => {
                         if (err) throw err;
 
-                        // automatic login after registration
-                        return res.redirect(307, '/users/login');
+                        // remove the confirmPassword field
+                        delete req.body.ConfirmPassword;
+
+                        var newClient = Clients(req.body).save((err, data) => {
+                            if (err) throw err;
+    
+                            // automatic login after registration
+                            return res.redirect(307, '/users/login');
+                        })
+
                     })
+
+                    // send a validation email
 
                 }
 
             } catch (error) {
+
+                console.log(error);
                 return res.status(500).send(error); // AJAX intepretes this and display appropiate error messages
             }
 

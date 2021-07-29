@@ -21,20 +21,12 @@ const therapistSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    'Date_of_Birth' : {
+    'Sex' : {
         type: String,
         required: true
     },
     'Specialization' : {
         type: Array,
-        required: true
-    },
-    'isVerified' : {
-        type: Boolean,
-        required: true,
-    },
-    'Date_of_Birth' : {
-        type: String,
         required: true
     },
     'Unique_Code' : {

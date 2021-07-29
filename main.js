@@ -13,17 +13,17 @@ const http = require('http');
 const server = http.createServer(app);
 
 // Using socket Io for web sockets
-// const { Server } = require("socket.io");
-// const io = new Server(server);
+const { Server } = require("socket.io");
+const io = new Server(server);
 
 // when you start working with socket this will be used to export the server socket to other controllers
-// module.exports = io;
+module.exports = io;
 
 const uri = process.env.DB_URI;
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
     .then((result) => {
 
-        const port = process.env.PORT || 3000; 
+        const port = process.env.PORT || 3100; 
         console.log("Starting app...");
 
         console.log("Database Connection Succesful.");
@@ -53,10 +53,22 @@ app.use(express.static('./assets'));
 app.use(express.json());
 
 // adding authetication middlewares
-const registerRoute = require('./controllers/auths/auth');
+const accountsManagementRoute = require('./controllers/auths/auth');
 
 // using those middlewares, this is where that router functions come in all the code directed to /users/ will use the defined routes in the auth
-app.use('/users', registerRoute);
+app.use('/users', accountsManagementRoute);
+
+// this opens up the admin/client/therapist specific routes so based on the logged in your i can push to either one
+// client controller
+const adminController =  require('./controllers/admin_controller');
+const clientController =  require('./controllers/client_controller');
+const therapistController =  require('./controllers/therapist_controller');
+
+
+// using them
+app.use('/a', adminController); // c represents client
+app.use('/c', clientController); // c represents client
+app.use('/t', therapistController); // t represents therapist
 
 var mainController = require('./controllers/main_controller');
 mainController(app);
