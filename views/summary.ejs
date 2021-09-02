@@ -1,0 +1,173 @@
+<!--
+Author: W3layouts
+Author URL: http://w3layouts.com
+-->
+<!doctype html>
+<html lang="en">
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Preventive Medical Category Bootstrap Responsive Template | Services :: W3Layouts</title>
+	<link href="//fonts.googleapis.com/css?family=Nunito:400,600,700&display=swap" rel="stylesheet">
+	<!-- Template CSS -->
+    <link rel="stylesheet" href="../css/template_styles/bootstrap.min.css">
+	<link rel="stylesheet" href="../css/template_styles/style-starter.css">
+
+	<!-- My Styles -->
+	<link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+	<%- include('./partials/header') %>
+
+		<div style="margin-bottom: 30px;" class="container-fluid">
+			<div class="accordion" id="accordionExample">
+				<div class="accordion-item">
+					<h2 class="accordion-header" id="headingOne">
+						<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+							Therapists
+						</button>
+					</h2>
+					<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+						<div class="accordion-body">
+							<div class="table-responsive">
+								<table class="table table-hover">
+									<thead>
+										<tr>
+											<th scope="col">S/N</th>
+											<th scope="col">Username</th>
+											<th scope="col">Email Address</th>
+											<th scope="col">Telephone No</th>
+											<th scope="col">Case</th>
+											<th scope="col">Since</th>
+											<th scope="col" colspan="2"></th>
+										</tr>
+									</thead>
+									<tbody>
+										<% for( let index = 0; index < data.length; index++ ) { %>
+											<tr>
+												<th scope="row"><%= index+1 %> </th>
+												<td><%= data[index].Username %></td>
+												<td id="cEmail<%= index %>"><%= data[index].Email %></td>
+												<td><%= data[index].Telephone %></td>
+												<td><%= data[index].Case %></td>
+												<td><%= new Date(data[index].createdAt).toUTCString() %></td>
+												<!-- disabled will show disabled -->
+												<% if (data[index].Status == 'active' || data[index].Status == 'pending case') { %>
+													<td><button type="button" class="btn btn-success">Active</button></td>
+												<% } else if (data[index].Status == 'disabled') { %>
+													<td><button type="button" class="btn btn-info" style="background-color: grey !important; border-color: grey !important;" disabled>Disabled</button></td>
+												<% } %>
+												
+												<% if (data[index].Status == 'pending case') { %>
+													<td><button onclick="window.btn = this" type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal4report" onclick="reportClient('<%= index %>')" disabled>pending...</button></td>
+												<% } else { %>
+													<td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal4report" onclick="window.btn = this, reportClient('<%= index %>')">Report</button></td>
+												<% } %>
+												</tr>
+										<% } %>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="accordion-item">
+					<h2 class="accordion-header" id="headingTwo">
+						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+							Clients
+						</button>
+					</h2>
+					<div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+						<div class="accordion-body">
+							<div class="table-responsive">
+								<table class="table table-hover">
+									<thead>
+										<tr>
+											<th scope="col">S/N</th>
+											<th scope="col">Username</th>
+											<th scope="col">Email Address</th>
+											<th scope="col">Telephone No</th>
+											<th scope="col">Case</th>
+											<th scope="col">Since</th>
+											<th scope="col" colspan="2"></th>
+										</tr>
+									</thead>
+									<tbody>
+										<% for( let index = 0; index < data.length; index++ ) { %>
+											<tr>
+												<th scope="row"><%= index+1 %> </th>
+												<td><%= data[index].Username %></td>
+												<td id="cEmail<%= index %>"><%= data[index].Email %></td>
+												<td><%= data[index].Telephone %></td>
+												<td><%= data[index].Case %></td>
+												<td><%= new Date(data[index].createdAt).toUTCString() %></td>
+												<!-- disabled will show disabled -->
+												<% if (data[index].Status == 'active' || data[index].Status == 'pending case') { %>
+													<td><button type="button" class="btn btn-success">Active</button></td>
+												<% } else if (data[index].Status == 'disabled') { %>
+													<td><button type="button" class="btn btn-info" style="background-color: grey !important; border-color: grey !important;" disabled>Disabled</button></td>
+												<% } %>
+												
+												<% if (data[index].Status == 'pending case') { %>
+													<td><button onclick="window.btn = this" type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal4report" onclick="reportClient('<%= index %>')" disabled>pending...</button></td>
+												<% } else { %>
+													<td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal4report" onclick="window.btn = this, reportClient('<%= index %>')">Report</button></td>
+												<% } %>
+												</tr>
+										<% } %>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<%- include('./partials/footer') %>
+
+			<!-- //copyright -->
+			<!-- Template JavaScript -->
+			<script src="../js/template_scripts/jquery-3.3.1.min.js"></script>
+			<script src="../js/template_scripts/theme-change.js"></script>
+			<!--/MENU-JS-->
+			<script>
+				$(window).on("scroll", function () {
+					var scroll = $(window).scrollTop();
+
+					if (scroll >= 80) {
+						$("#site-header").addClass("nav-fixed");
+					} else {
+						$("#site-header").removeClass("nav-fixed");
+					}
+				});
+
+				//Main navigation Active Class Add Remove
+				$(".navbar-toggler").on("click", function () {
+					$("header").toggleClass("active");
+				});
+				$(document).on("ready", function () {
+					if ($(window).width() > 991) {
+						$("header").removeClass("active");
+					}
+					$(window).on("resize", function () {
+						if ($(window).width() > 991) {
+							$("header").removeClass("active");
+						}
+					});
+				});
+			</script>
+			<!--//MENU-JS-->
+			<script src="../js/template_scripts/bootstrap.min.js"></script>
+			<script src="../js/template_scripts/bootstrap.bundle.min.js"></script>
+
+			<!-- My Script -->
+			<script src="../js/script.js"></script>
+
+</body>
+
+</html>

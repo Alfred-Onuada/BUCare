@@ -36,6 +36,10 @@ const clientSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    'Status': {
+        type: String,
+        default: "active"
+    },
     'Unique_Code' : {
         type: String,
         required: true

@@ -5,12 +5,19 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
-const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
+const fs = require('fs')
 
 // Initializing server with http
-const http = require('http');
-const server = http.createServer(app);
+const https = require('https');
+
+// Reading the SSL certificates and appending it to the server
+const options = {
+    key: fs.readFileSync('key.pem'),
+    cert: fs.readFileSync('cert.pem')
+}
+
+const server = https.createServer(options, app);
 
 // Using socket Io for web sockets
 const { Server } = require("socket.io");
@@ -26,10 +33,10 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, useFind
         const port = process.env.PORT || 3100; 
         console.log("Starting app...");
 
-        console.log("Database Connection Succesful.");
+        console.log("Database Connection Successful.");
 
         server.listen(port);
-        console.log(`App is now active on port ${port}`);
+        console.log(`App is now active at https://localhost:${port}`);
 
     })
     .catch((err) => {
@@ -40,14 +47,11 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, useFind
 // set a template engine
 app.set('view engine', 'ejs');
 
-// set a middleware for handling post request so i dont have to always define it
-app.use(bodyParser.urlencoded({ extended: false }));
-
 // set a middleware for handling cookies sent from request
 app.use(cookieParser());
 
 // set static files path
-app.use(express.static('./assets'));
+app.use(express.static('./assets',));
 
 // this enables me to send Json output not always string
 app.use(express.json());
@@ -59,14 +63,12 @@ const accountsManagementRoute = require('./controllers/auths/auth');
 app.use('/users', accountsManagementRoute);
 
 // this opens up the admin/client/therapist specific routes so based on the logged in your i can push to either one
-// client controller
 const adminController =  require('./controllers/admin_controller');
 const clientController =  require('./controllers/client_controller');
 const therapistController =  require('./controllers/therapist_controller');
 
-
 // using them
-app.use('/a', adminController); // c represents client
+app.use('/a', adminController); // a represents admin
 app.use('/c', clientController); // c represents client
 app.use('/t', therapistController); // t represents therapist
 
