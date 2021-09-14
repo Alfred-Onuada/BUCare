@@ -9,6 +9,7 @@ module.exports =  function(req, res, next) {
 
     // if it doesnt exist
     if(!token) {
+        req.errorMessage = "Unauthorized access to the requested page. <br> If you believe this to be an error please file a report on the contact us page."
         return res.redirect(307, '/');
     }
 
@@ -32,6 +33,7 @@ module.exports =  function(req, res, next) {
 
                 } else {
                     // this also makes sure that is for any reason you no longer exist on the database you are also logged out
+                    req.errorMessage = "Unauthorized access to the requested page. <br> If you believe this to be an error please file a report on the contact us page."
                     return res.redirect(307, '/');
                 }
             })
@@ -44,7 +46,8 @@ module.exports =  function(req, res, next) {
         // if token is expired
         if (error) {
             // i need to send back a user state because of the navbar
-            res.status(401).render('index', { userStatus: req.user });
+            req.errorMessage = "Unauthorized access to the requested page. <br> If you believe this to be an error please file a report on the contact us page."
+            res.status(401).render('index', { userStatus: req.user, errorMessage: req.errorMessage });
         }
 
     }

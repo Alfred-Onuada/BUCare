@@ -1,32 +1,333 @@
-.loginFormMod{
+* {
+    box-sizing: border-box;
+}
+
+
+/* width */
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+
+/* Track */
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+
+/* Handle */
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+
+/* Handle on hover */
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.loginFormMod {
     grid-template-columns: none !important;
 }
 
-.hide{
+.hide {
     display: none !important;
 }
 
-.shake{
+.shake {
     animation: shakeEffect .5s 1 linear;
 }
 
-@keyframes shakeEffect{
-    0% { transform: translate(1px, 1px) rotate(0deg); }
-    10% { transform: translate(-1px, -2px) rotate(-1deg); }
-    20% { transform: translate(-3px, 0px) rotate(1deg); }
-    30% { transform: translate(3px, 2px) rotate(0deg); }
-    40% { transform: translate(1px, -1px) rotate(1deg); }
-    50% { transform: translate(-1px, 2px) rotate(-1deg); }
-    60% { transform: translate(-3px, 1px) rotate(0deg); }
-    70% { transform: translate(3px, 1px) rotate(-1deg); }
-    80% { transform: translate(-1px, -1px) rotate(1deg); }
-    90% { transform: translate(1px, 2px) rotate(0deg); }
-    100% { transform: translate(1px, -2px) rotate(-1deg); }
+@keyframes shakeEffect {
+    0% {
+        transform: translate(1px, 1px) rotate(0deg);
+    }
+    10% {
+        transform: translate(-1px, -2px) rotate(-1deg);
+    }
+    20% {
+        transform: translate(-3px, 0px) rotate(1deg);
+    }
+    30% {
+        transform: translate(3px, 2px) rotate(0deg);
+    }
+    40% {
+        transform: translate(1px, -1px) rotate(1deg);
+    }
+    50% {
+        transform: translate(-1px, 2px) rotate(-1deg);
+    }
+    60% {
+        transform: translate(-3px, 1px) rotate(0deg);
+    }
+    70% {
+        transform: translate(3px, 1px) rotate(-1deg);
+    }
+    80% {
+        transform: translate(-1px, -1px) rotate(1deg);
+    }
+    90% {
+        transform: translate(1px, 2px) rotate(0deg);
+    }
+    100% {
+        transform: translate(1px, -2px) rotate(-1deg);
+    }
 }
 
-.headtext{
+.headtext {
     text-transform: capitalize;
     font-size: 30px;
     line-height: 35px;
     padding: 20px 0px;
+}
+
+.active-client,
+.reported-client,
+.disabled-client {
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    background-color: red;
+}
+
+.rooms-container {
+    background-color: #f1f2f4;
+    width: 100%;
+    height: fit-content;
+}
+
+.rooms-inner {
+    border: 1px solid rgb(220, 220, 250);
+    background-color: white;
+    height: 610px;
+}
+
+.contacts {
+    height: fit-content;
+    min-height: 610px;
+    width: 100%;
+    border-right: 1px solid lavender;
+}
+
+.contacts-list {
+    padding: 0px 10px;
+    overflow-y: auto;
+    max-height: 500px;
+}
+
+.searchandprofile {
+    height: 70px;
+    display: flex;
+    place-items: center;
+    place-content: center;
+    background-color: whitesmoke;
+}
+
+.profileIconImg {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+}
+
+.searchBox {
+    width: 400px !important;
+    margin: 0px 10px;
+}
+
+.eachContact {
+    display: flex;
+    place-content: baseline;
+    min-height: 60px;
+}
+
+.eachContact:hover {
+    background-color: whitesmoke;
+}
+
+.previousChat {
+    margin-top: 5px;
+}
+
+.contactPicture>img {
+    height: 55px;
+    width: 55px;
+    border-radius: 50%;
+    margin: 5px 20px 0px 0px;
+}
+
+.contactName {
+    font-weight: 600;
+    font-size: 1.25vw;
+}
+
+.recentChat {
+    font-weight: normal;
+    margin: 7px 0px 0px 0px;
+    font-size: 1.1vw;
+}
+
+.contactInfo {
+    height: 70px;
+    background-color: whitesmoke;
+    padding: 10px 10px 0px 30px;
+}
+
+.contactNameInner {
+    font-weight: 400;
+    font-size: 1.2vw;
+}
+
+.status {
+    font-weight: normal;
+    margin-top: 10px;
+    font-size: .9vw;
+}
+
+.videoandvoice {
+    display: flex;
+    place-items: center;
+}
+
+.videoandvoiceIcons {
+    margin: 0px 10px 0px 0px;
+    font-size: 20px;
+    height: 35px;
+    width: 35px;
+    border-radius: 50%;
+    text-align: center;
+    padding-top: 3px;
+}
+
+.videoandvoiceIcons:hover{
+    background-color: rgb(211, 211, 211);
+}
+
+.nameandstatus {
+    width: 85%;
+}
+
+.chatsFeed {
+    height: 500px;
+    width: 100%;
+    background-image: url('/defaults/chats.jpg');
+    background-size: contain;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.msgbox {
+    height: fit-content;
+    max-height: 60px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.msgbtn:hover {
+    cursor: pointer;
+}
+
+.incoming {
+    float: left;
+    width: 100%;
+    margin: 5px 0px;
+}
+
+.outgoing {
+    float: right;
+    clear: right;
+    margin: 5px 0px;
+}
+
+.messageSection {
+    height: fit-content;
+    width: fit-content;
+    background-color: white;
+    padding: 5px 10px;
+    border: 1px solid lavender;
+    border-radius: 0% 5px 5px 5px;
+    max-width: 600px;
+}
+
+.messageSection2 {
+    height: fit-content;
+    width: fit-content;
+    background-color: white;
+    padding: 5px 10px;
+    border: 1px solid lavender;
+    border-radius: 5px 0% 5px 5px;
+    max-width: 600px;
+}
+
+.actualMsg {
+    color: black;
+    font-size: 1vw;
+    font-weight: normal;
+}
+
+.msgDate {
+    font-size: 13px;
+    font-weight: normal;
+    text-align: right;
+    margin: 5px 0px 0px 0px;
+}
+
+.dateandseen {
+    display: flex;
+    place-content: end;
+}
+
+.seenicon {
+    padding-left: 5px;
+    font-size: 20px;
+}
+
+.recent {
+    display: flex;
+    min-width: 26vw;
+    place-items: baseline;
+}
+
+.recentChat {
+    width: 25vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.seen {
+    color: #3a0ca3;
+}
+
+.notifcation-dot {
+    height: 10px;
+    width: 10px;
+    background-color: blue;
+    border-radius: 50%;
+}
+
+.inactive-room-text{
+    padding: 5px 0px;
+    font-weight: 100;
+    text-transform: capitalize;
+    font-style: italic;
+}
+
+.errorContainer{
+    position: absolute;
+    width: 100%;
+    height: 150px;
+    z-index: 1;
+    padding-top: 100px;
+    display: flex;
+    place-content: center;
+    text-align: center;
+}
+
+.errorText{
+    width: fit-content;
+    height: fit-content;
 }

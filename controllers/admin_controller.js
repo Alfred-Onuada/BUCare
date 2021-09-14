@@ -1,5 +1,6 @@
 const Users = require('./../models/user');
 const Therapist = require('./../models/therapist');
+const Client = require('./../models/client');
 const Admin = require('./../models/admin');
 
 // Initialize Packages
@@ -104,7 +105,8 @@ Router.get('/summary', verify, (req, res) => {
 
     console.log(`Request made to : a${req.url}`);
 
-    Users.find()
+    // gets all the therapists
+    Client.find()
         .then(docs => {
             if (docs) {    
                 res.render('summary', { userStatus: req.user, data: docs });

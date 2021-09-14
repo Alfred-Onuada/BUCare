@@ -8,6 +8,9 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const fs = require('fs')
 
+// When you start working with file uploads this will help
+// const fileUpload = require('express-fileupload');
+
 // Initializing server with http
 const https = require('https');
 

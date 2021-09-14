@@ -9,6 +9,10 @@ const roomSchema = mongoose.Schema({
     'TherapistId' : {
         type: String,
         required: true
+    },
+    'Status': {
+        type: Boolean,
+        default: true
     }
 }, { timestamps: true });
 

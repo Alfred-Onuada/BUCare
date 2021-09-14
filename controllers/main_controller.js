@@ -18,7 +18,7 @@ module.exports = (app) => {
 
         console.log(`Request made to : ${req.url}`);
 
-        res.render("index", { userStatus: req.userInfo });
+        res.render("index", { userStatus: req.userInfo, errorMessage: req.errorMessage });
 
     });
 
@@ -26,7 +26,7 @@ module.exports = (app) => {
 
         console.log(`Request made to : ${req.url}`);
 
-        res.render("index", { userStatus: req.userInfo });
+        res.render("index", { userStatus: req.userInfo, errorMessage: req.errorMessage });
 
     });
 
@@ -70,9 +70,10 @@ module.exports = (app) => {
 
                 if (docs && docs.isClient) {
                     return res.redirect(307, '/c/rooms');
-                } else if (docs && docs.isClient) {
+                } else if (docs && docs.isTherapist) {
                     return res.redirect(307, '/t/rooms');
                 } else {
+                    req['errorMessage'] = "Unauthorized access to the requested page. <br> If you believe this to be an error please file a report on the contact us page."
                     return res.redirect(307, '/');
                 }
 
@@ -82,6 +83,47 @@ module.exports = (app) => {
             })
 
     });
+
+    // This routes are here because the header file doesnt explicitly specify /a or /t in any of it urls so these routes 
+    //checks the user's details and appends the appropraite prefix
+    app.get('/clientsList', checkUser, (req, res) => {
+
+        console.log(`Request made to : ${req.url}`);
+
+        if (req.userInfo.isTherapist) {
+            return res.redirect('/t/clientsList');
+        } else {
+            // send them back to the homepage
+            req['errorMessage'] = "Unauthorized access to the requested page. <br> If you believe this to be an error please file a report on the contact us page."
+            return res.redirect('/');
+        }
+    });
+
+    app.get('/summary', checkUser, (req, res) => {
+
+        console.log(`Request made to : ${req.url}`);
+
+        if (req.userInfo.isAdmin) {
+            return res.redirect('/a/summary');
+        } else {
+            req['errorMessage'] = "Unauthorized access to the requested page. <br> If you believe this to be an error please file a report on the contact us page."
+            return res.redirect('/');
+        }
+    });
+    
+    app.put('/leaveRoom', (req, res) => {
+        
+        console.log(`Request made to : ${req.url}`);
+
+        // this simply changes the room status to false
+        Rooms.findByIdAndUpdate(req.body.RoomId, {Status: false})
+            .then(docs => {
+                res.status(200).send("Success");
+            })
+            .catch(err => {
+                if (err) console.log(err);
+            })
+    })
 
     // video chat routes
 
@@ -111,28 +153,5 @@ module.exports = (app) => {
 
     //     res.render('video-chat', {RoomID: req.params.vid});
     // })
-
-    // the app automatically create room no user should be able to do that, it will happen once you register and pick a therapist it creates the room for bith of you
-    app.post('/create-room', verify, async (req, res) => {
-
-        console.log(`Request made to : ${req.url}`);
-
-        var { error } = await roomSchema.validateAsync(req.body);
-
-        // make a check to validate that the users actually exist using Users.findOne on both user sent
-        // in the req.body and also check that one is a client and one is a therapist
-
-        if (error) {
-            return res.status(400).send(error.details[0].message);
-        } else {
-            var newRoom = Rooms(req.body).save((err, docs) => {
-                if (err) console.log(err);
-                
-                
-                res.status(200).send("Room created");
-            })
-        }
-
-    });
 
 }

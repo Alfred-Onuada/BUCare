@@ -22,8 +22,12 @@
 
 	</head>
 
-	<body>
+	<body onload="displayErrorMsg('<%= errorMessage %>')">
 
+		<div id="errorContainer" class="errorContainer hide">
+			<div id="errorText" class="alert alert-danger errorText" role="alert"></div>
+		</div>
+		
 		<%- include('./partials/header') %>
 
 		<!-- main-slider -->

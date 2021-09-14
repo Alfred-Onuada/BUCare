@@ -38,10 +38,14 @@ Author URL: http://w3layouts.com
 									<thead>
 										<tr>
 											<th scope="col">S/N</th>
+											<th scope="col">First Name</th>
+											<th scope="col">Last Name</th>
 											<th scope="col">Username</th>
 											<th scope="col">Email Address</th>
 											<th scope="col">Telephone No</th>
+											<th scope="col">Age</th>
 											<th scope="col">Case</th>
+											<th scope="col">Assigned Therapist</th>
 											<th scope="col">Since</th>
 											<th scope="col" colspan="2"></th>
 										</tr>
@@ -50,23 +54,17 @@ Author URL: http://w3layouts.com
 										<% for( let index = 0; index < data.length; index++ ) { %>
 											<tr>
 												<th scope="row"><%= index+1 %> </th>
+												<td><%= data[index].First_Name %></td>
+												<td><%= data[index].Last_Name %></td>
 												<td><%= data[index].Username %></td>
 												<td id="cEmail<%= index %>"><%= data[index].Email %></td>
 												<td><%= data[index].Telephone %></td>
+												<td><%= data[index].Age %></td>
 												<td><%= data[index].Case %></td>
-												<td><%= new Date(data[index].createdAt).toUTCString() %></td>
+												<td><%= data[index].Assigned_Therapist %></td>
+												<td><%= new Date(data[index].createdAt).toDateString() %></td>
 												<!-- disabled will show disabled -->
-												<% if (data[index].Status == 'active' || data[index].Status == 'pending case') { %>
-													<td><button type="button" class="btn btn-success">Active</button></td>
-												<% } else if (data[index].Status == 'disabled') { %>
-													<td><button type="button" class="btn btn-info" style="background-color: grey !important; border-color: grey !important;" disabled>Disabled</button></td>
-												<% } %>
 												
-												<% if (data[index].Status == 'pending case') { %>
-													<td><button onclick="window.btn = this" type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal4report" onclick="reportClient('<%= index %>')" disabled>pending...</button></td>
-												<% } else { %>
-													<td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal4report" onclick="window.btn = this, reportClient('<%= index %>')">Report</button></td>
-												<% } %>
 												</tr>
 										<% } %>
 									</tbody>
@@ -84,43 +82,50 @@ Author URL: http://w3layouts.com
 					<div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
 						<div class="accordion-body">
 							<div class="table-responsive">
-								<table class="table table-hover">
-									<thead>
-										<tr>
-											<th scope="col">S/N</th>
-											<th scope="col">Username</th>
-											<th scope="col">Email Address</th>
-											<th scope="col">Telephone No</th>
-											<th scope="col">Case</th>
-											<th scope="col">Since</th>
-											<th scope="col" colspan="2"></th>
-										</tr>
-									</thead>
-									<tbody>
-										<% for( let index = 0; index < data.length; index++ ) { %>
+								<div class="table-responsive">
+									<table class="table table-hover">
+										<thead>
 											<tr>
-												<th scope="row"><%= index+1 %> </th>
-												<td><%= data[index].Username %></td>
-												<td id="cEmail<%= index %>"><%= data[index].Email %></td>
-												<td><%= data[index].Telephone %></td>
-												<td><%= data[index].Case %></td>
-												<td><%= new Date(data[index].createdAt).toUTCString() %></td>
-												<!-- disabled will show disabled -->
-												<% if (data[index].Status == 'active' || data[index].Status == 'pending case') { %>
-													<td><button type="button" class="btn btn-success">Active</button></td>
-												<% } else if (data[index].Status == 'disabled') { %>
-													<td><button type="button" class="btn btn-info" style="background-color: grey !important; border-color: grey !important;" disabled>Disabled</button></td>
-												<% } %>
-												
-												<% if (data[index].Status == 'pending case') { %>
-													<td><button onclick="window.btn = this" type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal4report" onclick="reportClient('<%= index %>')" disabled>pending...</button></td>
-												<% } else { %>
-													<td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal4report" onclick="window.btn = this, reportClient('<%= index %>')">Report</button></td>
-												<% } %>
-												</tr>
-										<% } %>
-									</tbody>
-								</table>
+												<th scope="col">S/N</th>
+												<th scope="col">First Name</th>
+												<th scope="col">Last Name</th>
+												<th scope="col">Username</th>
+												<th scope="col">Email Address</th>
+												<th scope="col">Telephone No</th>
+												<th scope="col">Age</th>
+												<th scope="col">Case</th>
+												<th scope="col">Assigned Therapist</th>
+												<th scope="col">Since</th>
+												<th scope="col" colspan="2"></th>
+											</tr>
+										</thead>
+										<tbody>
+											<% for( let index = 0; index < data.length; index++ ) { %>
+												<tr>
+													<th scope="row"><%= index+1 %> </th>
+													<td><%= data[index].First_Name %></td>
+													<td><%= data[index].Last_Name %></td>
+													<td><%= data[index].Username %></td>
+													<td id="cEmail<%= index %>"><%= data[index].Email %></td>
+													<td><%= data[index].Telephone %></td>
+													<td><%= data[index].Age %></td>
+													<td><%= data[index].Case %></td>
+													<td><%= data[index].Assigned_Therapist %></td>
+													<td><%= new Date(data[index].createdAt).toDateString() %></td>
+													<!-- Reported Clients have a red circle beside their record -->
+													<% if (data[index].Status == 'active') { %>
+														<td><div class="active-client"></div></td>
+													<% } else if (data[index].Status == 'pending case') { %>
+														<td><div class="reported-client"></div></td>
+													<% } else if (data[index].Status == 'disabled') { %>
+														<td><div class="disabled-client"></div></td>
+													<% } %>
+													<td></td>													
+													</tr>
+											<% } %>
+										</tbody>
+									</table>
+								</div>
 							</div>
 						</div>
 					</div>
