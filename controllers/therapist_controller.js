@@ -36,6 +36,25 @@ Router.get('/rooms', verify, (req, res) => {
             Io.to(socket.id).emit("ack_rooms", "failed");
         }
 
+        // this code alerts all users that this person is now online
+        const nowOnline = () => {
+
+            // get all rooms that this person participates in
+            Rooms.find({ TherapistId: req.user._id })
+            .then(async room_docs => {
+                for (let index = 0; index < room_docs.length; index++) {
+                    const room = room_docs[index];
+                    socket.to(room.ClientId).emit('isOnline', room._id);
+                }
+            })
+            .catch(err => {
+                if (err) console.log(err);
+            })
+
+        }
+
+        nowOnline();
+
         socket.on('chat_message', async function (data) {
 
             var { errors } = await chatSchema.validateAsync(data);
@@ -176,7 +195,38 @@ Router.get('/rooms', verify, (req, res) => {
                     if (err) console.log(err);
                 });
         })
-        
+
+        socket.on('is_online_processed', (roomId) => {
+            Rooms.findById(roomId)
+                .then((docs) => {
+                    // because this handles events from therapist so the reciever is automatically the client
+                    var reciever = docs.ClientId;
+                    Io.to(reciever).emit('isAlsoOnline', roomId);
+                })
+                .catch(err => {
+                    if (err) console.log(err);
+                })
+        })
+
+        const wentOffline = () => {
+
+            // get all rooms that this person participates in
+            Rooms.find({ TherapistId: req.user._id })
+            .then(async room_docs => {
+                for (let index = 0; index < room_docs.length; index++) {
+                    const room = room_docs[index];
+                    socket.to(room.ClientId).emit('wentOffline', room._id);
+                }
+            })
+            .catch(err => {
+                if (err) console.log(err);
+            })
+
+        }
+
+        // this code alerts all users that this person has gone offline
+        socket.on('disconnect', wentOffline);
+
         // i kill the listener so for every new connection its a new listener
         Io.removeAllListeners("connection");
     
@@ -230,7 +280,7 @@ Router.get('/rooms', verify, (req, res) => {
             res.send(err)
         })
     } else {
-        req.errorMessage = "Unauthorized access to the requested page. <br> If you believe this to be an error please file a report on the contact us page."
+        req.errorMessage = "Unauthorized access to the requested page. <br> If you believe this to be an error please file a report on the contact us page.";
         res.redirect(307, '/');
     }
 

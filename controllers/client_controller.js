@@ -34,6 +34,25 @@ Router.get('/rooms', verify, (req, res) => {
             Io.to(socket.id).emit("ack_rooms", "failed");
         }
 
+        // this code alerts all users that this person is now online
+        const nowOnline = () => {
+
+            // get all rooms that this person participates in
+            Rooms.find({ ClientId: req.user._id })
+            .then(async room_docs => {
+                for (let index = 0; index < room_docs.length; index++) {
+                    const room = room_docs[index];
+                    socket.to(room.TherapistId).emit('isOnline', room._id);
+                }
+            })
+            .catch(err => {
+                if (err) console.log(err);
+            })
+
+        }
+
+        nowOnline();
+
         socket.on('chat_message', async function (data) {
 
             var { errors } = await chatSchema.validateAsync(data);
@@ -174,6 +193,37 @@ Router.get('/rooms', verify, (req, res) => {
                     if (err) console.log(err);
                 });
         })
+
+        socket.on('is_online_processed', (roomId) => {
+            Rooms.findById(roomId)
+                .then((docs) => {
+                    // because this handles events from client so the reciever is automatically the therapist
+                    var reciever = docs.TherapistId;
+                    Io.to(reciever).emit('isAlsoOnline', roomId);
+                })
+                .catch(err => {
+                    if (err) console.log(err);
+                })
+        })
+
+        const wentOffline = () => {
+
+            // get all rooms that this person participates in
+            Rooms.find({ ClientId: req.user._id })
+            .then(async room_docs => {
+                for (let index = 0; index < room_docs.length; index++) {
+                    const room = room_docs[index];
+                    socket.to(room.TherapistId).emit('wentOffline', room._id);
+                }
+            })
+            .catch(err => {
+                if (err) console.log(err);
+            })
+
+        }
+
+        // this code alerts all users that this person has gone offline
+        socket.on('disconnect', wentOffline);
         
         // i kill the listener so for every new connection its a new listener
         Io.removeAllListeners("connection");

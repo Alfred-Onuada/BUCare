@@ -30,7 +30,7 @@ function init(userId) {
         // has to be written this way so i have access to the socket object
         displayRoom = (roomId) => {
 
-            var roomChats = document.getElementById('room-' + roomId);
+            var roomChats = document.querySelector('#room-' + roomId);
 
             var allRooms = document.getElementsByClassName('chats');
 
@@ -70,7 +70,7 @@ function init(userId) {
 
         function createIncomingMsg(data) {
 
-            var chats = document.getElementById("chatsIn-" + data.RoomId);
+            var chats = document.querySelector("#chatsIn-" + data.RoomId);
 
             var parent = document.createElement('div');
             parent.classList.add('incoming');
@@ -96,7 +96,7 @@ function init(userId) {
 
         function createOutgoingMsg(data) {
 
-            var chats = document.getElementById("chatsIn-" + data.RoomId);
+            var chats = document.querySelector("#chatsIn-" + data.RoomId);
 
             var parent = document.createElement('div');
             parent.classList.add('outgoing');
@@ -137,7 +137,7 @@ function init(userId) {
         function createNotification(data) {
             // This function updates the ui to show the new message in the contact feeds when a new message arrives
             var recentChats = document.querySelector('#recentChats-' + data.RoomId);
-            var dot = document.getElementById('dot4-' + data.RoomId)
+            var dot = document.querySelector('#dot4-' + data.RoomId)
 
             recentChats.innerHTML = data.Message;
             dot.classList.remove('hide');
@@ -213,6 +213,28 @@ function init(userId) {
 
         if (status == 'success') {
 
+            // to update the ui when new users connect
+            socket.on('isOnline', (roomId) => {
+                var status = document.querySelector('#statusIn-'+roomId);
+                status.innerHTML = "Online";
+
+                // when user comes online to the rooms, he sends a message to everybody he is connected to they use it to know he is online,
+                // this ack gets sent back by only those who are also online so the user that just came online also knows who is also online
+                socket.emit('is_online_processed', (socket.id, roomId));
+            })
+
+            // when the event fired from is_online_processed returns
+            socket.on('isAlsoOnline', (roomId) => {
+                var status = document.querySelector('#statusIn-'+roomId);
+                status.innerHTML = "Online";
+            })
+
+            // to update the ui when new users disconnect
+            socket.on('wentOffline', (roomId) => {
+                var status = document.querySelector('#statusIn-'+roomId);
+                status.innerHTML = "Offline";
+            })
+
             var btn = document.getElementsByClassName('msgbtn');
 
             for (let index = 0; index < btn.length; index++) {
@@ -227,7 +249,7 @@ function init(userId) {
 
                     // check if i can access the message above
 
-                    var msg = document.getElementById("msgIn-" + room).textContent.trim();
+                    var msg = document.querySelector("#msgIn-" + room).textContent.trim();
 
                     if (msg != '') {
 
@@ -239,7 +261,7 @@ function init(userId) {
                         scrollToTop(data2.RoomId);
                     }
 
-                    document.getElementById("msgIn-" + room).textContent = '';
+                    document.querySelector("#msgIn-" + room).textContent = '';
 
                 }
 
@@ -652,5 +674,16 @@ function modHeight(id) {
     } else {
         chatsFeed.style.height = '500px';
     }
+
+}
+
+function showProfile() {
+    
+    var myProfileDiv = document.querySelector('#myProfile');
+    var profileContent = document.querySelector('#slideInContent');
+
+    myProfileDiv.style.width = '100%';
+
+    profileContent.classList.remove('hide');
 
 }

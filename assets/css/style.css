@@ -127,6 +127,10 @@
     background-color: whitesmoke;
 }
 
+.profileIcon:hover{
+	cursor: pointer;
+}
+
 .profileIconImg {
     height: 40px;
     width: 40px;
@@ -330,4 +334,33 @@
 .errorText{
     width: fit-content;
     height: fit-content;
+}
+
+.slideIn{
+	position: absolute;
+    width: 0;
+    background-color: whitesmoke;
+    height: 610px;
+    transition: width 1s;
+}
+
+.slideInheading{
+	display: flex;
+    place-content: center;
+    place-items: center;
+    height: 70px;
+    justify-content: space-between;
+    padding: 0px 40px;
+	background-color: #3a0ca3;
+    color: white;
+}
+
+.slideInheading > h4{
+	font-size: 25px;
+	font-weight: 300;
+	color: white;
+}
+
+.closeSlideIn{
+	font-size: 30px;
 }
