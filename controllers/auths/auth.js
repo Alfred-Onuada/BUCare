@@ -32,7 +32,7 @@ const usersRegisterSchema = Joi.object({
     Telephone: Joi.string().min(6),
     Password: Joi.string().min(8).required(),
     Date_of_Birth: Joi.string().min(10).max(10), // 12-12-2021 makes 10 characters
-    Age: Joi.number().min(1),
+    Sex: Joi.string().required(),
     Case: Joi.string().required(),
     Assigned_Therapist: Joi.string().required(),
     Unique_Code: Joi.string()
@@ -78,7 +78,7 @@ Router.post('/register', async (req, res)=> {
                     var therapistName = req.body.Assigned_Therapist;
 
                     // this variable holds only the fields that are available on the users model
-                    var unwanted = ['Date_of_Birth', 'Case', 'Assigned_Therapist', 'Age', 'ConfirmPassword'];
+                    var unwanted = ['Date_of_Birth', 'Case', 'Assigned_Therapist', 'ConfirmPassword'];
                     var userData = Object.keys(req.body)
                         .filter(key => unwanted.includes(key) == false)
                         .reduce((obj, key) => {

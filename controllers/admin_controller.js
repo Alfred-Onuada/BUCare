@@ -184,6 +184,7 @@ Router.get('/users/logout', (req, res) => {
 //     Last_Name: Joi.string().min(2).required(),
 //     Email: Joi.string().min(6).required().email(),
 //     Telephone: Joi.string().min(6).required(),
+//     Sex: Joi.string().required(),
 //     Password: Joi.string().min(8).required(),
 //     ConfirmPassword: Joi.string().min(8),
 //     Security_Question: Joi.string().required(),

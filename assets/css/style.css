@@ -1,5 +1,5 @@
 * {
-    box-sizing: border-box;
+    box-sizing: border-box !important;
 }
 
 
@@ -160,7 +160,7 @@
     height: 55px;
     width: 55px;
     border-radius: 50%;
-    margin: 5px 20px 0px 0px;
+    margin: 0px 20px 0px 0px;
 }
 
 .contactName {
@@ -341,7 +341,10 @@
     width: 0;
     background-color: whitesmoke;
     height: 610px;
-    transition: width 1s;
+    transition-property: width;
+    transition-duration: .4s;
+    transition-timing-function: cubic-bezier(1, 0, 0, 1);
+    overflow-y: auto;
 }
 
 .slideInheading{
@@ -363,4 +366,118 @@
 
 .closeSlideIn{
 	font-size: 30px;
+}
+
+.closeSlideIn:hover{
+    cursor: pointer;
+}
+
+.profilePicture{
+    display: flex;
+    place-content: center;
+    place-items: center;
+    height: 250px;
+    transform: scale(0);
+    transition: all .3s;
+}
+
+.profilePicture > img {
+    height: 200px;
+    width: 200px;
+    border-radius: 50%;
+}
+
+.profilePicture > img:hover{
+    background-color: grey;
+}
+
+.changePhoto{
+    position: absolute;
+    height: 200px;
+    width: 200px;
+    background-color: whitesmoke;
+    display: flex;
+    place-content: center;
+    flex-direction: column;
+    place-items: center;
+    text-align: center;
+    border-radius: 50%;
+    opacity: 0;
+    transition: all .5s;
+}
+
+.changePhoto:hover{
+    opacity: .7;
+    cursor: pointer;
+}
+
+.changePhoto > i{
+    font-size: 30px;
+    color: black;
+    margin: 0px 0px 15px 0px;
+}
+
+.changePhotoText{
+    padding: 0px 15px;
+    font-weight: normal;
+    font-size: 20px;
+}
+
+.profileDetails{
+    width: 100%;
+    height: fit-content;
+}
+
+.eachDetail{
+    height: 75px;
+    padding: 0px 30px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    place-content: center;
+    justify-content: space-evenly;
+    border-bottom: lavender 1px solid;
+    box-shadow: 0px 0px 5px lavender;
+    margin-bottom: 10px;
+}
+
+.detailName{
+    font-size: 13px;
+    font-weight: normal;
+}
+
+.detailValue{
+    font-size: 15px;
+    color: lightslategrey;
+    width: 100%;
+    float: left;
+}
+
+.detailValue:focus-visible{
+    border-bottom: 2px solid #3a0ca3;
+}
+
+.editPen{
+    position: absolute;
+}
+
+[contenteditable] {
+    outline: 0px solid transparent;
+}
+
+.editMark{
+    position: absolute;
+    font-size: 20px;
+    color: #3a0ca3;
+}
+
+.resetPassword{
+    text-align: center;
+    font-size: 15px;
+    font-weight: 100;
+}
+
+.resetPassword:hover{
+    cursor: pointer;
+    color: #3a0ca3;
 }

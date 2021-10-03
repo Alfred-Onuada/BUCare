@@ -52,10 +52,173 @@ Author URL: http://w3layouts.com
 							<div id="slideInContent" class="slideInContent hide">
 								<div class="slideInheading">
 									<h4>Profile</h4>
-									<span class="closeSlideIn">&times;</span>
+									<span onclick="closeProfile()" class="closeSlideIn">&times;</span>
 								</div>
 								<hr style="margin: 0px !important;">
 								<div class="slideInBody">
+                                    <div id="profilePicture" class="profilePicture">
+                                        <!-- this will actually first check if you have a dp -->
+                                        <img src="../defaults/<%= userStatus.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture">
+                                        <div class="changePhoto">
+                                            <i class="bi bi-camera-fill"></i>
+                                            <h5 class="changePhotoText">Change Profile Photo</h5>
+                                        </div>
+                                    </div>
+
+                                    <% if (userStatus.isClient) { %>
+
+                                        <div class="profileDetails">
+                                            <div class="eachDetail">
+                                                <h4 class="detailName">First Name</h4>
+                                                <div class="textEditArea">
+                                                    <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
+                                                        <%= userStatus.details.First_Name != null ? userStatus.details.First_Name : 'Not Specified' %>
+                                                    </div>
+                                                    <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
+                                                    <i class="editMark hide bi bi-check2"></i>
+                                                </div>
+                                            </div>
+    
+                                            <div class="eachDetail">
+                                                <h4 class="detailName">Last Name</h4>
+                                                <div class="textEditArea">
+                                                    <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
+                                                        <%= userStatus.details.Last_Name != null ? userStatus.details.Last_Name : 'Not Specified'  %> 
+                                                    </div>
+                                                    <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
+                                                    <i class="editMark hide bi bi-check2"></i>
+                                                </div>
+                                            </div>
+    
+                                            <div class="eachDetail">
+                                                <h4 class="detailName">Username</h4>
+                                                <div class="textEditArea">
+                                                    <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
+                                                        <%= userStatus.details.Username != null ? userStatus.details.Username : 'Not Specified'  %>
+                                                    </div>
+                                                    <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
+                                                    <i class="editMark hide bi bi-check2"></i>
+                                                </div>
+                                            </div>
+    
+                                            <div class="eachDetail">
+                                                <h4 class="detailName">Email</h4>
+                                                <div class="textEditArea">
+                                                    <div class="detailValue">
+                                                        <%= userStatus.details.Email %>
+                                                    </div>
+                                                </div>
+                                            </div>
+    
+                                            <div class="eachDetail">
+                                                <h4 class="detailName">Telephone</h4>
+                                                <div class="textEditArea">
+                                                    <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
+                                                        <%= userStatus.details.Telephone != null ? userStatus.details.Telephone : 'Not Specified' %>
+                                                    </div>
+                                                    <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
+                                                    <i class="editMark hide bi bi-check2"></i>
+                                                </div>
+                                            </div>
+    
+                                            <div class="eachDetail">
+                                                <h4 class="detailName">Date Of Birth - DD-MM-YY</h4>
+                                                <div class="textEditArea">
+                                                    <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
+                                                        <%= userStatus.details.Date_Of_Birth != null ? userStatus.details.Date_Of_Birth : 'Not Specified' %>
+                                                    </div>
+                                                    <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
+                                                    <i class="editMark hide bi bi-check2"></i>
+                                                </div>
+                                            </div>
+    
+                                            <div class="eachDetail">
+                                                <h4 class="detailName">Age</h4>
+                                                <div class="textEditArea">
+                                                    <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
+                                                        <%= userStatus.details.Age != null ? userStatus.details.Age : 'Not Specified' %>
+                                                    </div>
+                                                    <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
+                                                    <i class="editMark hide bi bi-check2"></i>
+                                                </div>
+                                            </div>
+    
+                                            <div class="eachDetail">
+                                                <h4 class="detailName">Sex - Male or Female</h4>
+                                                <div class="textEditArea">
+                                                    <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
+                                                        <%= userStatus.details.Sex != null ? userStatus.details.Sex : 'Not Specified'  %>
+                                                    </div>
+                                                    <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
+                                                    <i class="editMark hide bi bi-check2"></i>
+                                                </div>
+                                            </div>
+    
+                                            <!-- this will open up a new page for password rest not a modal -->
+                                            <div class="eachDetail">
+                                                <h4 class="resetPassword">Reset your password</h4>
+                                            </div>
+    
+                                        </div>
+                                     
+                                    <% } else if (userStatus.isTherapist) { %>
+
+                                        <div class="profileDetails">
+                                            <div class="eachDetail">
+                                                <h4 class="detailName">First Name</h4>
+                                                <div class="textEditArea">
+                                                    <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
+                                                        <%= userStatus.details.First_Name != null ? userStatus.details.First_Name : 'Not Specified'  %>
+                                                    </div>
+                                                    <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
+                                                    <i class="editMark hide bi bi-check2"></i>
+                                                </div>
+                                            </div>
+    
+                                            <div class="eachDetail">
+                                                <h4 class="detailName">Last Name</h4>
+                                                <div class="textEditArea">
+                                                    <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
+                                                        <%= userStatus.details.Last_Name != null ? userStatus.details.Last_Name : 'Not Specified'  %>
+                                                    </div>
+                                                    <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
+                                                    <i class="editMark hide bi bi-check2"></i>
+                                                </div>
+                                            </div>
+    
+                                            <div class="eachDetail">
+                                                <h4 class="detailName">Email</h4>
+                                                <div class="textEditArea">
+                                                    <div class="detailValue">
+                                                        Dave@gmail.com
+                                                    </div>
+                                                </div>
+                                            </div>
+    
+                                            <div class="eachDetail">
+                                                <h4 class="detailName">Telephone</h4>
+                                                <div class="textEditArea">
+                                                    <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
+                                                        <%= userStatus.details.Telephone != null ? userStatus.details.Telephone : 'Not Specified'  %>
+                                                    </div>
+                                                    <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
+
+                                                    <!-- to update pass in the user's email use the email to find the persons field in the user's model and specific model (client/therapist)
+                                                    pass in also the field your trying to update and the instance of that field (this.parentNode.children[1]) then on the javascript get the 
+                                                    value from the instance and make a put request -->
+
+                                                    <i onclick="updateProfile('<%= userStatus._id %>', 'telephone')" class="editMark hide bi bi-check2"></i>
+                                                </div>
+                                            </div>
+    
+                                            <!-- this will open up a new page for password rest not a modal -->
+                                            <div class="eachDetail">
+                                                <h4 class="resetPassword">Reset your password</h4>
+                                            </div>
+    
+                                        </div>
+                                        
+                                    <% } %>
 
 								</div>
 							</div>
@@ -63,7 +226,8 @@ Author URL: http://w3layouts.com
 
                         <div class="searchandprofile">
                             <div onclick="showProfile()" class="profileIcon">
-                                <img class="profileIconImg" src="../media/imgs/team4.jpg" alt="">
+                                <%= userStatus.sex %>
+                                <img class="profileIconImg" src="../defaults/<%= userStatus.Sex == 'Male' ? 'male' : 'female' %>.png" alt="">
                             </div>
                             <div>
                                 <form class="form-inline">
@@ -79,7 +243,8 @@ Author URL: http://w3layouts.com
                                 <% chat = room.Chats %>
                                 <div class="eachContact" onclick="displayRoom('<%= room._id %>')">
                                     <div class="contactPicture">
-                                        <img src="../media/imgs/team<%= Math.round(Math.random() * 3 + 1) %>.jpg" alt="">
+                                        <!-- check first if the person has a dp -->
+                                        <img src="../defaults/<%= room.Sex == 'Male' ? 'male' : 'female' %>.png" alt="">
                                     </div>
                                     <div class="previousChat">
                                         <h4 class="contactName">

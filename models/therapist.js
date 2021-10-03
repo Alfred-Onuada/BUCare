@@ -29,6 +29,9 @@ const therapistSchema = mongoose.Schema({
         type: Array,
         required: true
     },
+    'Display_Picture' : {
+        type: String
+    },
     'Unique_Code' : {
         type: String,
         required: true

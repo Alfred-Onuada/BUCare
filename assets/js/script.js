@@ -448,7 +448,7 @@ function registerFunc() {
         Email: registerForm.elements['Email'].value,
         Telephone: registerForm.elements['Telephone'].value,
         Password: registerForm.elements['Password'].value,
-        Age: registerForm.elements['Age'].value,
+        Sex: registerForm.elements['Sex'].value,
         Case: registerForm.elements['Case'].value,
         Assigned_Therapist: registerForm.elements['Assigned_Therapist'].value
     };
@@ -520,7 +520,7 @@ function loginFunc() {
 function logout() {
 
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'users/logout', true);
+    xhr.open('GET', '/users/logout', true);
     xhr.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             window.open('index', '_self');
@@ -681,9 +681,39 @@ function showProfile() {
     
     var myProfileDiv = document.querySelector('#myProfile');
     var profileContent = document.querySelector('#slideInContent');
+    var profilePicture = document.querySelector('#profilePicture');
 
     myProfileDiv.style.width = '100%';
 
-    profileContent.classList.remove('hide');
+    setTimeout(() => {
+        profileContent.classList.remove('hide');
+        
+        setTimeout(() => {
+            profilePicture.style.transform = "scale(1)";
+        }, 100);
+    }, 400);
 
+}
+
+function closeProfile() {
+    
+    var myProfileDiv = document.querySelector('#myProfile');
+    var profileContent = document.querySelector('#slideInContent');
+    var profilePicture = document.querySelector('#profilePicture');
+
+    profileContent.classList.add('hide');
+
+    setTimeout(() => {
+        profilePicture.style.transform = "scale(0)";
+        myProfileDiv.style.width = '0%';
+    }, 0);
+
+}
+
+function beginEdit(self) {
+    // self holds an instance of the exact element that was clicked lol
+    
+    self.parentNode.children[0].contentEditable = 'true';
+    self.parentNode.children[1].classList.add('hide');
+    self.parentNode.children[2].classList.remove('hide');
 }

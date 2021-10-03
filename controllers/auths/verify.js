@@ -24,10 +24,12 @@ module.exports =  function(req, res, next) {
         Users.findOne({ _id: req.user._id })
             .then(docs => {
                 if (docs) {
+
                     // only one can be true, the rest will be false
                     req.user.isAdmin = docs.isAdmin;
                     req.user.isClient = docs.isClient;
                     req.user.isTherapist = docs.isTherapist;
+                    req.user.Sex = docs.Sex;                   
 
                     next();
 

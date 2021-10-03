@@ -2,8 +2,9 @@
 const Chats = require('./../models/chat');
 const Rooms = require('./../models/room');
 const Clients = require('./../models/client');
-const Users = require('../models/user');
-const Reports = require('../models/report');
+const Users = require('./../models/user');
+const Therapists = require('./../models/therapist');
+const Reports = require('./../models/report');
 
 // Initialize Packages
 const Router = require('express').Router();
@@ -256,6 +257,7 @@ Router.get('/rooms', verify, (req, res) => {
                             await Clients.findOne({ Email: user.Email })
                                 .then(client => {
                                     rooms[index].Username = client.Username;
+                                    rooms[index].Sex = user.Sex;
                                 })
                                 .catch(err => {
                                     if (err) console.log(err);
@@ -273,6 +275,23 @@ Router.get('/rooms', verify, (req, res) => {
             // Start the function and waits till everything finishes
             await loop();
 
+            // get the user's record from database and send to the frontend useful in the chat page for the profile nav
+            await Users.findById(req.user._id)
+                .then(async users_docs => {
+
+                    await Therapists.findOne({ Email: users_docs.Email })
+                        .then(docs => {
+                            req.user.details = docs;
+                        })
+                        .catch(err => {
+                            if (err) console.log(err);
+                        })
+
+                    })
+                .catch(err => {
+                    if (err) console.log(err)
+                })
+            
             res.render('rooms', {rooms_info: rooms, userStatus: req.user, user: req.user._id});
 
         })
@@ -382,15 +401,11 @@ Router.get('/', (req, res) => {
 
 Router.get('/index', (req, res) => {
 
-    console.log("Here");
-
     res.redirect('../index');
 
 })
 
 Router.get('/about', (req, res) => {
-
-    console.log("Here");
 
     res.redirect('../about');
 
@@ -398,33 +413,13 @@ Router.get('/about', (req, res) => {
 
 Router.get('/contact', (req, res) => {
 
-    console.log("Here");
-
     res.redirect('../contact');
 
 })
 
 Router.get('/services', (req, res) => {
 
-    console.log("Here");
-
     res.redirect('../services');
-
-})
-
-Router.get('/users/login', (req, res) => {
-
-    console.log("Here");
-
-    res.redirect('../users/login');
-
-})
-
-Router.get('/users/logout', (req, res) => {
-
-    console.log("Here");
-
-    res.redirect('../users/logout');
 
 })
 
