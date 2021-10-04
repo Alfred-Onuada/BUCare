@@ -30,7 +30,7 @@ const io = new Server(server);
 module.exports = io;
 
 const uri = process.env.DB_URI;
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
     .then((result) => {
 
         const port = process.env.PORT || 3100; 
