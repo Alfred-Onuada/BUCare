@@ -20,8 +20,9 @@ module.exports =  async function(req, res, next) {
         req.userInfo = verified;
 
         // if for any reason your info no longer exists on the db this makes sure your userInfo object is set to null
-        await Users.findOne({ '_id': req.userInfo._id })
+        await Users.findOne({ _id: req.userInfo._id })
             .then(docs => {
+
                 if (docs == null) { 
                     req.userInfo = null;
                 } else {

@@ -177,7 +177,7 @@ function init(userId) {
             xhr.open('PUT', '/leaveRoom', true);
             xhr.setRequestHeader("Content-type", "application/JSON");
             xhr.onreadystatechange = function () {
-                if (this.status == 200 && this.readyState == 4) {
+                if (this.status === 200 && this.readyState === 4) {
 
                     // i dont need the user's ID because what so ever socket emits this event beacause the sockets are handled by separate controllers it invariably
                     // tells me who he/she is
@@ -211,7 +211,7 @@ function init(userId) {
         // this function is called once the user opens the chat room page, it changes all the pending messages to delievered
         deliverAll(userId);
 
-        if (status == 'success') {
+        if (status === 'success') {
 
             // to update the ui when new users connect
             socket.on('isOnline', (roomId) => {
@@ -295,7 +295,7 @@ function init(userId) {
 
                 // temporary conversion of htmlcollection to array
                 [].forEach.call(icons, function(icon) {
-                    if (icon.classList.contains('seen') == false) {
+                    if (icon.classList.contains('seen') === false) {
                         icon.classList.add('seen');
                     }
                 })
@@ -352,6 +352,7 @@ function displayErrorMsg(msg, boxId=null) {
         errorContainer.classList.remove('hide');
         errorContainer.classList.add('shake');
         errorContainer.innerHTML = msg;
+        errorContainer.scrollIntoView();
     
         setTimeout(() => {
             removeErrorMsg(boxId);
@@ -366,6 +367,7 @@ function displayErrorMsg(msg, boxId=null) {
             errorContainer.classList.remove('hide');
             errorText.innerHTML = msg;
             errorContainer.classList.add('shake');
+            errorContainer.scrollIntoView();
 
             setTimeout(() => {
                 errorText.innerHTML = '';
@@ -385,6 +387,7 @@ function displaySuccessMsg(msg, boxId) {
     errorContainer.classList.remove('hide');
     errorContainer.classList.add('shake');
     errorContainer.innerHTML = msg;
+    errorContainer.scrollIntoView();
 
     setTimeout(() => {
         removeSuccessMsg(boxId);
@@ -406,7 +409,7 @@ function registerFunc() {
     xhr.open('POST', '/users/register', true);
     xhr.setRequestHeader("Content-type", "application/JSON");
     xhr.onreadystatechange = function() {
-        if (this.readyState == 4) {
+        if (this.readyState === 4) {
             switch (this.status) {
                 case 200:
 
@@ -473,7 +476,7 @@ function loginFunc() {
     xhr.open('POST', '/users/login', true);
     xhr.setRequestHeader("Content-type", "application/JSON");
     xhr.onreadystatechange = function() {
-        if (this.readyState == 4) {
+        if (this.readyState === 4) {
             switch (this.status) {
                 case 200:
 
@@ -522,7 +525,7 @@ function logout() {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', '/users/logout', true);
     xhr.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
+        if (this.readyState === 4 && this.status === 200) {
             window.open('index', '_self');
         }
     }
@@ -551,7 +554,7 @@ function reportFunc(TherapistId) {
     xhr.open('POST', '/t/report', true);
     xhr.setRequestHeader('content-type', 'application/json');
     xhr.onreadystatechange = function() {
-        if (this.readyState == 4) {
+        if (this.readyState === 4) {
 
             switch (this.status) {
                 case 200:
@@ -612,7 +615,7 @@ function regTherapistFunc() {
     xhr.open('POST', '/a/register', true);
     xhr.setRequestHeader("Content-type", "application/JSON");
     xhr.onreadystatechange = function() {
-        if (this.readyState == 4) {
+        if (this.readyState === 4) {
             switch (this.status) {
                 case 200:
 
@@ -716,4 +719,57 @@ function beginEdit(self) {
     self.parentNode.children[0].contentEditable = 'true';
     self.parentNode.children[1].classList.add('hide');
     self.parentNode.children[2].classList.remove('hide');
+}
+
+function endEdit(self, val) {
+    // self holds an instance of the exact element that was clicked lol
+    
+    self.parentNode.children[0].contentEditable = 'false';
+    self.parentNode.children[1].classList.remove('hide');
+    self.parentNode.children[3].classList.add('hide');
+
+    if (val === null) {
+        self.parentNode.children[0].textContent = "Not Specified";
+    } 
+
+}
+
+function loading(self) {
+    // self holds an instance of the exact element that was clicked lol
+    
+    self.parentNode.children[2].classList.add('hide');
+    self.parentNode.children[3].classList.remove('hide');
+
+}
+
+function updateProfile(userId, affectedField, fieldInstance) {
+
+    var value = fieldInstance.parentNode.children[0].textContent.trim();
+    const newValue = value != "" || value != "Not Specified" ? value : null;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('PUT', '/updateProfile', true);
+    xhr.setRequestHeader('content-type', 'application/json');
+    xhr.onreadystatechange = function () {
+        if (this.readyState === 4) {
+            
+            // passed in newValue so as to enter Not Specified into the field if the user leaves it empty
+            endEdit(fieldInstance, newValue);
+
+            // add a small pop from below shwoing update suceess
+        } 
+    }
+    const data = {
+        userId: userId,
+        affectedField: affectedField,
+        newValue: newValue 
+    }
+
+    xhr.send(JSON.stringify(data));
+    loading(fieldInstance);
+
+}
+
+function uplodadPhoto(userId, affectedField, fieldInstance) {
+    console.log(fieldInstance);
 }

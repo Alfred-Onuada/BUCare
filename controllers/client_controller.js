@@ -121,16 +121,18 @@ Router.get('/rooms', verify, (req, res) => {
                             
                             const roomId = room._id;
                             // $ne means not equal to
-                            // modifiy status to include not equal to seen
+                            
                             await Chats.updateMany({ RoomId: roomId, SpokesPerson: {$ne: userId}, Status: {$ne: 'delivered', $ne: 'seen'} }, {Status: 'delivered'})
                                 .then(chat_docs => {
-                                    // nModified holds the number of chats it modified
-                                    if (chat_docs.nModified > 0) {
+                                    // modifiedCount holds the number of chats it modified
+
+                                    if (chat_docs.modifiedCount != 0) {
+
                                         // i send back a message for the frontend to update the ui
                                         // even if the person is offline it doesnt matter i still updated the db
                                         socket.to(room.TherapistId).emit("seen_all_completed", roomId);
                                     }
-                                    
+
                                 })
                                 .catch(err => {
                                     if (err) console.log(err);
@@ -159,11 +161,10 @@ Router.get('/rooms', verify, (req, res) => {
                             
                             const roomId = room._id;
                             // $ne means not equal to
-                            // modifiy status to include not equal to seen
                             await Chats.updateMany({ RoomId: roomId, SpokesPerson: {$ne: userId}, Status: {$ne: 'seen'} }, {Status: 'seen'})
                                 .then(chat_docs => {
-                                    // nModified holds the number of chats it modified
-                                    if (chat_docs.nModified > 0) {
+
+                                    if (chat_docs.modifiedCount != 0) {
                                         // i send back a message for the frontend to update the ui
                                         // even if the person is offline it doesnt matter i still updated the db
                                         socket.to(room.TherapistId).emit("seen_all_completed", roomId);

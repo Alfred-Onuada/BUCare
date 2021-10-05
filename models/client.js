@@ -28,6 +28,10 @@ const clientSchema = mongoose.Schema({
     'Age' : {
         type: Number,
     },
+    'Sex': {
+        type: String,
+        required: true
+    },
     'Case' : {
         type: String,
         required: true

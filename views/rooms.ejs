@@ -60,10 +60,14 @@ Author URL: http://w3layouts.com
                                         <!-- this will actually first check if you have a dp -->
                                         <img src="../defaults/<%= userStatus.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture">
                                         <div class="changePhoto">
-                                            <i class="bi bi-camera-fill"></i>
-                                            <h5 class="changePhotoText">Change Profile Photo</h5>
+                                            <label for="changePhoto">
+
+                                                <i class="bi bi-camera-fill"></i>
+                                                <h5 class="changePhotoText">Change Profile Photo</h5>
+                                            </label>
                                         </div>
                                     </div>
+                                    <input type="file" onchange="uploadPhoto('<%= userStatus._id %>', 'Display_Picture', this)" name="changePhoto" id="changePhoto" class="hide">
 
                                     <% if (userStatus.isClient) { %>
 
@@ -75,7 +79,8 @@ Author URL: http://w3layouts.com
                                                         <%= userStatus.details.First_Name != null ? userStatus.details.First_Name : 'Not Specified' %>
                                                     </div>
                                                     <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
-                                                    <i class="editMark hide bi bi-check2"></i>
+                                                    <i onclick="updateProfile('<%= userStatus._id %>', 'First_Name', this)" class="saveEdit hide bi bi-check2"></i>
+                                                    <div class="hide preloader spinner-border" role="status"></div>
                                                 </div>
                                             </div>
     
@@ -86,7 +91,8 @@ Author URL: http://w3layouts.com
                                                         <%= userStatus.details.Last_Name != null ? userStatus.details.Last_Name : 'Not Specified'  %> 
                                                     </div>
                                                     <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
-                                                    <i class="editMark hide bi bi-check2"></i>
+                                                    <i onclick="updateProfile('<%= userStatus._id %>', 'Last_Name', this)" class="saveEdit hide bi bi-check2"></i>
+                                                    <div class="hide preloader spinner-border" role="status"></div>
                                                 </div>
                                             </div>
     
@@ -97,7 +103,8 @@ Author URL: http://w3layouts.com
                                                         <%= userStatus.details.Username != null ? userStatus.details.Username : 'Not Specified'  %>
                                                     </div>
                                                     <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
-                                                    <i class="editMark hide bi bi-check2"></i>
+                                                    <i onclick="updateProfile('<%= userStatus._id %>', 'Username', this)" class="saveEdit hide bi bi-check2"></i>
+                                                    <div class="hide preloader spinner-border" role="status"></div>
                                                 </div>
                                             </div>
     
@@ -117,7 +124,8 @@ Author URL: http://w3layouts.com
                                                         <%= userStatus.details.Telephone != null ? userStatus.details.Telephone : 'Not Specified' %>
                                                     </div>
                                                     <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
-                                                    <i class="editMark hide bi bi-check2"></i>
+                                                    <i onclick="updateProfile('<%= userStatus._id %>', 'Telephone', this)" class="saveEdit hide bi bi-check2"></i>
+                                                    <div class="hide preloader spinner-border" role="status"></div>
                                                 </div>
                                             </div>
     
@@ -125,10 +133,11 @@ Author URL: http://w3layouts.com
                                                 <h4 class="detailName">Date Of Birth - DD-MM-YY</h4>
                                                 <div class="textEditArea">
                                                     <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
-                                                        <%= userStatus.details.Date_Of_Birth != null ? userStatus.details.Date_Of_Birth : 'Not Specified' %>
+                                                        <%= userStatus.details.Date_of_Birth != null ? userStatus.details.Date_of_Birth : 'Not Specified' %>
                                                     </div>
                                                     <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
-                                                    <i class="editMark hide bi bi-check2"></i>
+                                                    <i onclick="updateProfile('<%= userStatus._id %>', 'Date_of_Birth', this)" class="saveEdit hide bi bi-check2"></i>
+                                                    <div class="hide preloader spinner-border" role="status"></div>
                                                 </div>
                                             </div>
     
@@ -139,7 +148,8 @@ Author URL: http://w3layouts.com
                                                         <%= userStatus.details.Age != null ? userStatus.details.Age : 'Not Specified' %>
                                                     </div>
                                                     <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
-                                                    <i class="editMark hide bi bi-check2"></i>
+                                                    <i onclick="updateProfile('<%= userStatus._id %>', 'Age', this)" class="saveEdit hide bi bi-check2"></i>
+                                                    <div class="hide preloader spinner-border" role="status"></div>
                                                 </div>
                                             </div>
     
@@ -150,7 +160,8 @@ Author URL: http://w3layouts.com
                                                         <%= userStatus.details.Sex != null ? userStatus.details.Sex : 'Not Specified'  %>
                                                     </div>
                                                     <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
-                                                    <i class="editMark hide bi bi-check2"></i>
+                                                    <i onclick="updateProfile('<%= userStatus._id %>', 'Sex', this)" class="saveEdit hide bi bi-check2"></i>
+                                                    <div class="hide preloader spinner-border" role="status"></div>
                                                 </div>
                                             </div>
     
@@ -171,7 +182,8 @@ Author URL: http://w3layouts.com
                                                         <%= userStatus.details.First_Name != null ? userStatus.details.First_Name : 'Not Specified'  %>
                                                     </div>
                                                     <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
-                                                    <i class="editMark hide bi bi-check2"></i>
+                                                    <i onclick="updateProfile('<%= userStatus._id %>', 'First_Name', this)" class="saveEdit hide bi bi-check2"></i>
+                                                    <div class="hide preloader spinner-border" role="status"></div>
                                                 </div>
                                             </div>
     
@@ -182,7 +194,8 @@ Author URL: http://w3layouts.com
                                                         <%= userStatus.details.Last_Name != null ? userStatus.details.Last_Name : 'Not Specified'  %>
                                                     </div>
                                                     <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
-                                                    <i class="editMark hide bi bi-check2"></i>
+                                                    <i onclick="updateProfile('<%= userStatus._id %>', 'Last_Name', this)" class="saveEdit hide bi bi-check2"></i>
+                                                    <div class="hide preloader spinner-border" role="status"></div>
                                                 </div>
                                             </div>
     
@@ -190,7 +203,7 @@ Author URL: http://w3layouts.com
                                                 <h4 class="detailName">Email</h4>
                                                 <div class="textEditArea">
                                                     <div class="detailValue">
-                                                        Dave@gmail.com
+                                                        <%= userStatus.details.Email %>
                                                     </div>
                                                 </div>
                                             </div>
@@ -202,16 +215,12 @@ Author URL: http://w3layouts.com
                                                         <%= userStatus.details.Telephone != null ? userStatus.details.Telephone : 'Not Specified'  %>
                                                     </div>
                                                     <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
-
-                                                    <!-- to update pass in the user's email use the email to find the persons field in the user's model and specific model (client/therapist)
-                                                    pass in also the field your trying to update and the instance of that field (this.parentNode.children[1]) then on the javascript get the 
-                                                    value from the instance and make a put request -->
-
-                                                    <i onclick="updateProfile('<%= userStatus._id %>', 'telephone')" class="editMark hide bi bi-check2"></i>
+                                                    <i onclick="updateProfile('<%= userStatus._id %>', 'Telephone', this)" class="saveEdit hide bi bi-check2"></i>
+                                                    <div class="hide preloader spinner-border" role="status"></div>
                                                 </div>
                                             </div>
     
-                                            <!-- this will open up a new page for password rest not a modal -->
+                                            <!-- this will open up a new page for password reset not a modal -->
                                             <div class="eachDetail">
                                                 <h4 class="resetPassword">Reset your password</h4>
                                             </div>

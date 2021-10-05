@@ -303,7 +303,7 @@
 }
 
 .seen {
-    color: #3a0ca3;
+    color: #007bff;
 }
 
 .notifcation-dot {
@@ -465,7 +465,7 @@
     outline: 0px solid transparent;
 }
 
-.editMark{
+.saveEdit{
     position: absolute;
     font-size: 20px;
     color: #3a0ca3;
@@ -480,4 +480,11 @@
 .resetPassword:hover{
     cursor: pointer;
     color: #3a0ca3;
+}
+
+.preloader{
+    height: 20px;
+    width: 20px;
+    border-width: 2px;
+    position: absolute;
 }
