@@ -17,7 +17,7 @@ const options = {
     cert: fs.readFileSync('cert.pem')
 }
 
-const server = https.createServer(app);
+const server = https.createServer(options, app);
 
 // Using socket Io for web sockets
 const { Server } = require("socket.io");
