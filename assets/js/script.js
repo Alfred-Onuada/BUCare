@@ -788,6 +788,4 @@ function updatePhoto(userId, affectedField, fieldInstance) {
     
     xhr.send(data);
 
-    // 
-
 }

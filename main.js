@@ -7,6 +7,7 @@ const app = express();
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const fs = require('fs')
+const sslRedirect = require('heroku-ssl-redirect').default;
 
 // Initializing server with http
 const https = require('https');
@@ -43,6 +44,8 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
         console.log(err);
     })
 
+// enable ssl redirect important so every http request is changed to https
+app.use(sslRedirect());
     
 // set a template engine
 app.set('view engine', 'ejs');
