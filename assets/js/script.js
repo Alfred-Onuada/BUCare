@@ -770,6 +770,22 @@ function updateProfile(userId, affectedField, fieldInstance) {
 
 }
 
-function uplodadPhoto(userId, affectedField, fieldInstance) {
-    console.log(fieldInstance);
+function updatePhoto(userId, affectedField, fieldInstance) {
+
+    let fileData = fieldInstance.files[0];
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('PUT', '/updatePhoto', true);
+    xhr.onreadystatechange = function () {
+        if (this.readyState == 4) {
+
+        }
+    }
+    let data = new FormData();
+    data.append('file', fileData);
+    data.append('userId', userId);
+    data.append('affectedField', affectedField);
+    
+    xhr.send(data);
+
 }

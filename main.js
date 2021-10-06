@@ -8,9 +8,6 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const fs = require('fs')
 
-// When you start working with file uploads this will help
-// const fileUpload = require('express-fileupload');
-
 // Initializing server with http
 const https = require('https');
 
@@ -56,7 +53,7 @@ app.use(cookieParser());
 // set static files path
 app.use(express.static('./assets',));
 
-// this enables me to send Json output not always string
+// these enables me to parse JSON documents sent to the server
 app.use(express.json());
 
 // adding authetication middlewares

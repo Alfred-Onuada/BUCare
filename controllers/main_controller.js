@@ -1,8 +1,6 @@
 
 const Users = require('./../models/user');
 const Rooms = require('./../models/room');
-const Therapists = require('./../models/therapist');
-const Clients = require('./../models/client');
 
 const Joi = require('@hapi/joi');
 
@@ -12,6 +10,9 @@ const checkUser = require('./auths/checkUser');
 const { v4: uuidV4 } = require('uuid');
  
 const Io = require("./../main");
+
+// modules for edits
+const { updatePhoto, updateProfile } = require('./updates/updateProfile');
 
 // checkuser simply returns information about the logged in user, it doesn't protect the route
 module.exports = (app) => {
@@ -88,7 +89,7 @@ module.exports = (app) => {
 
     // This routes are here because the header file doesnt explicitly specify /a or /t in any of it urls so these routes 
     //checks the user's details and appends the appropraite prefix
-    app.get('/clientsList', checkUser, (req, res) => {
+    app.get('/clientsList', verify, (req, res) => {
 
         console.log(`Request made to : ${req.url}`);
 
@@ -101,7 +102,7 @@ module.exports = (app) => {
         }
     });
 
-    app.get('/summary', checkUser, (req, res) => {
+    app.get('/summary', verify, (req, res) => {
 
         console.log(`Request made to : ${req.url}`);
 
@@ -113,7 +114,7 @@ module.exports = (app) => {
         }
     });
     
-    app.put('/leaveRoom', (req, res) => {
+    app.put('/leaveRoom', verify, (req, res) => {
         
         console.log(`Request made to : ${req.url}`);
 
@@ -127,66 +128,9 @@ module.exports = (app) => {
             })
     })
 
-    app.put('/updateProfile', (req, res) => {
+    app.put('/updateProfile', verify, updateProfile);
 
-        const data = req.body;
-
-        Users.findOne({ _id: data.userId })
-            .then(users_docs => {
-                const userEmail = users_docs.Email;
-
-                // even is the specified filed is not on the users model it still gets to the then block because it didnt fail
-                // it just didnt edit any field
-
-                // the $set operator allows a variable field to be update (you don't have to hardcode the field value)
-                Users.findByIdAndUpdate(data.userId, {$set: (o = {}, o[data.affectedField] = data.newValue, o)})
-                    .then(info => {
-                        if (users_docs.isTherapist) {
-                            
-                            Therapists.findOneAndUpdate({ Email: userEmail}, {$set: (o = {}, o[data.affectedField] = data.newValue, o)})
-                                .then(info => {
-                                    res.status(200).send("Update Successful");
-                                })
-                                .catch(err => {
-                                    if (err) console.log(err);
-            
-                                    res.status(500).send("Update Failed");
-            
-                                })
-
-                        } else {
-
-                            Clients.findOneAndUpdate({ Email: userEmail}, {$set: (o = {}, o[data.affectedField] = data.newValue, o)})
-                                .then(info => {
-
-                                    res.status(200).send("Update Successful");
-                                })
-                                .catch(err => {
-                                    if (err) console.log(err);
-            
-                                    res.status(500).send("Update Failed");
-            
-                                })
-
-                        }
-                    })
-                    .catch(err => {
-                        if (err) console.log(err);
-
-                        res.status(500).send("Update Failed");
-
-                    })
-
-            })
-            .catch(err => {
-                if (err) console.log(err);
-
-                res.status(500).send("Update Failed");
-
-            })
-
-
-    });
+    app.put('/updatePhoto', verify, updatePhoto);
 
     // video chat routes
 

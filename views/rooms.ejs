@@ -67,7 +67,7 @@ Author URL: http://w3layouts.com
                                             </label>
                                         </div>
                                     </div>
-                                    <input type="file" onchange="uploadPhoto('<%= userStatus._id %>', 'Display_Picture', this)" name="changePhoto" id="changePhoto" class="hide">
+                                    <input type="file" onchange="updatePhoto('<%= userStatus._id %>', 'Display_Picture', this)" name="changePhoto" id="changePhoto" class="hide" accept="image/*">
 
                                     <% if (userStatus.isClient) { %>
 
