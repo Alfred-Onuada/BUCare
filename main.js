@@ -8,14 +8,20 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const fs = require('fs')
 
-// Initializing server with https and http
+// when you start working with voip feature may only need it on development as heroku or the web server may already provide a secure connection
+// const https = require('https');
+
+// Initializing server with http
 const http = require('http');
 
 // Reading the SSL certificates and appending it to the server
-const options = {
-    key: fs.readFileSync('key.pem'),
-    cert: fs.readFileSync('cert.pem')
-}
+// const options = {
+//     key: fs.readFileSync('key.pem'),
+//     cert: fs.readFileSync('cert.pem')
+// }
+
+// when you start working with voip feature may only need it on development as heroku or the web server may already provide a secure connection
+// const server = https.createServer(options, app);
 
 const server = http.createServer(app);
 
@@ -37,7 +43,7 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
         console.log("Database Connection Successful.");
 
         server.listen(port);
-        console.log(`App is now active at https://localhost:${port}`);
+        console.log(`App is now active at http://localhost:${port}`);
 
     })
     .catch((err) => {

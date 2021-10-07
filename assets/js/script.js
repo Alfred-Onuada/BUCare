@@ -773,16 +773,21 @@ function updateProfile(userId, affectedField, fieldInstance) {
 function updatePhoto(userId, affectedField, fieldInstance) {
 
     let fileData = fieldInstance.files[0];
+    let displayPicture = document.querySelector('#displayPicture');
 
     var xhr = new XMLHttpRequest();
     xhr.open('PUT', '/updatePhoto', true);
     xhr.onreadystatechange = function () {
         if (this.readyState == 4) {
-
+            if (this.status == 200) {
+                displayPicture.src = this.responseText;
+            } else {
+                // handle error using the slide in idea from bottom
+            }
         }
     }
     let data = new FormData();
-    data.append('file', fileData);
+    data.append('displayPhoto', fileData);
     data.append('userId', userId);
     data.append('affectedField', affectedField);
     

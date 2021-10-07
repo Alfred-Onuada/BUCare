@@ -58,7 +58,7 @@ Author URL: http://w3layouts.com
 								<div class="slideInBody">
                                     <div id="profilePicture" class="profilePicture">
                                         <!-- this will actually first check if you have a dp -->
-                                        <img src="../defaults/<%= userStatus.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture">
+                                        <img src="../defaults/<%= userStatus.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture" id="displayPicture">
                                         <div class="changePhoto">
                                             <label for="changePhoto">
 
@@ -67,7 +67,7 @@ Author URL: http://w3layouts.com
                                             </label>
                                         </div>
                                     </div>
-                                    <input type="file" onchange="updatePhoto('<%= userStatus._id %>', 'Display_Picture', this)" name="changePhoto" id="changePhoto" class="hide" accept="image/*">
+                                    <input type="file" onchange="updatePhoto('<%= userStatus._id %>', 'Display_Picture', this)" name="displayPhoto" id="changePhoto" class="hide" accept="image/*">
 
                                     <% if (userStatus.isClient) { %>
 
