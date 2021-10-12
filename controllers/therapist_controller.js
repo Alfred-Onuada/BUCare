@@ -257,6 +257,7 @@ Router.get('/rooms', verify, (req, res) => {
                                 .then(client => {
                                     rooms[index].Username = client.Username;
                                     rooms[index].Sex = user.Sex;
+                                    rooms[index].Display_Picture = user.Display_Picture;
                                 })
                                 .catch(err => {
                                     if (err) console.log(err);

@@ -1,4 +1,6 @@
 const Users = require('./../../models/user');
+const Therapists = require('./../../models/therapist');
+const Clients = require('../../models/client');
 
 //  this module is a middle ware used to verify if a user is logged in
 const jwt = require('jsonwebtoken');
@@ -22,14 +24,28 @@ module.exports =  function(req, res, next) {
 
         // this appends the signed in user's identity
         Users.findOne({ _id: req.user._id })
-            .then(docs => {
+            .then(async docs => {
                 if (docs) {
 
                     // only one can be true, the rest will be false
                     req.user.isAdmin = docs.isAdmin;
                     req.user.isClient = docs.isClient;
                     req.user.isTherapist = docs.isTherapist;
-                    req.user.Sex = docs.Sex;                   
+                    req.user.Sex = docs.Sex;
+
+                    if (req.user.isTherapist) {
+                        await Therapists.findOne({ Email: docs.Email })
+                            .then(extradocs => {
+                                req.user.Display_Picture = extradocs.Display_Picture;
+                            })
+                            .catch(err => console.log(err));
+                    } else if (req.user.isClient) {
+                        await Clients.findOne({ Email: docs.Email })
+                            .then(extradocs => {
+                                req.user.Display_Picture = extradocs.Display_Picture;
+                            })
+                            .catch(err => console.log(err));
+                    }
 
                     next();
 

@@ -754,7 +754,7 @@ function updateProfile(userId, affectedField, fieldInstance) {
         if (this.readyState === 4) {
             
             // passed in newValue so as to enter Not Specified into the field if the user leaves it empty
-            endEdit(fieldInstance, newValue);
+            endEdit(fieldInstance, this.responseText);
 
             // add a small pop from below shwoing update suceess
         } 

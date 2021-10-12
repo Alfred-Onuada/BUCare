@@ -30,7 +30,7 @@ const therapistSchema = mongoose.Schema({
         required: true
     },
     'Display_Picture' : {
-        type: String
+        type: Buffer
     },
     'Unique_Code' : {
         type: String,

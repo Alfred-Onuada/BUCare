@@ -45,7 +45,7 @@ const clientSchema = mongoose.Schema({
         default: "active"
     },
     'Display_Picture': {
-        type: String
+        type: Buffer
     },
     'Unique_Code' : {
         type: String,

@@ -7,6 +7,7 @@ const app = express();
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const fs = require('fs')
+const fileUpload = require('express-fileupload');
 
 // when you start working with voip feature may only need it on development as heroku or the web server may already provide a secure connection
 // const https = require('https');
@@ -61,6 +62,9 @@ app.use(express.static('./assets',));
 
 // these enables me to parse JSON documents sent to the server
 app.use(express.json());
+
+// for parsing uploaded files
+app.use(fileUpload());
 
 // adding authetication middlewares
 const accountsManagementRoute = require('./controllers/auths/auth');

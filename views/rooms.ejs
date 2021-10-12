@@ -57,8 +57,11 @@ Author URL: http://w3layouts.com
 								<hr style="margin: 0px !important;">
 								<div class="slideInBody">
                                     <div id="profilePicture" class="profilePicture">
-                                        <!-- this will actually first check if you have a dp -->
-                                        <img src="../defaults/<%= userStatus.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture" id="displayPicture">
+                                        <% if (userStatus.Display_Picture != null) { %>
+                                            <img src="<%= userStatus.Display_Picture %>" alt="your profile picture" id="displayPicture">
+                                        <% } else { %>
+                                            <img src="../defaults/<%= userStatus.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture" id="displayPicture">
+                                        <% } %>
                                         <div class="changePhoto">
                                             <label for="changePhoto">
 
@@ -235,8 +238,11 @@ Author URL: http://w3layouts.com
 
                         <div class="searchandprofile">
                             <div onclick="showProfile()" class="profileIcon">
-                                <%= userStatus.sex %>
-                                <img class="profileIconImg" src="../defaults/<%= userStatus.Sex == 'Male' ? 'male' : 'female' %>.png" alt="">
+                                <% if (userStatus.Display_Picture != null) { %>
+                                    <img class="profileIconImg" src="<%= userStatus.Display_Picture %>" alt="your profile picture" id="displayPicture">
+                                <% } else { %>
+                                    <img class="profileIconImg" src="../defaults/<%= userStatus.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture" id="displayPicture">
+                                <% } %>
                             </div>
                             <div>
                                 <form class="form-inline">
@@ -252,8 +258,11 @@ Author URL: http://w3layouts.com
                                 <% chat = room.Chats %>
                                 <div class="eachContact" onclick="displayRoom('<%= room._id %>')">
                                     <div class="contactPicture">
-                                        <!-- check first if the person has a dp -->
-                                        <img src="../defaults/<%= room.Sex == 'Male' ? 'male' : 'female' %>.png" alt="">
+                                        <% if (room.Display_Picture != null) { %>
+                                            <img src="<%= room.Display_Picture %>" alt="your profile picture" id="displayPicture">
+                                        <% } else { %>
+                                            <img src="../defaults/<%= room.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture" id="displayPicture">
+                                        <% } %>
                                     </div>
                                     <div class="previousChat">
                                         <h4 class="contactName">
