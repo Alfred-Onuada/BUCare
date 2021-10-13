@@ -256,8 +256,8 @@ Router.get('/rooms', verify, (req, res) => {
                             await Clients.findOne({ Email: user.Email })
                                 .then(client => {
                                     rooms[index].Username = client.Username;
-                                    rooms[index].Sex = user.Sex;
-                                    rooms[index].Display_Picture = user.Display_Picture;
+                                    rooms[index].Sex = client.Sex;
+                                    rooms[index].Display_Picture = client.Display_Picture;
                                 })
                                 .catch(err => {
                                     if (err) console.log(err);

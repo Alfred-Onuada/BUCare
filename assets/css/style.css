@@ -488,3 +488,26 @@
     border-width: 2px;
     position: absolute;
 }
+
+.big-preloader{
+    height: 40px !important;
+    width: 40px !important;
+    border-width: 2px;
+    position: absolute;
+    color: white;
+}
+
+.toast4UpdateInfo{
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    place-items: end;
+    flex-direction: column;
+    position: absolute;
+    padding-right: 20px;
+    z-index: 1;
+}
+
+.myToast{
+    opacity: 1 !important;
+}

@@ -43,7 +43,7 @@ function updateProfile (req, res) {
                         Clients.findOneAndUpdate({ Email: userEmail}, {$set: (o = {}, o[data.affectedField] = data.newValue, o)})
                             .then(info => {
 
-                                res.status(200).send("Update Successful");
+                                res.status(200).send(data.newValue);
                             })
                             .catch(err => {
                                 if (err) console.log(err);
@@ -91,7 +91,7 @@ async function updatePhoto (req, res) {
     }
 
     let fileBufferData = Buffer.from(file.data, 'base64').toString('base64');
-    let dbReadyFile = "data:image/jpeg;charset=utf-8;base64," + fileBufferData;
+    let dbReadyFile = `data:${file.mimetype};charset=utf-8;base64,${fileBufferData}`;
 
     // i'm harnessing the function i had already written above
     req.body.newValue = dbReadyFile;

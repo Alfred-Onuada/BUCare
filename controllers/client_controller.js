@@ -256,8 +256,8 @@ Router.get('/rooms', verify, (req, res) => {
                             await Therapists.findOne({ Email: user.Email })
                                 .then(therapist => {
                                     rooms[index].Username = therapist.First_Name + ' ' + therapist.Last_Name;
-                                    rooms[index].Sex = user.Sex;
-                                    rooms[index].Display_Picture = user.Display_Picture;
+                                    rooms[index].Sex = therapist.Sex;
+                                    rooms[index].Display_Picture = therapist.Display_Picture;
 
                                 })
                                 .catch(err => {

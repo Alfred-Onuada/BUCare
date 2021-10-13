@@ -721,24 +721,104 @@ function beginEdit(self) {
     self.parentNode.children[2].classList.remove('hide');
 }
 
-function endEdit(self, val) {
-    // self holds an instance of the exact element that was clicked lol
-    
-    self.parentNode.children[0].contentEditable = 'false';
-    self.parentNode.children[1].classList.remove('hide');
-    self.parentNode.children[3].classList.add('hide');
+function endEdit(self, val=null) {
 
-    if (val === null) {
-        self.parentNode.children[0].textContent = "Not Specified";
-    } 
+    if (typeof self === 'object') {
+        // self holds an instance of the exact element that was clicked lol
+        
+        self.parentNode.children[0].contentEditable = 'false';
+        self.parentNode.children[1].classList.remove('hide');
+        self.parentNode.children[3].classList.add('hide');
+    
+        if (val === null) {
+            self.parentNode.children[0].textContent = "Not Specified";
+        } 
+    } else if (typeof self === 'string') {
+        let loader = document.getElementById(self);
+        loader.classList.add('hide');
+    }
 
 }
 
 function loading(self) {
-    // self holds an instance of the exact element that was clicked lol
+
+    if (typeof self === 'object') {
+
+        // self holds an instance of the exact element that was clicked lol
+
+        self.parentNode.children[2].classList.add('hide');
+        self.parentNode.children[3].classList.remove('hide');
+    } else if (typeof self === 'string') {
+        let loader = document.getElementById(self);
+        loader.classList.remove('hide');
+    }
+
+}
+
+function closeToastMsg(toast) {
     
-    self.parentNode.children[2].classList.add('hide');
-    self.parentNode.children[3].classList.remove('hide');
+    let toastContainer = document.getElementById('toastContainer');
+
+    toastContainer.removeChild(toast);
+
+}
+
+function featureNotAvailable() {
+    let toastContainer = document.getElementById('toastContainer');
+
+    let toast = document.createElement('div');
+    // add all the default attributes from bootstrap
+    toast.classList.add('myToast', 'toast');
+    toast.ariaRoleDescription = 'alert';
+    toast.ariaLive = 'assertive';
+    toast.ariaAtomic = true;
+    toast.innerHTML = `
+        <div class="toast-header">
+            <span class="fa fa-smile-o mr-2"></span>
+            <span class="mr-auto">BUCare</span>
+            <small>a few moments ago</small>
+            <button onclick="closeToastMsg(this.parentNode)" type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div id="serverMsg" class="toast-body">Sorry, this feature is currently not available, <br> we are working to get it out as soon as possible. thank you</div>
+    `;
+
+    toastContainer.appendChild(toast);
+
+    setTimeout(() => {
+        closeToastMsg(toast);
+    }, 5000);
+
+}
+
+function showToastMsg(msg) {
+    
+    let toastContainer = document.getElementById('toastContainer');
+
+    let toast = document.createElement('div');
+    // add all the default attributes from bootstrap
+    toast.classList.add('myToast', 'toast');
+    toast.ariaRoleDescription = 'alert';
+    toast.ariaLive = 'assertive';
+    toast.ariaAtomic = true;
+    toast.innerHTML = `
+        <div class="toast-header">
+            <span class="fa fa-smile-o mr-2"></span>
+            <span class="mr-4">BUCare</span>
+            <small>a few moments ago</small>
+            <button onclick="closeToastMsg(this.parentNode.parentNode)" type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div id="serverMsg" class="toast-body">${msg}</div>
+    `;
+
+    toastContainer.appendChild(toast);
+
+    setTimeout(() => {
+        closeToastMsg(toast);
+    }, 5000);
 
 }
 
@@ -752,12 +832,21 @@ function updateProfile(userId, affectedField, fieldInstance) {
     xhr.setRequestHeader('content-type', 'application/json');
     xhr.onreadystatechange = function () {
         if (this.readyState === 4) {
-            
-            // passed in newValue so as to enter Not Specified into the field if the user leaves it empty
-            endEdit(fieldInstance, this.responseText);
 
-            // add a small pop from below shwoing update suceess
-        } 
+            if (this.status == 200) {
+                // passed in newValue so as to enter Not Specified into the field if the user leaves it empty
+                endEdit(fieldInstance, this.responseText);
+
+                showToastMsg("Update was successful");
+
+            } else if (this.status === 500) {
+                showToastMsg("Oops! something went wrong");
+            } else if (this.status === 400) {
+                showToastMsg(this.responseText);
+            } else {
+                showToastMsg("Oops! something isn't right, try again later");
+            }
+        }
     }
     const data = {
         userId: userId,
@@ -774,16 +863,27 @@ function updatePhoto(userId, affectedField, fieldInstance) {
 
     let fileData = fieldInstance.files[0];
     let displayPicture = document.querySelector('#displayPicture');
+    let tinyDisplayPicture = document.querySelector('#tinyDisplayPicture');
 
     var xhr = new XMLHttpRequest();
     xhr.open('PUT', '/updatePhoto', true);
     xhr.onreadystatechange = function () {
-        if (this.readyState == 4) {
-            if (this.status == 200) {
+        if (this.readyState === 4) {
+            if (this.status === 200) {
                 displayPicture.src = this.responseText;
+                tinyDisplayPicture.src = this.responseText;
+
+                showToastMsg("Update was successful");
+
+            } else if (this.status === 500) {
+                showToastMsg("Oops! something went wrong");
+            } else if (this.status === 400) {
+                showToastMsg(this.responseText);
             } else {
-                // handle error using the slide in idea from bottom
+                showToastMsg("Oops! something isn't right, try again later");
             }
+
+            endEdit('dpPreloader');
         }
     }
     let data = new FormData();
@@ -792,5 +892,6 @@ function updatePhoto(userId, affectedField, fieldInstance) {
     data.append('affectedField', affectedField);
     
     xhr.send(data);
+    loading('dpPreloader');
 
 }

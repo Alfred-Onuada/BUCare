@@ -23,6 +23,8 @@ Author URL: http://w3layouts.com
 
     <%- include('./partials/header') %>
     
+    <div id="toastContainer" class="toast4UpdateInfo"></div>
+
     <!-- Modal -->
     <div class="modal fade" id="leaveChatModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="leaveChatModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -57,7 +59,7 @@ Author URL: http://w3layouts.com
 								<hr style="margin: 0px !important;">
 								<div class="slideInBody">
                                     <div id="profilePicture" class="profilePicture">
-                                        <% if (userStatus.Display_Picture != null) { %>
+                                        <% if (userStatus.Display_Picture != undefined) { %>
                                             <img src="<%= userStatus.Display_Picture %>" alt="your profile picture" id="displayPicture">
                                         <% } else { %>
                                             <img src="../defaults/<%= userStatus.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture" id="displayPicture">
@@ -69,6 +71,7 @@ Author URL: http://w3layouts.com
                                                 <h5 class="changePhotoText">Change Profile Photo</h5>
                                             </label>
                                         </div>
+                                        <div class="hide big-preloader spinner-border" role="status" id="dpPreloader"></div>
                                     </div>
                                     <input type="file" onchange="updatePhoto('<%= userStatus._id %>', 'Display_Picture', this)" name="displayPhoto" id="changePhoto" class="hide" accept="image/*">
 
@@ -238,10 +241,10 @@ Author URL: http://w3layouts.com
 
                         <div class="searchandprofile">
                             <div onclick="showProfile()" class="profileIcon">
-                                <% if (userStatus.Display_Picture != null) { %>
-                                    <img class="profileIconImg" src="<%= userStatus.Display_Picture %>" alt="your profile picture" id="displayPicture">
+                                <% if (userStatus.Display_Picture != undefined) { %>
+                                    <img class="profileIconImg" src="<%= userStatus.Display_Picture %>" alt="your profile picture" id="tinyDisplayPicture">
                                 <% } else { %>
-                                    <img class="profileIconImg" src="../defaults/<%= userStatus.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture" id="displayPicture">
+                                    <img class="profileIconImg" src="../defaults/<%= userStatus.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture" id="tinyDisplayPicture">
                                 <% } %>
                             </div>
                             <div>
@@ -258,10 +261,10 @@ Author URL: http://w3layouts.com
                                 <% chat = room.Chats %>
                                 <div class="eachContact" onclick="displayRoom('<%= room._id %>')">
                                     <div class="contactPicture">
-                                        <% if (room.Display_Picture != null) { %>
-                                            <img src="<%= room.Display_Picture %>" alt="your profile picture" id="displayPicture">
+                                        <% if (room.Display_Picture != undefined) { %>
+                                            <img src="<%= room.Display_Picture %>" alt="your profile picture">
                                         <% } else { %>
-                                            <img src="../defaults/<%= room.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture" id="displayPicture">
+                                            <img src="../defaults/<%= room.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture">
                                         <% } %>
                                     </div>
                                     <div class="previousChat">
@@ -300,20 +303,21 @@ Author URL: http://w3layouts.com
                                             <h4 id="statusIn-<%= room._id %>" class="status">Offline</h4>
                                         </div>
                                         <div class="videoandvoice">
-                                            <i class="bi bi-telephone videoandvoiceIcons"></i>
-                                            <i class="bi bi-camera-video videoandvoiceIcons"></i>
+                                            <i onclick="featureNotAvailable()" class="bi bi-telephone videoandvoiceIcons"></i>
+                                            <i onclick="featureNotAvailable()" class="bi bi-camera-video videoandvoiceIcons"></i>
 
                                             <div class="videoandvoiceIcons" style="display: relative;">
                                                 <i class="bi bi-three-dots-vertical" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"></i>
                                                 
                                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                                    <li><a class="dropdown-item" href="#">About <%= userStatus.isTherapist ? 'client' : 'therapist' %></a></li>
+                                                    <li><a class="dropdown-item" onclick="">About <%= userStatus.isTherapist ? 'client' : 'therapist' %></a></li>
                                                     <!--  this end session will only show on the therapist side of the code when he ends it the user is prompted to rate him/her and when starts it probably there should be a pop up in the client as well and the button will change dpending on whether it is started or hasnt started -->
                                                     <li><a class="dropdown-item" href="#">Start/End a session</a></li>
                                                     <li><a class="dropdown-item" href="#">Rate the therapist</a></li>
                                                     <li onclick="leaveChatModal('<%= room._id %>')" ><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#leaveChatModal">Leave chat</a></li>
                                                 </ul>
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
