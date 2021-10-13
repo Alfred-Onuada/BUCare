@@ -262,9 +262,9 @@ Author URL: http://w3layouts.com
                                 <div class="eachContact" onclick="displayRoom('<%= room._id %>')">
                                     <div class="contactPicture">
                                         <% if (room.Display_Picture != undefined) { %>
-                                            <img src="<%= room.Display_Picture %>" alt="your profile picture">
+                                            <img id="pic4<%= index %>" src="<%= room.Display_Picture %>" alt="your profile picture">
                                         <% } else { %>
-                                            <img src="../defaults/<%= room.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture">
+                                            <img id="pic4<%= index %>" src="../defaults/<%= room.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture">
                                         <% } %>
                                     </div>
                                     <div class="previousChat">
@@ -287,8 +287,9 @@ Author URL: http://w3layouts.com
                                 <hr style="margin: 5px 0px !important;">
                             <% } %>
                         </div>
+
                     </div>
-                    <div style="padding: 0px !important;" class="allRooms col-sm-8 col-md-8 col-lg-8 col-xl-8">
+                    <div id="chatBox" style="padding: 0px !important;" class="allRooms col-sm-8 col-md-8 col-lg-8 col-xl-8">
 
                         <% for( let index = 0; index < rooms_info.length; index++ ) { %>
                             <% room = rooms_info[index] %>
@@ -310,7 +311,7 @@ Author URL: http://w3layouts.com
                                                 <i class="bi bi-three-dots-vertical" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"></i>
                                                 
                                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                                    <li><a class="dropdown-item" onclick="">About <%= userStatus.isTherapist ? 'client' : 'therapist' %></a></li>
+                                                    <li><a class="dropdown-item" onclick="showExtraInfo('<%= userStatus.isClient ? room.TherapistId : room.ClientId %>', '<%= index %>')">About <%= userStatus.isTherapist ? 'client' : 'therapist' %></a></li>
                                                     <!--  this end session will only show on the therapist side of the code when he ends it the user is prompted to rate him/her and when starts it probably there should be a pop up in the client as well and the button will change dpending on whether it is started or hasnt started -->
                                                     <li><a class="dropdown-item" href="#">Start/End a session</a></li>
                                                     <li><a class="dropdown-item" href="#">Rate the therapist</a></li>
@@ -400,6 +401,9 @@ Author URL: http://w3layouts.com
                             </div>
 
                         <% } %>
+                    </div>
+                    <div id="contactAdditionalInfo" style="padding: 0px !important;" class="hide contactAdditionalInfo col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                        
                     </div>
                 </div>
             </div>

@@ -895,3 +895,116 @@ function updatePhoto(userId, affectedField, fieldInstance) {
     loading('dpPreloader');
 
 }
+
+function closeextrainfo() {
+    
+    let chatBox = document.getElementById('chatBox');
+    let infoPanel = document.getElementById('contactAdditionalInfo');
+
+    // creates space for it to appear
+    infoPanel.classList.add('hide');
+    chatBox.classList.remove('col-sm-5', 'col-md-5', 'col-lg-5', 'col-xl-5');
+    chatBox.classList.add('col-sm-8', 'col-md-8', 'col-lg-8', 'col-xl-8');
+
+    // clears it if there was something previously inside
+    infoPanel.innerHTML = '';
+
+}
+
+function showExtraInfo(userId, picId) {
+
+    let chatBox = document.getElementById('chatBox');
+    let infoPanel = document.getElementById('contactAdditionalInfo');
+
+    // if possible find a better fix to this
+    let profilePicFromContactList = document.getElementById('pic4'+picId) 
+
+    // creates space for it to appear
+    infoPanel.classList.remove('hide');
+    chatBox.classList.remove('col-sm-8', 'col-md-8', 'col-lg-8', 'col-xl-8');
+    chatBox.classList.add('col-sm-5', 'col-md-5', 'col-lg-5', 'col-xl-5');
+
+    // clears it if there was something previously inside
+    infoPanel.innerHTML = '';
+
+    infoPanel.innerHTML = `
+        <div class="center">
+            <div class="large-preloader spinner-border" role="status"></div>
+        </div>
+    `;
+
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', `getinfo/${userId}`, true);
+    xhr.onreadystatechange = function () {
+        if (this.readyState == 4) {
+            if (this.status == 200) {
+
+                let response = JSON.parse(this.responseText);
+
+                let data = `
+                    <div class="header4closeextra">
+                        <span onclick="closeextrainfo()">&times;</span>
+                    </div>
+                    <div style="transform: scale(1) !important;" class="profilePicture">
+                        <img src="${profilePicFromContactList.src}" alt="your profile picture" id="displayPicture">
+                    </div>
+                    <div class="profileDetails">
+                        <div class="eachDetail">
+                            <h4 class="detailName">First Name</h4>
+                            <div class="textEditArea">
+                                <div class="detailValue">
+                                    ${response.First_Name ? response.First_Name : 'Not Specified'}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="eachDetail">
+                            <h4 class="detailName">Last Name</h4>
+                            <div class="textEditArea">
+                                <div class="detailValue">
+                                    ${response.Last_Name ? response.Last_Name : 'Not Specified'}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="eachDetail">
+                            <h4 class="detailName">Email</h4>
+                            <div class="textEditArea">
+                                <div class="detailValue">
+                                    ${response.Email ? response.Email : 'Not Specified'}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="eachDetail">
+                            <h4 class="detailName">Telephone</h4>
+                            <div class="textEditArea">
+                                <div class="detailValue">
+                                    ${response.Telephone}
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="eachDetail">
+                            <h4 class="detailName">Sex</h4>
+                            <div class="textEditArea">
+                                <div class="detailValue">
+                                    ${response.Sex}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                `;
+
+                infoPanel.innerHTML = data;    
+
+            } else {
+                showToastMsg(this.responseText);
+            }
+        }
+    }
+    xhr.send();
+
+}

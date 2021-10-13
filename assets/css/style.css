@@ -98,6 +98,7 @@
     background-color: #f1f2f4;
     width: 100%;
     height: fit-content;
+    height: -moz-fit-content;
 }
 
 .rooms-inner {
@@ -106,8 +107,13 @@
     height: 610px;
 }
 
+.allRooms{
+    transition: width .5s;
+}
+
 .contacts {
     height: fit-content;
+    height: -moz-fit-content;
     min-height: 610px;
     width: 100%;
     border-right: 1px solid lavender;
@@ -194,6 +200,9 @@
 .videoandvoice {
     display: flex;
     place-items: center;
+    max-width: 25%;
+    width: 25%;
+    place-content: end;
 }
 
 .videoandvoiceIcons {
@@ -211,7 +220,7 @@
 }
 
 .nameandstatus {
-    width: 85%;
+    width: 75%;
 }
 
 .chatsFeed {
@@ -225,6 +234,7 @@
 
 .msgbox {
     height: fit-content;
+    height: -moz-fit-content;
     max-height: 60px;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -248,7 +258,9 @@
 
 .messageSection {
     height: fit-content;
+    height: -moz-fit-content;
     width: fit-content;
+    width: -moz-fit-content;
     background-color: white;
     padding: 5px 10px;
     border: 1px solid lavender;
@@ -258,7 +270,9 @@
 
 .messageSection2 {
     height: fit-content;
+    height: -moz-fit-content;
     width: fit-content;
+    width: -moz-fit-content;
     background-color: white;
     padding: 5px 10px;
     border: 1px solid lavender;
@@ -333,7 +347,9 @@
 
 .errorText{
     width: fit-content;
+    width: -moz-fit-content;
     height: fit-content;
+    height: -moz-fit-content;
 }
 
 .slideIn{
@@ -426,6 +442,7 @@
 .profileDetails{
     width: 100%;
     height: fit-content;
+    height: -moz-fit-content;
 }
 
 .eachDetail{
@@ -497,9 +514,19 @@
     color: white;
 }
 
+.large-preloader{
+    height: 70px !important;
+    width: 70px !important;
+    border-width: 10px;
+    border-style: dotted;
+    position: absolute;
+    color: #007bff;
+}
+
 .toast4UpdateInfo{
     width: 100%;
     height: fit-content;
+    height: -moz-fit-content;
     display: flex;
     place-items: end;
     flex-direction: column;
@@ -510,4 +537,33 @@
 
 .myToast{
     opacity: 1 !important;
+}
+
+.contactAdditionalInfo{
+    max-height: 100%;
+    overflow: auto;
+}
+
+.center{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    place-content: center;
+    place-items: center;
+}
+
+.header4closeextra{
+    height: 70px;
+    width: 100%;
+    background-color: whitesmoke;
+    text-align: right;
+}
+
+.header4closeextra > span{
+    font-size: 40px;
+    margin: 10px 20px;
+}
+
+.header4closeextra > span{
+    cursor: pointer;
 }

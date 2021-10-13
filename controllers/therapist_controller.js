@@ -349,6 +349,8 @@ const reportSchema = Joi.object({
 
 Router.post('/report', (req, res) => {
 
+    console.log(`Request made to : t${req.url}`);
+
     Clients.findOne({ Email: req.body.clientEmail })
         .then(async (docs) => {
 
@@ -391,6 +393,43 @@ Router.post('/report', (req, res) => {
         });
 
 });
+
+Router.get('/getinfo/:userId', (req, res) => {
+
+    console.log(`Request made to : t${req.url}`);
+
+    Users.findById(req.params.userId)
+        .then(docs => {
+            if (docs) {
+
+                Clients.findOne({ Email: docs.Email })
+                    .then(c_docs => {
+                        if (c_docs) {                            
+            
+                            // removes confidential info from the response
+                            c_docs = {
+                                First_Name: c_docs.First_Name,
+                                Last_Name: c_docs.Last_Name,
+                                Email: c_docs.Email,
+                                Telephone: c_docs.Telephone,
+                                Sex: c_docs.Sex,
+                            }
+            
+                            res.status(200).send(c_docs);
+                        } else {
+                            res.status(401).send("User not found");
+                        }
+                    })
+
+            } else {
+                res.status(401).send("User not found");
+            }
+        })
+        .catch(err => {
+            res.status(500).send("Sorry something went wrong");
+        }) 
+
+})
 
 // This makes sure all normal routes called from the client route c/ will redirect backwards
 Router.get('/', (req, res) => {

@@ -306,6 +306,42 @@ Router.get('/rooms', verify, (req, res) => {
     
 });
 
+Router.get('/getinfo/:userId', (req, res) => {
+
+    console.log(`Request made to : t${req.url}`);
+
+    Users.findById(req.params.userId)
+        .then(docs => {
+            if (docs) {
+
+                Therapists.findOne({  Email: docs.Email })
+                    .then(t_docs => {
+                        if (t_docs) {                            
+            
+                            // removes confidential info from the response
+                            t_docs = {
+                                First_Name: t_docs.First_Name,
+                                Last_Name: t_docs.Last_Name,
+                                Email: t_docs.Email,
+                                Telephone: t_docs.Telephone,
+                                Sex: t_docs.Sex,
+                            }
+            
+                            res.status(200).send(t_docs);
+                        } else {
+                            res.status(401).send("User not found");
+                        }
+                    })
+
+            } else {
+                res.status(401).send("User not found");
+            }
+        })
+        .catch(err => {
+            res.status(500).send("Sorry something went wrong");
+        }) 
+})
+
 // This makes sure all normal routes called from the client route c/ will redirect backwards
 Router.get('/', (req, res) => {
 
