@@ -1008,3 +1008,69 @@ function showExtraInfo(userId, picId) {
     xhr.send();
 
 }
+
+function ratingModalInfo(roomId) {
+    
+    let modalInfo = document.getElementById('ratingEquivalentText');
+    modalInfo.dataset.roomId = roomId;
+
+}
+
+function showRatingText(msg, starId) {
+    
+    let textBox = document.getElementById('ratingEquivalentText');
+    let stars = document.getElementById('stars').children;
+
+    textBox.textContent = msg;
+
+    // the length will only be 1 when the person has already given a rating and the stars removed
+    if (stars.length == 1) {
+        return;
+    }
+
+    for (let index = stars.length-1; index >= 0; index--) {
+        const element = stars[index];
+
+        if (index <= starId) {
+            element.classList.remove('bi-star');
+            element.classList.add('active-star', 'bi-star-fill');
+        } else {
+            element.classList.remove('active-star', 'bi-star-fill');
+            element.classList.add('bi-star');
+        }
+    }
+
+}
+
+function rate(rating) {
+    
+    let roomId = document.getElementById('ratingEquivalentText').dataset.roomId;
+    let starsContainer = document.getElementById('stars');
+    let textBox = document.getElementById('ratingEquivalentText');
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('PUT', 'ratetherapist', true);
+    xhr.setRequestHeader('content-type', 'application/json');
+    xhr.onreadystatechange = function () {
+        if (this.readyState === 4) {
+            if (this.status === 200) {
+                starsContainer.innerHTML = `
+                    <h5 class="ratingSuccess">Thank you for your feedback.</h5>
+                `;
+                textBox.innerHTML = '';
+            } else if (this.status === 429) {
+                showToastMsg('Sorry we are unable to process your request. you have to wait at least 1 hour before rating this therapist again');
+            } else if (this.status === 401) {
+                showToastMsg('Sorry we are unable to process your request as it may have been malformed');
+            } else {
+                showToastMsg('Sorry we are unable to process your request at this time');
+            }
+        }
+    }
+    const data = {
+        roomId: roomId,
+        rating: rating
+    }
+    xhr.send(JSON.stringify(data));
+
+}

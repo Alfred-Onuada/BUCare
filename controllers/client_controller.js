@@ -3,6 +3,7 @@ const Users = require('./../models/user');
 const Rooms = require('./../models/room');
 const Therapists = require('./../models/therapist');
 const Clients = require('./../models/client');
+const Ratings = require('./../models/rating');
 
 // Initialize Packages
 const Router = require('express').Router();
@@ -306,7 +307,7 @@ Router.get('/rooms', verify, (req, res) => {
     
 });
 
-Router.get('/getinfo/:userId', (req, res) => {
+Router.get('/getinfo/:userId', verify, (req, res) => {
 
     console.log(`Request made to : t${req.url}`);
 
@@ -340,6 +341,138 @@ Router.get('/getinfo/:userId', (req, res) => {
         .catch(err => {
             res.status(500).send("Sorry something went wrong");
         }) 
+})
+
+
+// Joi Schema for rating
+const ratingSchema = Joi.object({
+    ClientId: Joi.string().required(),
+    TherapistId: Joi.string().required(),
+    Rating: Joi.number().required() 
+});
+
+Router.put('/ratetherapist', verify, (req, res) => {
+    if (req.user.isClient) {
+
+        let data = req.body;
+
+        if (data.roomId === null || data.rating === null) {
+            return res.status(400).send();
+        }
+
+        let therapistId;
+        let clientId = req.user._id;
+        let previousAverageRating, previousRatingRespondent;
+
+        Rooms.findById(data.roomId)
+            .then(rooms => {
+
+                if (!rooms) {
+                    return res.status(400).send();
+                }
+
+                therapistId = rooms.TherapistId;
+
+                // the following line retrieves the modt recent document that meets the criteria
+                // sort({_id: -1}) means in descending order (-1), 1 means ascending order
+                // limit, limits the number of results
+                Ratings.find({ ClientId: req.user._id, TherapistId: therapistId }).sort({_id: -1}).limit(1)
+                    .then(async docs => {
+                        if (!docs) {
+                            return res.status(400).send();
+                        }
+
+                        // if there has been a record previously
+                        if (docs.length > 0) {
+                            
+                            let lastRatingTime = new Date(docs[0].createdAt).getTime();
+                            let now = Date.now();
+    
+                            let differnce = now - lastRatingTime;
+    
+                            let hourInMilliSeconds = 1000 * 60 * 60;
+                        
+                            if (differnce < hourInMilliSeconds) {
+                                return res.status(429).send();
+                            }
+                            
+                        }
+                        let therapistEmail; // used to work with the therapist model
+
+                        await Users.findById(therapistId)
+                            .then(docs => {
+                                therapistEmail = docs.Email;
+                            })
+                            .catch(err => {
+                                console.log(err);
+                                return res.status(500).send()
+                            })
+
+                        Therapists.findOne({ Email: therapistEmail })
+                            .then(therapists_docs => {
+                
+                                if (!therapists_docs) {
+                                    return res.status(400).send();
+                                }
+                
+                                previousAverageRating = therapists_docs.Average_Rating ? therapists_docs.Average_Rating : 0;
+                                previousRatingRespondent = therapists_docs.Rating_Respondents ? therapists_docs.Rating_Respondents : 0;
+                                
+                                let newRatingRespondents = previousRatingRespondent + 1;
+                                let newAverageRating = ((previousAverageRating * previousRatingRespondent) + data.rating) / newRatingRespondents;
+
+                                newAverageRating = newAverageRating.toFixed(2);
+                
+                                Therapists.findOneAndUpdate({ Email: therapistEmail }, { Rating_Respondents: newRatingRespondents, Average_Rating: newAverageRating })
+                                    .then(docs => {
+                
+                                        const ratingData = {
+                                            ClientId: clientId,
+                                            TherapistId: therapistId,
+                                            Rating: data.rating,
+                                        }
+                
+                                        let { errors } = ratingSchema.validateAsync(ratingData);
+                
+                                        if (errors) {
+                                            return res.status(400).send();
+                                        }
+                
+                                        Ratings(ratingData).save((err, docs) => {
+                                            if (err) {
+                                                return res.status(500).send();
+                                            } else {
+                                                return res.status(200).send();
+                                            }
+                                        })
+                
+                                    })
+                                    .catch(err => {
+                                        console.log(err);
+                                        return res.status(500).send();
+                                    })
+                
+                                // find the therapist id, then get his curent rating do the maths and then insert into the rating model and therapist model their 
+                                // respective data
+                
+                            })
+                            .catch(err => {
+                                console.log(err);
+                                return res.status(500).send();
+                            })
+
+                    })
+                
+            })
+            .catch(err => {
+                console.log(err);
+                return res.status(500).send();
+            })
+
+        
+    } else {
+        return res.status(401).send();
+    }
 })
 
 // This makes sure all normal routes called from the client route c/ will redirect backwards

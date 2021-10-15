@@ -32,6 +32,12 @@ const therapistSchema = mongoose.Schema({
     'Display_Picture' : {
         type: Buffer
     },
+    'Average_Rating' : {
+        type: Number
+    },
+    'Rating_Respondents' : {
+        type: Number
+    },
     'Unique_Code' : {
         type: String,
         required: true

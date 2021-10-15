@@ -567,3 +567,24 @@
 .header4closeextra > span{
     cursor: pointer;
 }
+
+.ratingHeader{
+    font-weight: normal;
+    font-size: 19px;
+    margin: 0px 0px 20px 0px;
+}
+
+.stars > i{
+    font-size: 25px;
+    padding: 0px 5px;
+}
+
+.active-star{
+    color: gold;
+}
+
+#ratingEquivalentText{
+    margin: 15px 0px 0px 0px;
+    font-weight: normal;
+    font-size: 15px;
+}

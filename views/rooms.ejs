@@ -28,431 +28,463 @@ Author URL: http://w3layouts.com
     <!-- Modal -->
     <div class="modal fade" id="leaveChatModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="leaveChatModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="leaveChatModalLabel">Confirmation Dialog</h5>
-            </div>
-            <div class="modal-body">
-                <center>
-                    <h3>Are you sure?</h3>
-                </center>
-            </div>
-            <div class="modal-footer">
-                <button id="leaveChatCloseBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button onclick="leaveChat()" id="leaveChatBtn" type="button" class="btn btn-primary">Yes, I'm</button>
-            </div>
-        </div>
-        </div>
-    </div>
-
-        <div class="rooms-container">
-            <div style="padding: 10px 20px !important;" class="container-fluid">
-                <div class="row rooms-inner">
-                    <div style="padding: 0px !important;" class="contacts col-sm-4 col-md-4 col-lg-4 col-xl-4">
-
-                        <div id="myProfile" class="div slideIn">
-							<div id="slideInContent" class="slideInContent hide">
-								<div class="slideInheading">
-									<h4>Profile</h4>
-									<span onclick="closeProfile()" class="closeSlideIn">&times;</span>
-								</div>
-								<hr style="margin: 0px !important;">
-								<div class="slideInBody">
-                                    <div id="profilePicture" class="profilePicture">
-                                        <% if (userStatus.Display_Picture != undefined) { %>
-                                            <img src="<%= userStatus.Display_Picture %>" alt="your profile picture" id="displayPicture">
-                                        <% } else { %>
-                                            <img src="../defaults/<%= userStatus.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture" id="displayPicture">
-                                        <% } %>
-                                        <div class="changePhoto">
-                                            <label for="changePhoto">
-
-                                                <i class="bi bi-camera-fill"></i>
-                                                <h5 class="changePhotoText">Change Profile Photo</h5>
-                                            </label>
-                                        </div>
-                                        <div class="hide big-preloader spinner-border" role="status" id="dpPreloader"></div>
-                                    </div>
-                                    <input type="file" onchange="updatePhoto('<%= userStatus._id %>', 'Display_Picture', this)" name="displayPhoto" id="changePhoto" class="hide" accept="image/*">
-
-                                    <% if (userStatus.isClient) { %>
-
-                                        <div class="profileDetails">
-                                            <div class="eachDetail">
-                                                <h4 class="detailName">First Name</h4>
-                                                <div class="textEditArea">
-                                                    <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
-                                                        <%= userStatus.details.First_Name != null ? userStatus.details.First_Name : 'Not Specified' %>
-                                                    </div>
-                                                    <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
-                                                    <i onclick="updateProfile('<%= userStatus._id %>', 'First_Name', this)" class="saveEdit hide bi bi-check2"></i>
-                                                    <div class="hide preloader spinner-border" role="status"></div>
-                                                </div>
-                                            </div>
-    
-                                            <div class="eachDetail">
-                                                <h4 class="detailName">Last Name</h4>
-                                                <div class="textEditArea">
-                                                    <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
-                                                        <%= userStatus.details.Last_Name != null ? userStatus.details.Last_Name : 'Not Specified'  %> 
-                                                    </div>
-                                                    <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
-                                                    <i onclick="updateProfile('<%= userStatus._id %>', 'Last_Name', this)" class="saveEdit hide bi bi-check2"></i>
-                                                    <div class="hide preloader spinner-border" role="status"></div>
-                                                </div>
-                                            </div>
-    
-                                            <div class="eachDetail">
-                                                <h4 class="detailName">Username</h4>
-                                                <div class="textEditArea">
-                                                    <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
-                                                        <%= userStatus.details.Username != null ? userStatus.details.Username : 'Not Specified'  %>
-                                                    </div>
-                                                    <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
-                                                    <i onclick="updateProfile('<%= userStatus._id %>', 'Username', this)" class="saveEdit hide bi bi-check2"></i>
-                                                    <div class="hide preloader spinner-border" role="status"></div>
-                                                </div>
-                                            </div>
-    
-                                            <div class="eachDetail">
-                                                <h4 class="detailName">Email</h4>
-                                                <div class="textEditArea">
-                                                    <div class="detailValue">
-                                                        <%= userStatus.details.Email %>
-                                                    </div>
-                                                </div>
-                                            </div>
-    
-                                            <div class="eachDetail">
-                                                <h4 class="detailName">Telephone</h4>
-                                                <div class="textEditArea">
-                                                    <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
-                                                        <%= userStatus.details.Telephone != null ? userStatus.details.Telephone : 'Not Specified' %>
-                                                    </div>
-                                                    <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
-                                                    <i onclick="updateProfile('<%= userStatus._id %>', 'Telephone', this)" class="saveEdit hide bi bi-check2"></i>
-                                                    <div class="hide preloader spinner-border" role="status"></div>
-                                                </div>
-                                            </div>
-    
-                                            <div class="eachDetail">
-                                                <h4 class="detailName">Date Of Birth - DD-MM-YY</h4>
-                                                <div class="textEditArea">
-                                                    <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
-                                                        <%= userStatus.details.Date_of_Birth != null ? userStatus.details.Date_of_Birth : 'Not Specified' %>
-                                                    </div>
-                                                    <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
-                                                    <i onclick="updateProfile('<%= userStatus._id %>', 'Date_of_Birth', this)" class="saveEdit hide bi bi-check2"></i>
-                                                    <div class="hide preloader spinner-border" role="status"></div>
-                                                </div>
-                                            </div>
-    
-                                            <div class="eachDetail">
-                                                <h4 class="detailName">Age</h4>
-                                                <div class="textEditArea">
-                                                    <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
-                                                        <%= userStatus.details.Age != null ? userStatus.details.Age : 'Not Specified' %>
-                                                    </div>
-                                                    <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
-                                                    <i onclick="updateProfile('<%= userStatus._id %>', 'Age', this)" class="saveEdit hide bi bi-check2"></i>
-                                                    <div class="hide preloader spinner-border" role="status"></div>
-                                                </div>
-                                            </div>
-    
-                                            <div class="eachDetail">
-                                                <h4 class="detailName">Sex - Male or Female</h4>
-                                                <div class="textEditArea">
-                                                    <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
-                                                        <%= userStatus.details.Sex != null ? userStatus.details.Sex : 'Not Specified'  %>
-                                                    </div>
-                                                    <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
-                                                    <i onclick="updateProfile('<%= userStatus._id %>', 'Sex', this)" class="saveEdit hide bi bi-check2"></i>
-                                                    <div class="hide preloader spinner-border" role="status"></div>
-                                                </div>
-                                            </div>
-    
-                                            <!-- this will open up a new page for password rest not a modal -->
-                                            <div class="eachDetail">
-                                                <h4 class="resetPassword">Reset your password</h4>
-                                            </div>
-    
-                                        </div>
-                                     
-                                    <% } else if (userStatus.isTherapist) { %>
-
-                                        <div class="profileDetails">
-                                            <div class="eachDetail">
-                                                <h4 class="detailName">First Name</h4>
-                                                <div class="textEditArea">
-                                                    <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
-                                                        <%= userStatus.details.First_Name != null ? userStatus.details.First_Name : 'Not Specified'  %>
-                                                    </div>
-                                                    <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
-                                                    <i onclick="updateProfile('<%= userStatus._id %>', 'First_Name', this)" class="saveEdit hide bi bi-check2"></i>
-                                                    <div class="hide preloader spinner-border" role="status"></div>
-                                                </div>
-                                            </div>
-    
-                                            <div class="eachDetail">
-                                                <h4 class="detailName">Last Name</h4>
-                                                <div class="textEditArea">
-                                                    <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
-                                                        <%= userStatus.details.Last_Name != null ? userStatus.details.Last_Name : 'Not Specified'  %>
-                                                    </div>
-                                                    <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
-                                                    <i onclick="updateProfile('<%= userStatus._id %>', 'Last_Name', this)" class="saveEdit hide bi bi-check2"></i>
-                                                    <div class="hide preloader spinner-border" role="status"></div>
-                                                </div>
-                                            </div>
-    
-                                            <div class="eachDetail">
-                                                <h4 class="detailName">Email</h4>
-                                                <div class="textEditArea">
-                                                    <div class="detailValue">
-                                                        <%= userStatus.details.Email %>
-                                                    </div>
-                                                </div>
-                                            </div>
-    
-                                            <div class="eachDetail">
-                                                <h4 class="detailName">Telephone</h4>
-                                                <div class="textEditArea">
-                                                    <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
-                                                        <%= userStatus.details.Telephone != null ? userStatus.details.Telephone : 'Not Specified'  %>
-                                                    </div>
-                                                    <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
-                                                    <i onclick="updateProfile('<%= userStatus._id %>', 'Telephone', this)" class="saveEdit hide bi bi-check2"></i>
-                                                    <div class="hide preloader spinner-border" role="status"></div>
-                                                </div>
-                                            </div>
-    
-                                            <!-- this will open up a new page for password reset not a modal -->
-                                            <div class="eachDetail">
-                                                <h4 class="resetPassword">Reset your password</h4>
-                                            </div>
-    
-                                        </div>
-                                        
-                                    <% } %>
-
-								</div>
-							</div>
-						</div>
-
-                        <div class="searchandprofile">
-                            <div onclick="showProfile()" class="profileIcon">
-                                <% if (userStatus.Display_Picture != undefined) { %>
-                                    <img class="profileIconImg" src="<%= userStatus.Display_Picture %>" alt="your profile picture" id="tinyDisplayPicture">
-                                <% } else { %>
-                                    <img class="profileIconImg" src="../defaults/<%= userStatus.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture" id="tinyDisplayPicture">
-                                <% } %>
-                            </div>
-                            <div>
-                                <form class="form-inline">
-                                    <input class="searchBox form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                                </form>
-                            </div>
-                        </div>
-                        <hr style="margin-top: 0px !important;">
-                        <div class="contacts-list">
-
-                            <% for( let index = 0; index < rooms_info.length; index++ ) { %>
-                                <% room = rooms_info[index] %>
-                                <% chat = room.Chats %>
-                                <div class="eachContact" onclick="displayRoom('<%= room._id %>')">
-                                    <div class="contactPicture">
-                                        <% if (room.Display_Picture != undefined) { %>
-                                            <img id="pic4<%= index %>" src="<%= room.Display_Picture %>" alt="your profile picture">
-                                        <% } else { %>
-                                            <img id="pic4<%= index %>" src="../defaults/<%= room.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture">
-                                        <% } %>
-                                    </div>
-                                    <div class="previousChat">
-                                        <h4 class="contactName">
-                                            <%= room.Username %>
-                                        </h4>
-                                        <div class="recent">
-                                            <h4 id="recentChats-<%= room._id %>" class="recentChat">
-                                                <% if (chat.length > 0) { %>
-                                                    <%= chat[chat.length-1].Message %>
-                                                <% } else { %>
-                                                    <i>tap to begin a conversation</i>
-                                                <% } %>
-                                            </h4>
-                                            <!-- This index refers to the very last chat -->
-                                            <div id="dot4-<%= room._id %>" class="hide notifcation-dot"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr style="margin: 5px 0px !important;">
-                            <% } %>
-                        </div>
-
-                    </div>
-                    <div id="chatBox" style="padding: 0px !important;" class="allRooms col-sm-8 col-md-8 col-lg-8 col-xl-8">
-
-                        <% for( let index = 0; index < rooms_info.length; index++ ) { %>
-                            <% room = rooms_info[index] %>
-
-                            <div id="room-<%= room._id %>" class="chats <%= index == 0 ? '' : 'hide' %>">
-                                <div class="contactInfo">
-                                    <div class="row">
-                                        <div class="nameandstatus">
-                                            <h4 class="contactNameInner">
-                                                <%= room.Username %>
-                                            </h4>
-                                            <h4 id="statusIn-<%= room._id %>" class="status">Offline</h4>
-                                        </div>
-                                        <div class="videoandvoice">
-                                            <i onclick="featureNotAvailable()" class="bi bi-telephone videoandvoiceIcons"></i>
-                                            <i onclick="featureNotAvailable()" class="bi bi-camera-video videoandvoiceIcons"></i>
-
-                                            <div class="videoandvoiceIcons" style="display: relative;">
-                                                <i class="bi bi-three-dots-vertical" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"></i>
-                                                
-                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                                    <li><a class="dropdown-item" onclick="showExtraInfo('<%= userStatus.isClient ? room.TherapistId : room.ClientId %>', '<%= index %>')">About <%= userStatus.isTherapist ? 'client' : 'therapist' %></a></li>
-                                                    <!--  this end session will only show on the therapist side of the code when he ends it the user is prompted to rate him/her and when starts it probably there should be a pop up in the client as well and the button will change dpending on whether it is started or hasnt started -->
-                                                    <li><a class="dropdown-item" href="#">Start/End a session</a></li>
-                                                    <li><a class="dropdown-item" href="#">Rate the therapist</a></li>
-                                                    <li onclick="leaveChatModal('<%= room._id %>')" ><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#leaveChatModal">Leave chat</a></li>
-                                                </ul>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="msgSection">
-                                    <div id="chatsIn-<%= room._id %>" class="chatsFeed">
-
-                                        <% for( let index = 0; index < room.Chats.length; index++ ) { %>
-                                        <% 
-                                            chat = room.Chats[index];
-                                            var hour = new Date(chat.createdAt).getHours(); 
-                                            var min = new Date(chat.createdAt).getMinutes();
-                                            var timeOfDay = hour <= 11 ? 'am' : 'pm';
-                                            hour = hour % 12;
-                                            // append additional zero when needed
-                                            hour = hour < 10 ? '0' + hour : hour;
-                                            min = min < 10 ? '0' + min : min;
-
-                                            var date = hour + ':' + min + ' ' + timeOfDay;
-                                        %>
-                                        <% if (chat.SpokesPerson === user) { %>
-                                            <!-- user is passed from the server -->
-
-                                            <div class="outgoing">
-                                                <div class="messageSection2">
-                                                    <h4 class="actualMsg">
-                                                        <%= chat.Message %>
-                                                    </h4>
-                                                    <div class="dateandseen">
-                                                        <h4 class="msgDate">
-                                                            <%= date %>
-                                                        </h4>
-                                                        <% if (chat.Status === 'sent') { %>
-                                                        <i class="outgoingIn<%= room._id %> seenicon bi bi-check2"></i>
-                                                        <% } else if (chat.Status === 'delivered') { %>
-                                                        <i class="outgoingIn<%= room._id %> seenicon bi bi-check2-all"></i>
-                                                        <% } else { %>
-                                                        <i class="outgoingIn<%= room._id %> seenicon bi bi-check2-all seen"></i>
-                                                        <% } %>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        <% } else { %>
-
-                                            <div class="incoming">
-                                                <div class="messageSection">
-                                                    <h4 class="actualMsg">
-                                                        <%= chat.Message %>
-                                                    </h4>
-                                                    <h4 class="msgDate">
-                                                        <%= date %>
-                                                    </h4>
-                                                </div>
-                                            </div>
-
-                                            <% } %>
-
-                                        <% } %>
-                                    </div>
-
-                                    <!-- This checks if a user has left a conversation, the room.status holds either true or false -->
-                                    <div id="sndMsg-<%= room._id %>">
-                                        <% if (room.Status) { %> 
-                                                <div class="input-group mb-3">
-                                                    <div onkeydown="modHeight('<%= room._id %>')" id="msgIn-<%= room._id %>" role="textbox" contenteditable="true" dir="ltr" class="form-control msgbox" aria-multiline="true" aria-required="true" placeholder="Recipient's username" aria-label="Recipient's username"
-                                                        aria-describedby="basic-addon2"></div>
-                                                    <div class="input-group-append">
-                                                        <button name="<%= room._id %>, <%= user %>" class="msgbtn input-group-text" id="basic-addon2">send</button>
-                                                    </div>
-                                                </div>
-                                        <% } else { %>
-                                            <center>
-                                                <div class="inactive-room">
-                                                    <h4 class="inactive-room-text">sorry, your no longer a participant in this room</h4>
-                                                </div>
-                                            </center>
-                                        <% } %>
-                                    </div>
-                                </div>
-                            </div>
-
-                        <% } %>
-                    </div>
-                    <div id="contactAdditionalInfo" style="padding: 0px !important;" class="hide contactAdditionalInfo col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                        
-                    </div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="leaveChatModalLabel">Confirmation Dialog</h5>
+                </div>
+                <div class="modal-body">
+                    <center>
+                        <h3>Are you sure?</h3>
+                    </center>
+                </div>
+                <div class="modal-footer">
+                    <button id="leaveChatCloseBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button onclick="leaveChat()" id="leaveChatBtn" type="button" class="btn btn-primary">Yes, I'm</button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- This script hides the topHeader for only this page -->
-        <script>
-            document.querySelector('#topHeader').classList.add('hide');
-        </script>
+    <!-- Modal 4 Rating Therapist -->
+    <div class="modal fade" id="ratingModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="ratingModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ratingModalLabel">Leave a feedback</h5>
+                </div>
+                <div class="modal-body">
+                    <center>
+                        <h5 class="ratingHeader">How likely are you to continue with this therapist?</h5>
+                        <div onmouseleave="showRatingText('', -1)" class="stars" id="stars">
+                            <i onclick="rate(1)" onmouseover="showRatingText('😒nah! I\'ll pass', 0)" class="bi bi-star"></i>
+                            <i onclick="rate(2)" onmouseover="showRatingText('I may consider it', 1)" class="bi bi-star"></i>
+                            <i onclick="rate(3)" onmouseover="showRatingText('There is a possibility', 2)" class="bi bi-star"></i>
+                            <i onclick="rate(4)" onmouseover="showRatingText('I will continue', 3)" class="bi bi-star"></i>
+                            <i onclick="rate(5)" onmouseover="showRatingText('I will definetly continue🤩🤩', 4)" class="bi bi-star"></i>
+                        </div>
+                        <h5 id="ratingEquivalentText"></h5>
+                    </center>
+                </div>
+                <div class="modal-footer">
+                    <button id="leaveChatCloseBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <!-- //copyright -->
-        <!-- Template JavaScript -->
-        <script src="../js/template_scripts/jquery-3.3.1.min.js"></script>
-        <script src="../js/template_scripts/theme-change.js"></script>
-        <!--/MENU-JS-->
-        <script>
-            $(window).on("scroll", function() {
-                var scroll = $(window).scrollTop();
+    <div class="rooms-container">
+        <div style="padding: 10px 20px !important;" class="container-fluid">
+            <div class="row rooms-inner">
+                <div style="padding: 0px !important;" class="contacts col-sm-4 col-md-4 col-lg-4 col-xl-4">
 
-                if (scroll >= 80) {
-                    $("#site-header").addClass("nav-fixed");
-                } else {
-                    $("#site-header").removeClass("nav-fixed");
-                }
-            });
+                    <div id="myProfile" class="div slideIn">
+                        <div id="slideInContent" class="slideInContent hide">
+                            <div class="slideInheading">
+                                <h4>Profile</h4>
+                                <span onclick="closeProfile()" class="closeSlideIn">&times;</span>
+                            </div>
+                            <hr style="margin: 0px !important;">
+                            <div class="slideInBody">
+                                <div id="profilePicture" class="profilePicture">
+                                    <% if (userStatus.Display_Picture != undefined) { %>
+                                        <img src="<%= userStatus.Display_Picture %>" alt="your profile picture" id="displayPicture">
+                                    <% } else { %>
+                                        <img src="../defaults/<%= userStatus.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture" id="displayPicture">
+                                    <% } %>
+                                    <div class="changePhoto">
+                                        <label for="changePhoto">
 
-            //Main navigation Active Class Add Remove
-            $(".navbar-toggler").on("click", function() {
-                $("header").toggleClass("active");
-            });
-            $(document).on("ready", function() {
+                                            <i class="bi bi-camera-fill"></i>
+                                            <h5 class="changePhotoText">Change Profile Photo</h5>
+                                        </label>
+                                    </div>
+                                    <div class="hide big-preloader spinner-border" role="status" id="dpPreloader"></div>
+                                </div>
+                                <input type="file" onchange="updatePhoto('<%= userStatus._id %>', 'Display_Picture', this)" name="displayPhoto" id="changePhoto" class="hide" accept="image/*">
+
+                                <% if (userStatus.isClient) { %>
+
+                                    <div class="profileDetails">
+                                        <div class="eachDetail">
+                                            <h4 class="detailName">First Name</h4>
+                                            <div class="textEditArea">
+                                                <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
+                                                    <%= userStatus.details.First_Name != null ? userStatus.details.First_Name : 'Not Specified' %>
+                                                </div>
+                                                <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
+                                                <i onclick="updateProfile('<%= userStatus._id %>', 'First_Name', this)" class="saveEdit hide bi bi-check2"></i>
+                                                <div class="hide preloader spinner-border" role="status"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="eachDetail">
+                                            <h4 class="detailName">Last Name</h4>
+                                            <div class="textEditArea">
+                                                <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
+                                                    <%= userStatus.details.Last_Name != null ? userStatus.details.Last_Name : 'Not Specified'  %> 
+                                                </div>
+                                                <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
+                                                <i onclick="updateProfile('<%= userStatus._id %>', 'Last_Name', this)" class="saveEdit hide bi bi-check2"></i>
+                                                <div class="hide preloader spinner-border" role="status"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="eachDetail">
+                                            <h4 class="detailName">Username</h4>
+                                            <div class="textEditArea">
+                                                <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
+                                                    <%= userStatus.details.Username != null ? userStatus.details.Username : 'Not Specified'  %>
+                                                </div>
+                                                <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
+                                                <i onclick="updateProfile('<%= userStatus._id %>', 'Username', this)" class="saveEdit hide bi bi-check2"></i>
+                                                <div class="hide preloader spinner-border" role="status"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="eachDetail">
+                                            <h4 class="detailName">Email</h4>
+                                            <div class="textEditArea">
+                                                <div class="detailValue">
+                                                    <%= userStatus.details.Email %>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="eachDetail">
+                                            <h4 class="detailName">Telephone</h4>
+                                            <div class="textEditArea">
+                                                <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
+                                                    <%= userStatus.details.Telephone != null ? userStatus.details.Telephone : 'Not Specified' %>
+                                                </div>
+                                                <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
+                                                <i onclick="updateProfile('<%= userStatus._id %>', 'Telephone', this)" class="saveEdit hide bi bi-check2"></i>
+                                                <div class="hide preloader spinner-border" role="status"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="eachDetail">
+                                            <h4 class="detailName">Date Of Birth - DD-MM-YY</h4>
+                                            <div class="textEditArea">
+                                                <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
+                                                    <%= userStatus.details.Date_of_Birth != null ? userStatus.details.Date_of_Birth : 'Not Specified' %>
+                                                </div>
+                                                <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
+                                                <i onclick="updateProfile('<%= userStatus._id %>', 'Date_of_Birth', this)" class="saveEdit hide bi bi-check2"></i>
+                                                <div class="hide preloader spinner-border" role="status"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="eachDetail">
+                                            <h4 class="detailName">Age</h4>
+                                            <div class="textEditArea">
+                                                <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
+                                                    <%= userStatus.details.Age != null ? userStatus.details.Age : 'Not Specified' %>
+                                                </div>
+                                                <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
+                                                <i onclick="updateProfile('<%= userStatus._id %>', 'Age', this)" class="saveEdit hide bi bi-check2"></i>
+                                                <div class="hide preloader spinner-border" role="status"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="eachDetail">
+                                            <h4 class="detailName">Sex - Male or Female</h4>
+                                            <div class="textEditArea">
+                                                <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
+                                                    <%= userStatus.details.Sex != null ? userStatus.details.Sex : 'Not Specified'  %>
+                                                </div>
+                                                <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
+                                                <i onclick="updateProfile('<%= userStatus._id %>', 'Sex', this)" class="saveEdit hide bi bi-check2"></i>
+                                                <div class="hide preloader spinner-border" role="status"></div>
+                                            </div>
+                                        </div>
+
+                                        <!-- this will open up a new page for password rest not a modal -->
+                                        <div class="eachDetail">
+                                            <h4 class="resetPassword">Reset your password</h4>
+                                        </div>
+
+                                    </div>
+                                    
+                                <% } else if (userStatus.isTherapist) { %>
+
+                                    <div class="profileDetails">
+                                        <div class="eachDetail">
+                                            <h4 class="detailName">First Name</h4>
+                                            <div class="textEditArea">
+                                                <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
+                                                    <%= userStatus.details.First_Name != null ? userStatus.details.First_Name : 'Not Specified'  %>
+                                                </div>
+                                                <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
+                                                <i onclick="updateProfile('<%= userStatus._id %>', 'First_Name', this)" class="saveEdit hide bi bi-check2"></i>
+                                                <div class="hide preloader spinner-border" role="status"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="eachDetail">
+                                            <h4 class="detailName">Last Name</h4>
+                                            <div class="textEditArea">
+                                                <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
+                                                    <%= userStatus.details.Last_Name != null ? userStatus.details.Last_Name : 'Not Specified'  %>
+                                                </div>
+                                                <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
+                                                <i onclick="updateProfile('<%= userStatus._id %>', 'Last_Name', this)" class="saveEdit hide bi bi-check2"></i>
+                                                <div class="hide preloader spinner-border" role="status"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="eachDetail">
+                                            <h4 class="detailName">Email</h4>
+                                            <div class="textEditArea">
+                                                <div class="detailValue">
+                                                    <%= userStatus.details.Email %>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="eachDetail">
+                                            <h4 class="detailName">Telephone</h4>
+                                            <div class="textEditArea">
+                                                <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
+                                                    <%= userStatus.details.Telephone != null ? userStatus.details.Telephone : 'Not Specified'  %>
+                                                </div>
+                                                <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
+                                                <i onclick="updateProfile('<%= userStatus._id %>', 'Telephone', this)" class="saveEdit hide bi bi-check2"></i>
+                                                <div class="hide preloader spinner-border" role="status"></div>
+                                            </div>
+                                        </div>
+
+                                        <!-- this will open up a new page for password reset not a modal -->
+                                        <div class="eachDetail">
+                                            <h4 class="resetPassword">Reset your password</h4>
+                                        </div>
+
+                                    </div>
+                                    
+                                <% } %>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="searchandprofile">
+                        <div onclick="showProfile()" class="profileIcon">
+                            <% if (userStatus.Display_Picture != undefined) { %>
+                                <img class="profileIconImg" src="<%= userStatus.Display_Picture %>" alt="your profile picture" id="tinyDisplayPicture">
+                            <% } else { %>
+                                <img class="profileIconImg" src="../defaults/<%= userStatus.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture" id="tinyDisplayPicture">
+                            <% } %>
+                        </div>
+                        <div>
+                            <form class="form-inline">
+                                <input class="searchBox form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                            </form>
+                        </div>
+                    </div>
+                    <hr style="margin-top: 0px !important;">
+                    <div class="contacts-list">
+
+                        <% for( let index = 0; index < rooms_info.length; index++ ) { %>
+                            <% room = rooms_info[index] %>
+                            <% chat = room.Chats %>
+                            <div class="eachContact" onclick="displayRoom('<%= room._id %>')">
+                                <div class="contactPicture">
+                                    <% if (room.Display_Picture != undefined) { %>
+                                        <img id="pic4<%= index %>" src="<%= room.Display_Picture %>" alt="your profile picture">
+                                    <% } else { %>
+                                        <img id="pic4<%= index %>" src="../defaults/<%= room.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture">
+                                    <% } %>
+                                </div>
+                                <div class="previousChat">
+                                    <h4 class="contactName">
+                                        <%= room.Username %>
+                                    </h4>
+                                    <div class="recent">
+                                        <h4 id="recentChats-<%= room._id %>" class="recentChat">
+                                            <% if (chat.length > 0) { %>
+                                                <%= chat[chat.length-1].Message %>
+                                            <% } else { %>
+                                                <i>tap to begin a conversation</i>
+                                            <% } %>
+                                        </h4>
+                                        <!-- This index refers to the very last chat -->
+                                        <div id="dot4-<%= room._id %>" class="hide notifcation-dot"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr style="margin: 5px 0px !important;">
+                        <% } %>
+                    </div>
+
+                </div>
+                <div id="chatBox" style="padding: 0px !important;" class="allRooms col-sm-8 col-md-8 col-lg-8 col-xl-8">
+
+                    <% for( let index = 0; index < rooms_info.length; index++ ) { %>
+                        <% room = rooms_info[index] %>
+
+                        <div id="room-<%= room._id %>" class="chats <%= index == 0 ? '' : 'hide' %>">
+                            <div class="contactInfo">
+                                <div class="row">
+                                    <div class="nameandstatus">
+                                        <h4 class="contactNameInner">
+                                            <%= room.Username %>
+                                        </h4>
+                                        <h4 id="statusIn-<%= room._id %>" class="status">Offline</h4>
+                                    </div>
+                                    <div class="videoandvoice">
+                                        <i onclick="featureNotAvailable()" class="bi bi-telephone videoandvoiceIcons"></i>
+                                        <i onclick="featureNotAvailable()" class="bi bi-camera-video videoandvoiceIcons"></i>
+
+                                        <div class="videoandvoiceIcons" style="display: relative;">
+                                            <i class="bi bi-three-dots-vertical" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                                            
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                <li><a class="dropdown-item" onclick="showExtraInfo('<%= userStatus.isClient ? room.TherapistId : room.ClientId %>', '<%= index %>')">About <%= userStatus.isTherapist ? 'client' : 'therapist' %></a></li>
+                                                <!--  this end session will only show on the therapist side of the code when he ends it the user is prompted to rate him/her and when starts it probably there should be a pop up in the client as well and the button will change dpending on whether it is started or hasnt started -->
+                                                <% if (userStatus.isTherapist) { %>
+                                                    <li><a class="dropdown-item" href="#">Start/End a session</a></li>
+                                                <% } %>
+                                                <!-- only client are allowed to rate therapist -->
+                                                <% if (userStatus.isClient) { %>
+                                                    <li onclick="ratingModalInfo('<%= room._id %>')"><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#ratingModal">Rate the therapist</a></li>
+                                                <% } %>
+                                                <li onclick="leaveChatModal('<%= room._id %>')" ><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#leaveChatModal">Leave chat</a></li>
+                                            </ul>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="msgSection">
+                                <div id="chatsIn-<%= room._id %>" class="chatsFeed">
+
+                                    <% for( let index = 0; index < room.Chats.length; index++ ) { %>
+                                    <% 
+                                        chat = room.Chats[index];
+                                        var hour = new Date(chat.createdAt).getHours(); 
+                                        var min = new Date(chat.createdAt).getMinutes();
+                                        var timeOfDay = hour <= 11 ? 'am' : 'pm';
+                                        hour = hour % 12;
+                                        // append additional zero when needed
+                                        hour = hour < 10 ? '0' + hour : hour;
+                                        min = min < 10 ? '0' + min : min;
+
+                                        var date = hour + ':' + min + ' ' + timeOfDay;
+                                    %>
+                                    <% if (chat.SpokesPerson === user) { %>
+                                        <!-- user is passed from the server -->
+
+                                        <div class="outgoing">
+                                            <div class="messageSection2">
+                                                <h4 class="actualMsg">
+                                                    <%= chat.Message %>
+                                                </h4>
+                                                <div class="dateandseen">
+                                                    <h4 class="msgDate">
+                                                        <%= date %>
+                                                    </h4>
+                                                    <% if (chat.Status === 'sent') { %>
+                                                    <i class="outgoingIn<%= room._id %> seenicon bi bi-check2"></i>
+                                                    <% } else if (chat.Status === 'delivered') { %>
+                                                    <i class="outgoingIn<%= room._id %> seenicon bi bi-check2-all"></i>
+                                                    <% } else { %>
+                                                    <i class="outgoingIn<%= room._id %> seenicon bi bi-check2-all seen"></i>
+                                                    <% } %>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    <% } else { %>
+
+                                        <div class="incoming">
+                                            <div class="messageSection">
+                                                <h4 class="actualMsg">
+                                                    <%= chat.Message %>
+                                                </h4>
+                                                <h4 class="msgDate">
+                                                    <%= date %>
+                                                </h4>
+                                            </div>
+                                        </div>
+
+                                        <% } %>
+
+                                    <% } %>
+                                </div>
+
+                                <!-- This checks if a user has left a conversation, the room.status holds either true or false -->
+                                <div id="sndMsg-<%= room._id %>">
+                                    <% if (room.Status) { %> 
+                                            <div class="input-group mb-3">
+                                                <div onkeydown="modHeight('<%= room._id %>')" id="msgIn-<%= room._id %>" role="textbox" contenteditable="true" dir="ltr" class="form-control msgbox" aria-multiline="true" aria-required="true" placeholder="Recipient's username" aria-label="Recipient's username"
+                                                    aria-describedby="basic-addon2"></div>
+                                                <div class="input-group-append">
+                                                    <button name="<%= room._id %>, <%= user %>" class="msgbtn input-group-text" id="basic-addon2">send</button>
+                                                </div>
+                                            </div>
+                                    <% } else { %>
+                                        <center>
+                                            <div class="inactive-room">
+                                                <h4 class="inactive-room-text">sorry, your no longer a participant in this room</h4>
+                                            </div>
+                                        </center>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+
+                    <% } %>
+                </div>
+                <div id="contactAdditionalInfo" style="padding: 0px !important;" class="hide contactAdditionalInfo col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- This script hides the topHeader for only this page -->
+    <script>
+        document.querySelector('#topHeader').classList.add('hide');
+    </script>
+
+    <!-- //copyright -->
+    <!-- Template JavaScript -->
+    <script src="../js/template_scripts/jquery-3.3.1.min.js"></script>
+    <script src="../js/template_scripts/theme-change.js"></script>
+    <!--/MENU-JS-->
+    <script>
+        $(window).on("scroll", function() {
+            var scroll = $(window).scrollTop();
+
+            if (scroll >= 80) {
+                $("#site-header").addClass("nav-fixed");
+            } else {
+                $("#site-header").removeClass("nav-fixed");
+            }
+        });
+
+        //Main navigation Active Class Add Remove
+        $(".navbar-toggler").on("click", function() {
+            $("header").toggleClass("active");
+        });
+        $(document).on("ready", function() {
+            if ($(window).width() > 991) {
+                $("header").removeClass("active");
+            }
+            $(window).on("resize", function() {
                 if ($(window).width() > 991) {
                     $("header").removeClass("active");
                 }
-                $(window).on("resize", function() {
-                    if ($(window).width() > 991) {
-                        $("header").removeClass("active");
-                    }
-                });
             });
-        </script>
-        <!--//MENU-JS-->
-        <script src="../js/template_scripts/bootstrap.bundle.min.js"></script>
-        <script src="../js/template_scripts/bootstrap.min.js"></script>
+        });
+    </script>
+    <!--//MENU-JS-->
+    <script src="../js/template_scripts/bootstrap.bundle.min.js"></script>
+    <script src="../js/template_scripts/bootstrap.min.js"></script>
 
-        <!-- My Script -->
-        <!-- This has to come first so the socket variable is available before the script calls it -->
-        <script src="../socket.io/socket.io.js"></script>
-        <script src="../js/script.js"></script>
+    <!-- My Script -->
+    <!-- This has to come first so the socket variable is available before the script calls it -->
+    <script src="../socket.io/socket.io.js"></script>
+    <script src="../js/script.js"></script>
 
 </body>
 

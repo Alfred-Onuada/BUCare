@@ -43,6 +43,7 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
 
         console.log("Database Connection Successful.");
 
+        // use multi core cpu feature here via cluster module
         server.listen(port);
         console.log(`App is now active at http://localhost:${port}`);
 
