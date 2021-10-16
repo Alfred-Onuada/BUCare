@@ -588,3 +588,12 @@
     font-weight: normal;
     font-size: 15px;
 }
+
+.systemMessage{
+    display: flex;
+    place-content: center;
+    width: 100%;
+    margin: 5px 0px;
+}
+
+.

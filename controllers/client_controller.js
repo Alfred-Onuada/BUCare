@@ -370,6 +370,11 @@ Router.put('/ratetherapist', verify, (req, res) => {
                 if (!rooms) {
                     return res.status(400).send();
                 }
+                
+                // if user is no longer a part of the room
+                if (rooms.Status == false) {
+                    return res.status(400).send();
+                }
 
                 therapistId = rooms.TherapistId;
 

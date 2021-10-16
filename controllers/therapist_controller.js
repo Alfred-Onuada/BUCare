@@ -42,15 +42,15 @@ Router.get('/rooms', verify, (req, res) => {
 
             // get all rooms that this person participates in
             Rooms.find({ TherapistId: req.user._id })
-            .then(async room_docs => {
-                for (let index = 0; index < room_docs.length; index++) {
-                    const room = room_docs[index];
-                    socket.to(room.ClientId).emit('isOnline', room._id);
-                }
-            })
-            .catch(err => {
-                if (err) console.log(err);
-            })
+                .then(async room_docs => {
+                    for (let index = 0; index < room_docs.length; index++) {
+                        const room = room_docs[index];
+                        socket.to(room.ClientId).emit('isOnline', room._id);
+                    }
+                })
+                .catch(err => {
+                    if (err) console.log(err);
+                })
 
         }
 
@@ -202,10 +202,98 @@ Router.get('/rooms', verify, (req, res) => {
                     // because this handles events from therapist so the reciever is automatically the client
                     var reciever = docs.ClientId;
                     Io.to(reciever).emit('isAlsoOnline', roomId);
+
+                    // this piece of code should not be in the client controller as it is therapist specific
+                    // what happens here is that once the therapist confirms what rooms are active (are online) he activates the start/end a session feature
+                    let therapistId = docs.TherapistId;
+                    Io.to(therapistId).emit('enable_session_toggle', roomId);
                 })
                 .catch(err => {
                     if (err) console.log(err);
                 })
+        })
+
+        socket.on('begin_session', async (roomId) => {
+
+            let clientId;
+            let therapistId = req.user._id; // because this is the therapist controller
+
+            await Rooms.findOne({ _id: roomId })
+                .then(docs => {
+                    if (docs) {
+                        clientId = docs.ClientId;
+                    }
+                })
+                .catch(err => {
+                    if (err) {
+                        console.log(err);
+                    }
+                })
+
+            const newChat = {
+                RoomId: roomId,
+                SpokesPerson: 'System',
+                Message: 'A new session started'
+            }
+
+            let { errors } = chatSchema.validateAsync(newChat);
+
+            if (errors) {
+                return res.status(500).send();
+            }
+
+            Chats(newChat).save((err, docs) => {
+                if (err) {
+                    console.log(err);
+                    return res.status(500).send();
+                }
+
+                // has to be sent back to both client and therapist
+                socket.to(clientId).emit('session_started', docs);
+                Io.to(therapistId).emit('session_started', docs); // Io.to().emit() because a socket won't broadcast to itself (you can make it to but no need)
+            })
+
+        })
+
+        socket.on('end_session', async (roomId) => {
+            let clientId;
+            let therapistId = req.user._id; // because this is the therapist controller
+
+            await Rooms.findOne({ _id: roomId })
+                .then(docs => {
+                    if (docs) {
+                        clientId = docs.ClientId;
+                    }
+                })
+                .catch(err => {
+                    if (err) {
+                        console.log(err);
+                    }
+                })
+
+            const newChat = {
+                RoomId: roomId,
+                SpokesPerson: 'System',
+                Message: 'This session ended'
+            }
+
+            let { errors } = chatSchema.validateAsync(newChat);
+
+            if (errors) {
+                return res.status(500).send();
+            }
+
+            Chats(newChat).save((err, docs) => {
+                if (err) {
+                    console.log(err);
+                    return res.status(500).send();
+                }
+
+                // has to be sent back to both client and therapist
+                socket.to(clientId).emit('session_ended', docs);
+                Io.to(therapistId).emit('session_ended', docs); // Io.to().emit() because a socket won't broadcast to itself (you can make it to but no need)
+            })
+
         })
 
         const wentOffline = () => {

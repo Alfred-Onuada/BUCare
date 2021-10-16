@@ -339,13 +339,12 @@ Author URL: http://w3layouts.com
                                             
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                                 <li><a class="dropdown-item" onclick="showExtraInfo('<%= userStatus.isClient ? room.TherapistId : room.ClientId %>', '<%= index %>')">About <%= userStatus.isTherapist ? 'client' : 'therapist' %></a></li>
-                                                <!--  this end session will only show on the therapist side of the code when he ends it the user is prompted to rate him/her and when starts it probably there should be a pop up in the client as well and the button will change dpending on whether it is started or hasnt started -->
                                                 <% if (userStatus.isTherapist) { %>
-                                                    <li><a class="dropdown-item" href="#">Start/End a session</a></li>
+                                                    <li id="sessionToggle<%= room._id %>" data-toggle-to="stop" onclick="toggleSession('<%= room._id %>')"><a id="sessionToggleText<%= room._id %>" class="dropdown-item">Start a session</a></li>
                                                 <% } %>
                                                 <!-- only client are allowed to rate therapist -->
                                                 <% if (userStatus.isClient) { %>
-                                                    <li onclick="ratingModalInfo('<%= room._id %>')"><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#ratingModal">Rate the therapist</a></li>
+                                                    <li id="ratingBtn<%= room._id %>" onclick="ratingModalInfo('<%= room._id %>')"><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#ratingModal">Rate the therapist</a></li>
                                                 <% } %>
                                                 <li onclick="leaveChatModal('<%= room._id %>')" ><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#leaveChatModal">Leave chat</a></li>
                                             </ul>
@@ -389,6 +388,21 @@ Author URL: http://w3layouts.com
                                                     <% } else { %>
                                                     <i class="outgoingIn<%= room._id %> seenicon bi bi-check2-all seen"></i>
                                                     <% } %>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    <% } else if (chat.SpokesPerson === 'System') { %>
+                                        
+                                        <div class="systemMessage">
+                                            <div style='width: 100%; font-style: italic; background-color: #3697ff !important;' class="messageSection">
+                                                <h4 style="color: white !important;" class="actualMsg">
+                                                    <%= chat.Message %>
+                                                </h4>
+                                                <div class="dateandseen">
+                                                    <h4 style="color: white !important;" class="msgDate">
+                                                        <%= date %>
+                                                    </h4>
                                                 </div>
                                             </div>
                                         </div>

@@ -1,5 +1,5 @@
 // this creates global functions even thou they are defined inside another function
-var displayRoom, leaveChat, leaveChatModal;
+let displayRoom, leaveChat, leaveChatModal, toggleSession;
 
 // there may be several pages that needs sockets so this function will be called on the body.onload from the html
 function init(userId) {
@@ -7,6 +7,9 @@ function init(userId) {
     const socket = io();
 
     socket.on('ack_rooms', (status) => {
+
+        // this variable has to be available to this entire scope not the full global scope
+        let sessionTimer;
 
         function scrollToTop(id = null) {
             if (id) {
@@ -144,6 +147,51 @@ function init(userId) {
 
         }
 
+        function createSystemMessage(data) {
+            var chats = document.querySelector("#chatsIn-" + data.RoomId);
+
+            var parent = document.createElement('div');
+            parent.classList.add('systemMessage');
+
+            var child = document.createElement('div');
+            child.classList.add('messageSection');
+            child.style.cssText = 'width: 100%;font-style: italic; background-color: #3697ff !important;';
+
+            var msgH4 = document.createElement('h4');
+            msgH4.classList.add('actualMsg');
+            msgH4.style.color = 'white';
+            msgH4.innerHTML = data.Message;
+
+            var date = document.createElement('div');
+            date.classList.add('dateandseen');
+
+            var dateH4 = document.createElement('h4');
+            dateH4.classList.add('msgDate');
+            dateH4.style.color = 'white';
+            dateH4.innerHTML = convertDate();
+
+            date.appendChild(dateH4);
+
+            child.appendChild(msgH4);
+            child.appendChild(date);
+            parent.appendChild(child);
+
+            chats.appendChild(parent);
+
+        }
+
+        function endSession(roomId) {
+
+            let ratingBtn = document.getElementById('ratingBtn'+roomId);
+
+            // this will be null for the therapist but will have a value for the client
+            if (ratingBtn) {
+                ratingBtn.click(); // this sets the required info in the modal
+                ratingBtn.children[0].click(); // this opens the modal
+            }
+
+        }
+
         function updateContactFeed(data) {
             // This function updates the ui to show the new message in the contact feeds
             var recentChats = document.querySelector('#recentChats-' + data.RoomId);
@@ -227,6 +275,62 @@ function init(userId) {
             socket.on('isAlsoOnline', (roomId) => {
                 var status = document.querySelector('#statusIn-'+roomId);
                 status.innerHTML = "Online";
+            })
+
+            // this particular event can only be fired from the therapist
+            socket.on('enable_session_toggle', (roomId) => {
+
+                let toggleTo = document.getElementById('sessionToggle'+roomId);
+
+                toggleTo.dataset.sessionToggleActive = 'true'; // this is string not boolean
+
+            })
+
+            toggleSession = (roomId) => {
+
+                let toggleTo = document.getElementById('sessionToggle'+roomId);
+                let toggleText = document.getElementById('sessionToggleText'+roomId);
+
+                // if disabled
+                if (toggleTo.dataset.sessionToggleActive !== 'true') {
+                    return showToastMsg("You can not start a session when the client is offline.");
+                } 
+
+
+                // toggleTo holds a value, what state you want to change it to
+                if (toggleTo.dataset.toggleTo === 'start') {
+            
+                    // toggle value to the opposite
+                    toggleTo.dataset.toggleTo = 'stop';
+                    toggleText.innerHTML = 'start a session';
+
+                    socket.emit('end_session', roomId);
+            
+                } else if (toggleTo.dataset.toggleTo === 'stop') {
+            
+                    // toggle value
+                    toggleTo.dataset.toggleTo = 'start';
+                    toggleText.innerHTML = 'Stop the session';
+
+                    socket.emit('begin_session', roomId);
+            
+                }
+            
+            }
+
+            socket.on('session_started', (chat_docs) => {
+                createSystemMessage(chat_docs);
+
+                // sessionTimer = setTimeout(() => {
+                //     endSession(chat_docs.RoomId);
+                // }, 60 * 60 * 1000); // 1 hour
+
+            })
+
+            socket.on('session_ended', (chat_docs) => {
+                createSystemMessage(chat_docs);
+
+                endSession(chat_docs.RoomId);
             })
 
             // to update the ui when new users disconnect
@@ -805,7 +909,7 @@ function showToastMsg(msg) {
     toast.innerHTML = `
         <div class="toast-header">
             <span class="fa fa-smile-o mr-2"></span>
-            <span class="mr-4">BUCare</span>
+            <span class="mr-4 mr-auto">BUCare</span>
             <small>a few moments ago</small>
             <button onclick="closeToastMsg(this.parentNode.parentNode)" type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
