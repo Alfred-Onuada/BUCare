@@ -1,6 +1,6 @@
 const Users = require('./../models/user');
-const Therapist = require('./../models/therapist');
-const Client = require('./../models/client');
+const Therapists = require('./../models/therapist');
+const Clients = require('./../models/client');
 const Admin = require('./../models/admin');
 
 // Initialize Packages
@@ -78,7 +78,7 @@ Router.post('/register', async (req, res) => {
                         // remove the confirmPassword field
                         delete req.body.ConfirmPassword;
 
-                        var newTherapist = Therapist(req.body).save((err, data) => {
+                        var newTherapist = Therapists(req.body).save((err, data) => {
                             if (err) throw err;
     
                             return res.status(200).send("Therapist has been added successfully");
@@ -105,11 +105,26 @@ Router.get('/summary', verify, (req, res) => {
 
     console.log(`Request made to : a${req.url}`);
 
-    // gets all the therapists
-    Client.find()
-        .then(docs => {
-            if (docs) {    
-                res.render('summary', { userStatus: req.user, data: docs });
+    let data = {}
+    Clients.find()
+        .then(c_docs => {
+            if (c_docs) {   
+
+                data.clients = c_docs;
+                
+                Therapists.find()
+                    .then(t_docs => {
+                        if (t_docs) {
+
+                            data.therapists = t_docs;
+                            res.render('summary', { userStatus: req.user, info: data });
+                        } else {
+                            res.render('summary', { userStatus: req.user, info: data });
+                        }
+                    })
+                    .catch(err => {
+                        if (err) console.log(err);
+                    })
             } else {
                 // this will only run is the one above it doesn't
                 res.render('summary', {userStatus: req.user});

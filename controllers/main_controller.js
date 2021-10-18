@@ -106,7 +106,7 @@ module.exports = (app) => {
 
         console.log(`Request made to : ${req.url}`);
 
-        if (req.userInfo.isAdmin) {
+        if (req.user.isAdmin) {
             return res.redirect('/a/summary');
         } else {
             req['errorMessage'] = "Unauthorized access to the requested page. <br> If you believe this to be an error please file a report on the contact us page."
