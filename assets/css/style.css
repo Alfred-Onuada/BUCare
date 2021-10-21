@@ -1,4 +1,3 @@
-@import '~font-awesome/css/font-awesome.css';
 
 * {
     box-sizing: border-box !important;
@@ -598,4 +597,19 @@
     margin: 5px 0px;
 }
 
-.
+.adminIcon{
+    color: #3a0ca3;
+}
+
+.adminIcon:hover{
+    opacity: .7;
+}
+
+.disabled{
+    color: grey;
+    opacity: .5;
+}
+
+.disabled:hover{
+    color: grey;
+}

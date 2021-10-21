@@ -22,6 +22,73 @@ Author URL: http://w3layouts.com
 
     <%- include('./partials/header') %> 
 
+     <!-- //modal-popup for report-->
+     <div class="selectpackage">
+
+        <div class="modal fade" id="myModal4report" tabindex="-1" role="dialog"
+            aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button id="reportModal" type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">
+                            &times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Report a Client</h4>
+                    </div>
+                    <div class="modal-body packages">
+                        <div class="appointment-form">
+                            <form id="reportForm" onsubmit="return reportFunc('<%= userStatus._id %>')">
+
+                              <!-- Error Alert box -->
+                              <div id="errorBox3" class="alert alert-danger hide" role="alert"></div>
+
+                              <!-- Success Alert box -->
+                              <div id="successBox3" class="alert alert-success hide" role="alert"></div>
+                              
+                              <div class="fields-grid">
+                                <div class="styled-input">
+
+                                    <div class="appointment-form-field">
+                                        Client's Email
+                                        <input type="text" name="clientEmail" placeholder="doe@gmail.com" required disabled>
+                                        <span id="blankMsg" style="color:red">
+                                    </div>
+                                </div>
+
+                                <div class="styled-input">
+                                    Select a reason for filing a case:
+                                    <div class="appointment-form-field">
+                                        <select name="reason" id="reason" required>
+                                            <option value="">Select an Issue</option>
+                                            <option value="Disrespect">Disrespect</option>
+                                            <option value="Fradulent Behaviour">Fradulent Behaviour</option>
+                                            <option value="Abuse">Abuse</option>
+                                            <option value="Others">Others</option>
+                                        </select>
+                                    </div>
+                                </div>
+                              </div>
+
+                              <div class="appointment-form-field">
+                                Describe the problem
+                                <textarea name="description" cols="30" rows="10" placeholder="Kindly describe the problem here." style="padding-top: 10px;" required></textarea>
+                              </div>
+
+                              <div class="appointment-btn text-lg-right">
+                                  <button id="reportBtn" type="submit" value="submit" class="btn btn-style btn-primary mt-4" >Report Client</button>
+                              </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            $('#myModal4report').modal('show');
+        </script>
+    </div>
+    <!-- //modal-popup for registrations ends-->
+
     <center>
         <h4 class="headtext hny-title mb-0">Below are your clients summary</h4>
     </center>
@@ -59,8 +126,10 @@ Author URL: http://w3layouts.com
                             
                             <% if (data[index].Status == 'pending case') { %>
                                 <td><button onclick="window.btn = this" type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal4report" onclick="reportClient('<%= index %>')" disabled>pending...</button></td>
-                            <% } else { %>
+                            <% } else if (data[index].Status === 'active') { %>
                                 <td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal4report" onclick="window.btn = this, reportClient('<%= index %>')">Report</button></td>
+                            <% } else { %>
+                              <td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal4report" onclick="window.btn = this, reportClient('<%= index %>')" disabled>Report</button></td>
                             <% } %>
                             </tr>
                     <% } %>

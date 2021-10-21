@@ -25,6 +25,11 @@ module.exports =  function(req, res, next) {
         // this appends the signed in user's identity
         Users.findOne({ _id: req.user._id })
             .then(async docs => {
+
+                if (docs.Disabled) {
+                    return res.status(401).send("Sorry, this account has been temporarily suspended, for more info reach out to our customer support");
+                }
+                
                 if (docs) {
 
                     // only one can be true, the rest will be false

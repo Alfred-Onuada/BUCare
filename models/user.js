@@ -35,6 +35,10 @@ const userSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
+    'Disabled' : {
+        type: Boolean,
+        default: false
+    },
     'Unique_Code' : {
         type: String,
         required: true

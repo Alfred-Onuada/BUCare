@@ -35,6 +35,10 @@ const therapistSchema = mongoose.Schema({
     'Average_Rating' : {
         type: Number
     },
+    'Disabled' : {
+        type: Boolean,
+        default: false
+    },
     'Rating_Respondents' : {
         type: Number
     },

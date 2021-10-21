@@ -177,6 +177,10 @@ Router.post('/login', async (req, res)=> {
     Users.findOne({ Email: req.body.Email })
         .then(async (docs) => {
 
+            if (docs.Disabled) {
+                return res.status(401).send("Sorry, this account has been temporarily suspended, for more info reach out to our customer support");
+            }
+
             if (docs == null) {
                 // return res.status(400).send("User Doesn't exist"); uncomment for debugging purposes
                 return res.status(401).send("User Crendentials Invalid");

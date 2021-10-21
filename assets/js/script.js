@@ -607,8 +607,12 @@ function reportClient(cId) {
 function reportFunc(TherapistId) {
   const boxId = 3;
 
-  var reportForm = document.querySelector("#reportForm");
-  var modalClose = document.querySelector("#reportModal");
+  let reportForm = document.querySelector("#reportForm");
+  let modalClose = document.querySelector("#reportModal");
+  let reportBtn = document.getElementById('reportBtn');
+
+  reportBtn.innerText = "Reporting...";
+  reportBtn.style.opacity = .7;
 
   var xhr = new XMLHttpRequest();
   xhr.open("POST", "/t/report", true);
@@ -618,6 +622,8 @@ function reportFunc(TherapistId) {
       switch (this.status) {
         case 200:
           displaySuccessMsg("Report has been filed.", boxId);
+          reportBtn.innerText = "Report Client";
+          reportBtn.style.opacity = 1;
 
           // lol, this window.btn is a variable i exposed onclick of the actuall button
           window.btn.innerHTML = "pending...";
@@ -1075,7 +1081,7 @@ function rate(rating) {
   let starsContainer = document.getElementById("stars");
   let textBox = document.getElementById("ratingEquivalentText");
 
-  var xhr = new XMLHttpRequest();
+  let xhr = new XMLHttpRequest();
   xhr.open("PUT", "ratetherapist", true);
   xhr.setRequestHeader("content-type", "application/json");
   xhr.onreadystatechange = function () {
@@ -1105,4 +1111,121 @@ function rate(rating) {
     rating: rating,
   };
   xhr.send(JSON.stringify(data));
+}
+
+
+function toggleDisabledStatus(userId, newValue, typeOfUser) {
+
+  let clientRow = document.getElementById('client-'+userId)
+  let reportInfo;
+
+  if (clientRow) {
+    reportInfo = document.getElementById('reportInfo-'+userId)
+  }
+  
+  fieldInstance = document.getElementById('disable'+userId);
+  const parent = fieldInstance.parentNode;
+  parent.innerHTML = '<i class="preloader spinner-border"></i>';
+  
+  let xhr = new XMLHttpRequest();
+  xhr.open('put', '/a/toggleDisabledStatus', true);
+  xhr.setRequestHeader('content-type', 'application/json');
+  xhr.onreadystatechange = function () {
+    if (this.readyState === 4) {
+      if (this.status === 200) {
+        if (this.responseText === 'false') {
+          parent.innerHTML = `<td><i id="disable${userId}" title="Disable this user" class="adminIcon fas fa-ban" onclick="toggleDisabledStatus(\'${userId}\', true, \'${typeOfUser}\')"></i></td>`;
+          showToastMsg('This user has been re-enabled successfully');
+        } else {
+          parent.innerHTML = `<td><i id="disable${userId}" title="Re-enable this user" class="adminIcon fas fa-ban disabled" onclick="toggleDisabledStatus(\'${userId}\', false, \'${typeOfUser}\')"></i></td>`;
+          showToastMsg('This user has been disabled successfully');
+
+          if (clientRow) {
+            clientRow.removeChild(reportInfo);
+          }
+        }        
+      } else {
+        // if i was trying to enable the user and it fails i need to update the ui to show where you where before
+        if (newValue === 'false') {
+          parent.innerHTML = `<td><i id="disable${userId}" title="Re-enable this user" class="adminIcon fas fa-ban disabled" onclick="toggleDisabledStatus(\'${userId}\', false, \'${typeOfUser}\')"></i></td>`;
+          showToastMsg('Sorry, that operation failed kindly try again.');
+        } else {
+          parent.innerHTML = `<td><i id="disable${userId}" title="Disable this user" class="adminIcon fas fa-ban" onclick="toggleDisabledStatus(\'${userId}\', true, \'${typeOfUser}\')"></i></td>`;
+          showToastMsg('Sorry, that operation failed kindly try again.');
+        }
+      }
+    }
+  }
+  const data = {
+    userId: userId,
+    newValue: newValue,
+    user: typeOfUser
+  }
+
+  xhr.send(JSON.stringify(data));
+}
+
+function prepareToDeleteUser(userId, typeOfUser) {
+  
+  let btn = document.getElementById('deleteUserBtn');
+
+  btn.dataset.userId = userId;
+  btn.dataset.typeOfUser = typeOfUser;
+
+}
+
+function deleteUser() {
+ 
+  let btn = document.getElementById('deleteUserBtn'); // this is the button from th modal
+
+  let userId = btn.dataset.userId;
+  let typeOfUser = btn.dataset.typeOfUser;
+  let fieldInstance = document.getElementById('therapist-'+userId);
+
+  let preloader = document.getElementById("preloader-"+userId);
+  let deleteBtn = document.getElementById("deleteBtn-"+userId); // this is the btn from the table
+
+  let modalCloseBtn = document.getElementById('deleteUserCloseBtn');
+
+  let parent;
+  if (typeOfUser === 'therapist') {
+    parent = document.getElementById('therapistSection');
+  } else {
+    parent = document.getElementById('clientSection');
+  }
+
+  deleteBtn.classList.add('hide');
+  preloader.classList.remove('hide');
+
+  let xhr = new XMLHttpRequest();
+  xhr.open('delete', '/a/deleteUser', true);
+  xhr.setRequestHeader('content-type', 'application/json');
+  xhr.onreadystatechange = function () {
+    if (this.readyState === 4) {
+      if (this.status === 200) {
+        showToastMsg('The user account has been deleted successfully');
+        parent.removeChild(fieldInstance);
+      } else {
+        showToastMsg('Sorry, that operation failed kindly try again.');
+
+        preloader.classList.add('hide');
+        deleteBtn.classList.remove('hide');
+      }
+
+      modalCloseBtn.click();
+    }
+  }
+  let data = {
+    userId: userId,
+    user: typeOfUser
+  }
+  xhr.send(JSON.stringify(data));
+
+}
+
+function getReport(userId, fieldInstance) {
+  
+  fieldInstance.classList.remove('fas', 'fa-exclamation-circle');
+  fieldInstance.classList.add('preloader', 'spinner-border')
+
 }

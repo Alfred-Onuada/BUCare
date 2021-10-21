@@ -47,6 +47,10 @@ const clientSchema = mongoose.Schema({
     'Display_Picture': {
         type: Buffer
     },
+    'Disabled' : {
+        type: Boolean,
+        default: false
+    },
     'Unique_Code' : {
         type: String,
         required: true

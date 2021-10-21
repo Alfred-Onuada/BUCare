@@ -382,7 +382,9 @@ Router.get("/clientsList", verify, async (req, res) => {
   Users.findOne({ _id: req.user._id })
     .then((docs) => {
       if (docs) {
-        var therapistName = docs.First_Name + " " + docs.Last_Name;
+        var therapistName = docs.Last_Name + " " + docs.First_Name;
+
+        console.log(therapistName);
 
         // retrieve all the clients associated with the logged in therapist
         Clients.find({ Assigned_Therapist: therapistName })

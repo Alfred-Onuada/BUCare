@@ -23,6 +23,10 @@ module.exports =  async function(req, res, next) {
         await Users.findOne({ _id: req.userInfo._id })
             .then(docs => {
 
+                if (docs.Disabled) {
+                    return res.status(401).send("Sorry, this account has been temporarily suspended, for more info reach out to our customer support");
+                }
+
                 if (docs == null) { 
                     req.userInfo = null;
                 } else {
