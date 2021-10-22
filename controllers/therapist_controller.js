@@ -382,7 +382,7 @@ Router.get("/clientsList", verify, async (req, res) => {
   Users.findOne({ _id: req.user._id })
     .then((docs) => {
       if (docs) {
-        var therapistName = docs.Last_Name + " " + docs.First_Name;
+        var therapistName = docs.First_Name + " " + docs.Last_Name;
 
         console.log(therapistName);
 

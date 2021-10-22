@@ -2,6 +2,7 @@ const Users = require("./../models/user");
 const Therapists = require("./../models/therapist");
 const Clients = require("./../models/client");
 const Admin = require("./../models/admin");
+const Rooms = require('./../models/room');
 
 // Initialize Packages
 const Router = require("express").Router();
@@ -24,6 +25,7 @@ const therapistRegisterSchema = Joi.object({
   Password: Joi.string().min(8).required(),
   Sex: Joi.string().required(),
   Specialization: Joi.array().required(),
+  Education_Level: Joi.string().required(),
   Unique_Code: Joi.string(),
 });
 
@@ -57,7 +59,7 @@ Router.post("/register", async (req, res) => {
           req.body.Unique_Code = crypto.randomBytes(6).toString("hex");
 
           // this variable holds only the fields that are available on the users model
-          var unwanted = ["Date_of_Birth", "Specialization", "ConfirmPassword"];
+          var unwanted = ["Date_of_Birth", "Specialization", "Education_Level"];
           var userData = Object.keys(req.body)
             .filter((key) => unwanted.includes(key) == false)
             .reduce((obj, key) => {
@@ -222,7 +224,10 @@ Router.delete("/deleteUser", verify, (req, res) => {
           Users.findOneAndDelete({ Email: email })
             .then(u_docs => {
               if (u_docs) {
-                return res.status(200).send();
+                Rooms.deleteMany({ TherapistId: u_docs._id })
+                  .then(r_docs => {
+                    return res.status(200).send();
+                  })
               } else {
                 return res.status(400).send("This user doesn't exist");
               }
@@ -240,7 +245,12 @@ Router.delete("/deleteUser", verify, (req, res) => {
           Users.findOneAndDelete({ Email: email })
             .then(u_docs => {
               if (u_docs) {
-                return res.status(200).send();
+                Rooms.deleteMany({ ClientId: u_docs._id })
+                  .then(r_docs => {
+                    if (r_docs) {
+                      return res.status(200).send();
+                    }
+                  })
               } else {
                 return res.status(400).send("This user doesn't exist");
               }

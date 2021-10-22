@@ -29,6 +29,10 @@ const therapistSchema = mongoose.Schema({
         type: Array,
         required: true
     },
+    'Education_Level' : {
+        type: String,
+        required: true
+    },
     'Display_Picture' : {
         type: Buffer
     },

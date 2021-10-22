@@ -503,12 +503,12 @@ function registerFunc() {
           break;
 
         case 500:
-          displayErrorMsg("Sorry, something went wrong");
+          displayErrorMsg("Sorry, something went wrong", boxId);
 
           break;
 
         default:
-          displayErrorMsg("Sorry, something went wrong");
+          displayErrorMsg("Sorry, something went wrong", boxId);
 
           break;
       }
@@ -517,6 +517,16 @@ function registerFunc() {
       submitBtn.style.opacity = "1";
     }
   };
+
+  // the password validation doesn't need to go to the server
+  if (registerForm.elements["Password"].value !== registerForm.elements["ConfirmPassword"].value) {
+    displayErrorMsg("Password mismatch, confirm your password", boxId);
+
+    submitBtn.innerHTML = "Create Profile";
+    submitBtn.style.opacity = "1";
+    return false;
+  }
+
   var data = {
     Username: registerForm.elements["Username"].value,
     Email: registerForm.elements["Email"].value,
@@ -567,7 +577,7 @@ function loginFunc() {
           break;
 
         default:
-          displayErrorMsg("Sorry, something went wrong");
+          displayErrorMsg("Sorry, something went wrong", boxId);
 
           break;
       }
@@ -692,12 +702,12 @@ function regTherapistFunc() {
           break;
 
         case 500:
-          displayErrorMsg("Sorry, something went wrong");
+          displayErrorMsg("Sorry, something went wrong", boxId);
 
           break;
 
         default:
-          displayErrorMsg("Sorry, something went wrong");
+          displayErrorMsg("Sorry, something went wrong", boxId);
 
           break;
       }
@@ -706,6 +716,16 @@ function regTherapistFunc() {
       submitBtn.style.opacity = "1";
     }
   };
+
+    // the password validation doesn't need to go to the server
+    if (registerForm.elements["Password"].value !== registerForm.elements["ConfirmPassword"].value) {
+      displayErrorMsg("Password mismatch, confirm your password", boxId);
+  
+      submitBtn.innerHTML = "Create Profile";
+      submitBtn.style.opacity = "1";
+      return false;
+    }
+
   var data = {
     First_Name: registerForm.elements["First_Name"].value,
     Last_Name: registerForm.elements["Last_Name"].value,
@@ -714,6 +734,7 @@ function regTherapistFunc() {
     Password: registerForm.elements["Password"].value,
     Sex: registerForm.elements["Sex"].value,
     Specialization: registerForm.elements["Specialization"].value,
+    Education_Level: registerForm.elements["Education_Level"].value,
   };
   xhr.send(JSON.stringify(data));
 
@@ -853,6 +874,7 @@ function showToastMsg(msg) {
     `;
 
   toastContainer.appendChild(toast);
+  toastContainer.scrollIntoView(true);
 
   setTimeout(() => {
     closeToastMsg(toast);
@@ -1180,18 +1202,19 @@ function deleteUser() {
 
   let userId = btn.dataset.userId;
   let typeOfUser = btn.dataset.typeOfUser;
-  let fieldInstance = document.getElementById('therapist-'+userId);
 
   let preloader = document.getElementById("preloader-"+userId);
   let deleteBtn = document.getElementById("deleteBtn-"+userId); // this is the btn from the table
 
   let modalCloseBtn = document.getElementById('deleteUserCloseBtn');
 
-  let parent;
+  let parent, fieldInstance;
   if (typeOfUser === 'therapist') {
     parent = document.getElementById('therapistSection');
+    fieldInstance = document.getElementById('therapist-'+userId);
   } else {
     parent = document.getElementById('clientSection');
+    fieldInstance = document.getElementById('client-'+userId);
   }
 
   deleteBtn.classList.add('hide');
