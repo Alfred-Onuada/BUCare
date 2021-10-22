@@ -1247,8 +1247,38 @@ function deleteUser() {
 }
 
 function getReport(userId, fieldInstance) {
+
+  let reportModalBtn = document.getElementById('reportModalBtn');
   
   fieldInstance.classList.remove('fas', 'fa-exclamation-circle');
   fieldInstance.classList.add('preloader', 'spinner-border')
+
+  let xhr = new XMLHttpRequest();
+  xhr.open('get', `/a/getreport/${userId}`, true);
+  xhr.setRequestHeader('content-type', 'application/json');
+  xhr.onreadystatechange = function () {
+    if (this.readyState === 4) {
+      if (this.status === 200) {        
+        let response = JSON.parse(this.responseText);
+
+        console.log(response.clientEmail)
+        // setting the info in the modal
+        document.getElementById('inReportTId1').innerText = response.therapistEmail;
+        document.getElementById('inReportTId2').innerText = response.therapistEmail;
+        document.getElementById('inReportCId').innerText = response.clientEmail;
+        document.getElementById('inReportCat').innerText = response.category;
+        document.getElementById('inReportComment').innerText = response.comment;
+
+        reportModalBtn.click();
+
+      } else {
+        showToastMsg('Sorry, this report information could not be retrived try again later.');
+      }
+
+      fieldInstance.classList.remove('preloader', 'spinner-border')
+      fieldInstance.classList.add('fas', 'fa-exclamation-circle');
+    }
+  }
+  xhr.send();
 
 }

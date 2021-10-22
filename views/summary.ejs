@@ -2,212 +2,375 @@
 Author: W3layouts
 Author URL: http://w3layouts.com
 -->
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>
+      Preventive Medical Category Bootstrap Responsive Template | Services ::
+      W3Layouts
+    </title>
+    <link
+      href="//fonts.googleapis.com/css?family=Nunito:400,600,700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Template CSS -->
+    <link rel="stylesheet" href="../css/template_styles/bootstrap.min.css" />
+    <link rel="stylesheet" href="../css/template_styles/style-starter.css" />
 
-<head>
-	<!-- Required meta tags -->
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<title>Preventive Medical Category Bootstrap Responsive Template | Services :: W3Layouts</title>
-	<link href="//fonts.googleapis.com/css?family=Nunito:400,600,700&display=swap" rel="stylesheet">
-	<!-- Template CSS -->
-    <link rel="stylesheet" href="../css/template_styles/bootstrap.min.css">
-	<link rel="stylesheet" href="../css/template_styles/style-starter.css">
+    <!-- My Styles -->
+    <link rel="stylesheet" href="../css/style.css" />
 
-	<!-- My Styles -->
-	<link rel="stylesheet" href="../css/style.css">
+    <script
+      src="https://kit.fontawesome.com/dc8ee980c4.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
 
-	<script src="https://kit.fontawesome.com/dc8ee980c4.js" crossorigin="anonymous"></script>
+  <body>
+    <%- include('./partials/header') %>
 
-</head>
+    <div id="toastContainer" class="toast4UpdateInfo"></div>
 
-<body>
-
-	<%- include('./partials/header') %>
-
-	<div id="toastContainer" class="toast4UpdateInfo"></div>
-	
     <!-- Modal -->
-    <div class="modal fade" id="deleteUserModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-					<div class="modal-content">
-							<div class="modal-header">
-									<h5 class="modal-title" id="deleteUserModalLabel">Confirmation Dialog</h5>
-							</div>
-							<div class="modal-body">
-									<center>
-											<h3>Are you sure?</h3>
-									</center>
-							</div>
-							<div class="modal-footer">
-									<button id="deleteUserCloseBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-									<button onclick="deleteUser()" id="deleteUserBtn" type="button" class="btn btn-primary">Yes</button>
-							</div>
-					</div>
-			</div>
-		</div>
+    <div
+      class="modal fade"
+      id="deleteUserModal"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="deleteUserModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteUserModalLabel">
+              Confirmation Dialog
+            </h5>
+          </div>
+          <div class="modal-body">
+            <center>
+              <h3>Are you sure?</h3>
+            </center>
+          </div>
+          <div class="modal-footer">
+            <button
+              id="deleteUserCloseBtn"
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button
+              onclick="deleteUser()"
+              id="deleteUserBtn"
+              type="button"
+              class="btn btn-primary"
+            >
+              Yes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-	<div style="margin-bottom: 30px;" class="container-fluid">
-		<div class="accordion" id="accordionExample">
-			<div class="accordion-item">
-				<h2 class="accordion-header" id="headingOne">
-					<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-						Therapists
-					</button>
-				</h2>
-				<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-					<div class="accordion-body">
-						<div class="table-responsive">
-							<table class="table table-hover">
-								<thead>
-									<tr>
-										<th scope="col">S/N</th>
-										<th scope="col">First Name</th>
-										<th scope="col">Last Name</th>
-										<th scope="col">Email Address</th>
-										<th scope="col">Telephone No</th>
-										<th scope="col">Sex</th>
-										<th scope="col">Average Rating</th>
-										<th scope="col">Since</th>
-										<th scope="col" colspan="3"></th>
-									</tr>
-								</thead>
-								<tbody id="therapistSection">
-									<% for( let index = 0; index < info.therapists.length; index++ ) { %>
-										<% let data = info.therapists[index] %>
-										<tr id="therapist-<%= data._id %>">
-											<th scope="row"><%= index+1 %> </th>
-											<td><%= data.First_Name %></td>
-											<td><%= data.Last_Name %></td>
-											<td><%= data.Email %></td>
-											<td><%= data.Telephone %></td>
-											<td><%= data.Sex %></td>
-											<td><%= data.Average_Rating !== undefined ? data.Average_Rating.toFixed(2) : 'Not available' %></td>
-											<td><%= new Date(data.createdAt).toDateString() %></td>	
-											<td><a href="mailto:<%= data.Email %>"><i class="adminIcon fas fa-envelope"></i></a></td>
-											<% if (data.Disabled) { %>
-												<td><i id="disable<%= data._id %>" title="Re-enable this user" class="disabled adminIcon fas fa-ban" onclick="toggleDisabledStatus('<%= data._id %>', false, 'therapist')"></i></td>
-											<% } else { %>
-												<td><i id="disable<%= data._id %>" title="Disable this user" class="adminIcon fas fa-ban" onclick="toggleDisabledStatus('<%= data._id %>', true, 'therapist')"></i></td>
-											<% } %>
-											<td id="deleteBtn-<%= data._id %>"><i title="Delete this user account" class="adminIcon fas fa-trash" data-bs-toggle="modal" data-bs-target="#deleteUserModal" onclick="prepareToDeleteUser('<%= data._id %>', 'therapist')"></i></td>
-											<td class="hide" id="preloader-<%= data._id %>"><i class="preloader spinner-border"></i></td>
-										</tr>
-									<% } %>
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="accordion-item">
-				<h2 class="accordion-header" id="headingTwo">
-					<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-						Clients
-					</button>
-				</h2>
-				<div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-					<div class="accordion-body">
-						<div class="table-responsive">
-							<table class="table table-hover">
-								<thead>
-									<tr>
-										<th scope="col">S/N</th>
-										<th scope="col">First Name</th>
-										<th scope="col">Last Name</th>
-										<th scope="col">Username</th>
-										<th scope="col">Email Address</th>
-										<th scope="col">Telephone No</th>
-										<th scope="col">Sex</th>
-										<th scope="col">Age</th>
-										<th scope="col">D.O.B</th>
-										<th scope="col">Case</th>
-										<th scope="col">Assigned therapist</th>
-										<th scope="col">Since</th>
-										<th scope="col" colspan="3"></th>
-									</tr>
-								</thead>
-								<tbody id="clientSection">
-									<% for( let index = 0; index < info.clients.length; index++ ) { %>
-										<% let data = info.clients[index] %>
-										<tr id="client-<%= data._id %>">
-											<th scope="row"><%= index+1 %> </th>
-											<td><%= data.First_Name %></td>
-											<td><%= data.Last_Name %></td>
-											<td><%= data.Username %></td>
-											<td><%= data.Email %></td>
-											<td><%= data.Telephone %></td>
-											<td><%= data.Sex %></td>
-											<td><%= data.Age %></td>
-											<td><%= data.Date_of_Birth %></td>
-											<td><%= data.Case %></td>
-											<td><%= data.Assigned_Therapist %></td>
-											<td><%= new Date(data.createdAt).toDateString() %></td>	
-											<td><a href="mailto:<%= data.Email %>"><i class="adminIcon fas fa-envelope"></i></a></td>
-											<% if (data.Disabled) { %>
-												<td><i id="disable<%= data._id %>" title="Re-enable this user" class="disabled adminIcon fas fa-ban" onclick="toggleDisabledStatus('<%= data._id %>', false, 'client')"></i></td>
-											<% } else { %>
-												<td><i id="disable<%= data._id %>" title="Disable this user" class="adminIcon fas fa-ban" onclick="toggleDisabledStatus('<%= data._id %>', true, 'client')"></i></td>
-											<% } %>
-											<td id="deleteBtn-<%= data._id %>"><i title="Delete this user account" class="adminIcon fas fa-trash" data-bs-toggle="modal" data-bs-target="#deleteUserModal" onclick="prepareToDeleteUser('<%= data._id %>', 'client')"></i></td>
-											<td class="hide" id="preloader-<%= data._id %>"><i class="preloader spinner-border"></i></td>
+    <!-- Modal 4 report info -->
+    <div
+      class="modal fade"
+      id="reportInfoModal"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="reportInfoModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="reportInfoModalLabel">
+              Report Information
+            </h5>
+          </div>
+          <div class="modal-body">
+						<p>
+							<i style="color: #007bff;" id="inReportTId1"></i> filed this report against
+							<i style="color: #007bff;" id="inReportCId"></i> under the category of
+							<i style="color: #007bff;" id="inReportCat"></i>. 
+							<br /><br />
+							<i style="color: #007bff;" id="inReportTId2"></i> said
+							&quot; <i style="color: #007bff;" id="inReportComment"></i> &quot;
+							<i></i>
+						</p>
+          </div>
+          <div class="modal-footer">
+            <button
+              id="reportInfoCloseBtn"
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-											<!-- to display info about why the client was reported -->
-											<% if (data.Status === 'pending case') { %>
-												<td id="reportInfo-<%= data._id %>"><i class="fas fa-exclamation-circle" onclick="getReport('<%= data._id %>', this)"></i></td>
-											<% } %>
-										</tr>
-									<% } %>
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+		<button class="hide"  data-bs-toggle="modal" data-bs-target="#reportInfoModal" id="reportModalBtn"></button>
 
-	<%- include('./partials/footer') %>
+    <div style="margin-bottom: 30px" class="container-fluid">
+      <div class="accordion" id="accordionExample">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingOne">
+            <button
+              class="accordion-button"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseOne"
+              aria-expanded="true"
+              aria-controls="collapseOne"
+            >
+              Therapists
+            </button>
+          </h2>
+          <div
+            id="collapseOne"
+            class="accordion-collapse collapse show"
+            aria-labelledby="headingOne"
+            data-bs-parent="#accordionExample"
+          >
+            <div class="accordion-body">
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">S/N</th>
+                      <th scope="col">First Name</th>
+                      <th scope="col">Last Name</th>
+                      <th scope="col">Email Address</th>
+                      <th scope="col">Telephone No</th>
+                      <th scope="col">Sex</th>
+                      <th scope="col">Average Rating</th>
+                      <th scope="col">Since</th>
+                      <th scope="col" colspan="3"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="therapistSection">
+                    <% for( let index = 0; index < info.therapists.length;
+                    index++ ) { %> <% let data = info.therapists[index] %>
+                    <tr id="therapist-<%= data._id %>">
+                      <th scope="row"><%= index+1 %></th>
+                      <td><%= data.First_Name %></td>
+                      <td><%= data.Last_Name %></td>
+                      <td><%= data.Email %></td>
+                      <td><%= data.Telephone %></td>
+                      <td><%= data.Sex %></td>
+                      <td>
+                        <%= data.Average_Rating !== undefined ?
+                        data.Average_Rating.toFixed(2) : 'Not available' %>
+                      </td>
+                      <td><%= new Date(data.createdAt).toDateString() %></td>
+                      <td>
+                        <a href="mailto:<%= data.Email %>"
+                          ><i class="adminIcon fas fa-envelope"></i
+                        ></a>
+                      </td>
+                      <% if (data.Disabled) { %>
+                      <td>
+                        <i
+                          id="disable<%= data._id %>"
+                          title="Re-enable this user"
+                          class="disabled adminIcon fas fa-ban"
+                          onclick="toggleDisabledStatus('<%= data._id %>', false, 'therapist')"
+                        ></i>
+                      </td>
+                      <% } else { %>
+                      <td>
+                        <i
+                          id="disable<%= data._id %>"
+                          title="Disable this user"
+                          class="adminIcon fas fa-ban"
+                          onclick="toggleDisabledStatus('<%= data._id %>', true, 'therapist')"
+                        ></i>
+                      </td>
+                      <% } %>
+                      <td id="deleteBtn-<%= data._id %>">
+                        <i
+                          title="Delete this user account"
+                          class="adminIcon fas fa-trash"
+                          data-bs-toggle="modal"
+                          data-bs-target="#deleteUserModal"
+                          onclick="prepareToDeleteUser('<%= data._id %>', 'therapist')"
+                        ></i>
+                      </td>
+                      <td class="hide" id="preloader-<%= data._id %>">
+                        <i class="preloader spinner-border"></i>
+                      </td>
+                    </tr>
+                    <% } %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingTwo">
+            <button
+              class="accordion-button"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseTwo"
+              aria-expanded="true"
+              aria-controls="collapseTwo"
+            >
+              Clients
+            </button>
+          </h2>
+          <div
+            id="collapseTwo"
+            class="accordion-collapse collapse show"
+            aria-labelledby="headingTwo"
+            data-bs-parent="#accordionExample"
+          >
+            <div class="accordion-body">
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">S/N</th>
+                      <th scope="col">First Name</th>
+                      <th scope="col">Last Name</th>
+                      <th scope="col">Username</th>
+                      <th scope="col">Email Address</th>
+                      <th scope="col">Telephone No</th>
+                      <th scope="col">Sex</th>
+                      <th scope="col">Age</th>
+                      <th scope="col">D.O.B</th>
+                      <th scope="col">Case</th>
+                      <th scope="col">Assigned therapist</th>
+                      <th scope="col">Since</th>
+                      <th scope="col" colspan="3"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="clientSection">
+                    <% for( let index = 0; index < info.clients.length; index++
+                    ) { %> <% let data = info.clients[index] %>
+                    <tr id="client-<%= data._id %>">
+                      <th scope="row"><%= index+1 %></th>
+                      <td><%= data.First_Name %></td>
+                      <td><%= data.Last_Name %></td>
+                      <td><%= data.Username %></td>
+                      <td><%= data.Email %></td>
+                      <td><%= data.Telephone %></td>
+                      <td><%= data.Sex %></td>
+                      <td><%= data.Age %></td>
+                      <td><%= data.Date_of_Birth %></td>
+                      <td><%= data.Case %></td>
+                      <td><%= data.Assigned_Therapist %></td>
+                      <td><%= new Date(data.createdAt).toDateString() %></td>
+                      <td>
+                        <a href="mailto:<%= data.Email %>"
+                          ><i class="adminIcon fas fa-envelope"></i
+                        ></a>
+                      </td>
+                      <% if (data.Disabled) { %>
+                      <td>
+                        <i
+                          id="disable<%= data._id %>"
+                          title="Re-enable this user"
+                          class="disabled adminIcon fas fa-ban"
+                          onclick="toggleDisabledStatus('<%= data._id %>', false, 'client')"
+                        ></i>
+                      </td>
+                      <% } else { %>
+                      <td>
+                        <i
+                          id="disable<%= data._id %>"
+                          title="Disable this user"
+                          class="adminIcon fas fa-ban"
+                          onclick="toggleDisabledStatus('<%= data._id %>', true, 'client')"
+                        ></i>
+                      </td>
+                      <% } %>
+                      <td id="deleteBtn-<%= data._id %>">
+                        <i
+                          title="Delete this user account"
+                          class="adminIcon fas fa-trash"
+                          data-bs-toggle="modal"
+                          data-bs-target="#deleteUserModal"
+                          onclick="prepareToDeleteUser('<%= data._id %>', 'client')"
+                        ></i>
+                      </td>
+                      <td class="hide" id="preloader-<%= data._id %>">
+                        <i class="preloader spinner-border"></i>
+                      </td>
 
-	<!-- //copyright -->
-	<!-- Template JavaScript -->
-	<script src="../js/template_scripts/jquery-3.3.1.min.js"></script>
-	<script src="../js/template_scripts/theme-change.js"></script>
-	<!--/MENU-JS-->
-	<script>
-		$(window).on("scroll", function () {
-			var scroll = $(window).scrollTop();
+                      <!-- to display info about why the client was reported -->
+                      <% if (data.Status === 'pending case') { %>
+                      <td id="reportInfo-<%= data._id %>">
+                        <i
+                          class="fas fa-exclamation-circle"
+                          onclick="getReport('<%= data._id %>', this)"
+                        ></i>
+                      </td>
+                      <% } %>
+                    </tr>
+                    <% } %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-			if (scroll >= 80) {
-				$("#site-header").addClass("nav-fixed");
-			} else {
-				$("#site-header").removeClass("nav-fixed");
-			}
-		});
+    <%- include('./partials/footer') %>
 
-		//Main navigation Active Class Add Remove
-		$(".navbar-toggler").on("click", function () {
-			$("header").toggleClass("active");
-		});
-		$(document).on("ready", function () {
-			if ($(window).width() > 991) {
-				$("header").removeClass("active");
-			}
-			$(window).on("resize", function () {
-				if ($(window).width() > 991) {
-					$("header").removeClass("active");
-				}
-			});
-		});
-	</script>
-	<!--//MENU-JS-->
-	<script src="../js/template_scripts/bootstrap.min.js"></script>
-	<script src="../js/template_scripts/bootstrap.bundle.min.js"></script>
+    <!-- //copyright -->
+    <!-- Template JavaScript -->
+    <script src="../js/template_scripts/jquery-3.3.1.min.js"></script>
+    <script src="../js/template_scripts/theme-change.js"></script>
+    <!--/MENU-JS-->
+    <script>
+      $(window).on("scroll", function () {
+        var scroll = $(window).scrollTop();
 
-	<!-- My Script -->
-	<script src="../js/script.js"></script>
+        if (scroll >= 80) {
+          $("#site-header").addClass("nav-fixed");
+        } else {
+          $("#site-header").removeClass("nav-fixed");
+        }
+      });
 
-</body>
+      //Main navigation Active Class Add Remove
+      $(".navbar-toggler").on("click", function () {
+        $("header").toggleClass("active");
+      });
+      $(document).on("ready", function () {
+        if ($(window).width() > 991) {
+          $("header").removeClass("active");
+        }
+        $(window).on("resize", function () {
+          if ($(window).width() > 991) {
+            $("header").removeClass("active");
+          }
+        });
+      });
+    </script>
+    <!--//MENU-JS-->
+    <script src="../js/template_scripts/bootstrap.min.js"></script>
+    <script src="../js/template_scripts/bootstrap.bundle.min.js"></script>
 
+    <!-- My Script -->
+    <script src="../js/script.js"></script>
+  </body>
 </html>

@@ -419,7 +419,7 @@ const reportSchema = Joi.object({
 Router.post("/report", (req, res) => {
   console.log(`Request made to : t${req.url}`);
 
-  Clients.findOne({ Email: req.body.clientEmail })
+  Users.findOne({ Email: req.body.clientEmail })
     .then(async (docs) => {
       // removes the email field to replace with id
       delete req.body.clientEmail;
@@ -434,10 +434,10 @@ Router.post("/report", (req, res) => {
           Reports(req.body).save((err, rData) => {
             if (err) throw err;
 
-            Clients.findByIdAndUpdate(req.body.ClientId, {
+            Clients.findOneAndUpdate({ Email: docs.Email }, { // docs is from the users collection
               Status: "pending case",
             })
-              .then((docs) => {
+              .then((c_docs) => {
                 return res.status(200).send("Case successfully filed");
               })
               .catch((err) => {

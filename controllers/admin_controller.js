@@ -3,6 +3,7 @@ const Therapists = require("./../models/therapist");
 const Clients = require("./../models/client");
 const Admin = require("./../models/admin");
 const Rooms = require('./../models/room');
+const Reports = require("./../models/report");
 
 // Initialize Packages
 const Router = require("express").Router();
@@ -262,6 +263,72 @@ Router.delete("/deleteUser", verify, (req, res) => {
     return res.status(400).send();
   }
 
+});
+
+Router.get('/getreport/:userId', verify, (req, res) => {
+
+  console.log(`Request made to : ${req.url}`);
+
+  if (!req.user.isAdmin) {
+    return res.status(401).send();
+  }
+
+  let reportData = {}
+  // getting the client email
+  Clients.findById(req.params.userId)
+    .then(docs => {
+      if (docs) {
+        reportData.clientEmail = docs.Email;
+
+        // getting the clients id from the user collection
+        Users.findOne({ Email: docs.Email })
+          .then(u_docs => {
+            if (u_docs) {
+
+              // getting the report data
+              Reports.findOne({ ClientId: u_docs._id })
+                .then(r_docs => {
+                  if (r_docs) {
+                    reportData.comment = r_docs.Case_Description;
+                    reportData.category = r_docs.Case;
+
+                    // getting the therapist email
+                    Users.findById(r_docs.TherapistId)
+                      .then(u_docs => {
+                        if (u_docs) {
+                          reportData.therapistEmail = u_docs.Email;
+
+                          return res.status(200).send(reportData);
+
+                        } else {
+                          return res.status(400).send("Sorry, something went wrong while performing this operation 4");
+                        }
+                      })
+                      .catch(err => {
+                        if (err) console.error(err);
+                      })
+                  } else {
+                    return res.status(400).send("Sorry, something went wrong while performing this operation 3");
+                  }
+                })
+                .catch(err => {
+                  if (err) console.error(err);
+                })
+
+            } else {
+              return res.status(400).send("Sorry, something went wrong while performing this operation 2");
+            }
+          })
+          .catch(err => {
+            if (err) console.error(err);
+          })
+      } else {
+        return res.status(400).send("Sorry, something went wrong while performing this operation 1");
+      }
+    })
+    .catch(err => {
+      if (err) console.error(err);
+    })
 });
 
 // This makes sure all normal routes called from the client route c/ will redirect backwards
