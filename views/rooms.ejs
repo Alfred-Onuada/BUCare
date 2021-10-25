@@ -53,7 +53,7 @@ Author URL: http://w3layouts.com
                     <h5 class="modal-title" id="ratingModalLabel">Leave a feedback</h5>
                 </div>
                 <div class="modal-body">
-                    <center>
+                    <center id="ratingStars">
                         <h5 class="ratingHeader">How likely are you to continue with this therapist?</h5>
                         <div onmouseleave="showRatingText('', -1)" class="stars" id="stars">
                             <i onclick="rate(1)" onmouseover="showRatingText('😒nah! I\'ll pass', 0)" class="bi bi-star"></i>
@@ -64,10 +64,57 @@ Author URL: http://w3layouts.com
                         </div>
                         <h5 id="ratingEquivalentText"></h5>
                     </center>
+                    <center id="ratingComment" class="hide">
+                        <div class="appointment-form-field">
+                            Leave an optional comment for this therapist
+                            <textarea id="ratingCommentText" name="comment" cols="30" rows="10" placeholder="Go ahead and describe your experience here" style="padding-top: 10px; margin-bottom: 0px;" required></textarea>
+                        </div>
+                        <div class="appointment-btn text-lg-right">
+                            <button onclick="addRatingComment()" id="commentSubmitBtn" type="submit" value="submit" class="btn btn-style btn-primary mt-4" style="margin: 5px 0px 0px 0px !important; padding: 5px 10px; font-size: 15px;">Leave a comment</button>
+                        </div>
+                    </center>
                 </div>
                 <div class="modal-footer">
-                    <button id="leaveChatCloseBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button id="ratingCancelBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 4 Presenting Case File -->
+    <div class="modal fade" id="caseFileModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="caseFileModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="caseFIleForm" onsubmit="return submitCaseFile()">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="caseFileModalLabel">Fill a case file</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="appointment-form-field">
+                            Major observation
+                            <textarea name="observation" cols="30" rows="10" placeholder="What were your major observations?" style="padding-top: 10px; height: 75px !important;" required></textarea>
+                        </div>
+
+                        <div class="appointment-form-field">
+                            Instruments to be administered
+                            <textarea name="instruments" cols="30" rows="10" placeholder="What instruments will be administered?" style="padding-top: 10px; height: 75px !important;" required></textarea>
+                        </div>
+
+                        <div class="appointment-form-field">
+                            Recommendation
+                            <textarea name="recommendation" cols="30" rows="10" placeholder="What recommendations will you make?" style="padding-top: 10px; height: 75px !important;" required></textarea>
+                        </div>
+
+                        <div class="appointment-form-field">
+                            Conclusion
+                            <textarea name="conclusion" cols="30" rows="10" placeholder="Give some conclusion?" style="padding-top: 10px;" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="caseFileSubmitBtn" type="submit" class="btn btn-secondary">Submit</button>
+                        <button id="caseFileCancelBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -345,6 +392,8 @@ Author URL: http://w3layouts.com
                                                 <!-- only client are allowed to rate therapist -->
                                                 <% if (userStatus.isClient) { %>
                                                     <li id="ratingBtn<%= room._id %>" onclick="ratingModalInfo('<%= room._id %>')"><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#ratingModal">Rate the therapist</a></li>
+                                                <% } else { %>
+                                                    <li class="hide" id="caseFileBtn<%= room._id %>" onclick="caseFileModalInfo('<%= room._id %>')"><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#caseFileModal"></a></li>
                                                 <% } %>
                                                 <li onclick="leaveChatModal('<%= room._id %>')" ><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#leaveChatModal">Leave chat</a></li>
                                             </ul>

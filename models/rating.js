@@ -13,6 +13,9 @@ const ratingSchema = mongoose.Schema({
     type: Number,
     required: true
   },
+  'Comment': {
+    type: String
+  }
 }, { timestamps: true })
 
 const rating = mongoose.model('rating', ratingSchema);

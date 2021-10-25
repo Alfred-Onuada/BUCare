@@ -6,7 +6,6 @@ function init(userId) {
   const socket = io();
 
   socket.on("ack_rooms", (status) => {
-
     function scrollToTop(id = null) {
       if (id) {
         var chatFeed = document.querySelector("#chatsIn-" + id);
@@ -182,6 +181,14 @@ function init(userId) {
         ratingBtn.click(); // this sets the required info in the modal
         ratingBtn.children[0].click(); // this opens the modal
       }
+
+      let caseFileBtn = document.getElementById("caseFileBtn" + roomId);
+
+      // this will be null for the client but will have a value for the client
+      if (caseFileBtn) {
+        caseFileBtn.click(); // this sets the required info in the modal
+        caseFileBtn.children[0].click(); // this opens the modal
+      }
     }
 
     function updateContactFeed(data) {
@@ -258,14 +265,12 @@ function init(userId) {
         // when user comes online to the rooms, he sends a message to everybody he is connected to they use it to know he is online,
         // this ack gets sent back by only those who are also online so the user that just came online also knows who is also online
         socket.emit("is_online_processed", (socket.id, roomId));
-
       });
 
       // when the event fired from is_online_processed returns
       socket.on("isAlsoOnline", (roomId) => {
         var status = document.querySelector("#statusIn-" + roomId);
         status.innerHTML = "Online";
-
       });
 
       // this particular event can only be fired from the therapist
@@ -275,7 +280,7 @@ function init(userId) {
         toggleTo.dataset.sessionToggleActive = "true"; // this is string not boolean
       });
 
-      toggleSession = (roomId, sessionExpired=false) => {
+      toggleSession = (roomId, sessionExpired = false) => {
         let toggleTo = document.getElementById("sessionToggle" + roomId);
         let toggleText = document.getElementById("sessionToggleText" + roomId);
 
@@ -318,11 +323,11 @@ function init(userId) {
         endSession(chat_docs.RoomId);
       });
 
-      socket.on('session_expired', (roomId) => {
-        socket.emit('end_session', roomId);
+      socket.on("session_expired", (roomId) => {
+        socket.emit("end_session", roomId);
 
         // because for the session_expired event to fire it must have name from the server i need to toggle the therapist controls, true means it was from the server
-        toggleSession(roomId, true); 
+        toggleSession(roomId, true);
       });
 
       // to update the ui when new users disconnect
@@ -519,7 +524,10 @@ function registerFunc() {
   };
 
   // the password validation doesn't need to go to the server
-  if (registerForm.elements["Password"].value !== registerForm.elements["ConfirmPassword"].value) {
+  if (
+    registerForm.elements["Password"].value !==
+    registerForm.elements["ConfirmPassword"].value
+  ) {
     displayErrorMsg("Password mismatch, confirm your password", boxId);
 
     submitBtn.innerHTML = "Create Profile";
@@ -619,10 +627,10 @@ function reportFunc(TherapistId) {
 
   let reportForm = document.querySelector("#reportForm");
   let modalClose = document.querySelector("#reportModal");
-  let reportBtn = document.getElementById('reportBtn');
+  let reportBtn = document.getElementById("reportBtn");
 
   reportBtn.innerText = "Reporting...";
-  reportBtn.style.opacity = .7;
+  reportBtn.style.opacity = 0.7;
 
   var xhr = new XMLHttpRequest();
   xhr.open("POST", "/t/report", true);
@@ -717,14 +725,17 @@ function regTherapistFunc() {
     }
   };
 
-    // the password validation doesn't need to go to the server
-    if (registerForm.elements["Password"].value !== registerForm.elements["ConfirmPassword"].value) {
-      displayErrorMsg("Password mismatch, confirm your password", boxId);
-  
-      submitBtn.innerHTML = "Create Profile";
-      submitBtn.style.opacity = "1";
-      return false;
-    }
+  // the password validation doesn't need to go to the server
+  if (
+    registerForm.elements["Password"].value !==
+    registerForm.elements["ConfirmPassword"].value
+  ) {
+    displayErrorMsg("Password mismatch, confirm your password", boxId);
+
+    submitBtn.innerHTML = "Create Profile";
+    submitBtn.style.opacity = "1";
+    return false;
+  }
 
   var data = {
     First_Name: registerForm.elements["First_Name"].value,
@@ -1047,7 +1058,6 @@ function showExtraInfo(userId, picId) {
                             </div>
                         </div>
 
-
                         <div class="eachDetail">
                             <h4 class="detailName">Sex</h4>
                             <div class="textEditArea">
@@ -1056,9 +1066,32 @@ function showExtraInfo(userId, picId) {
                                 </div>
                             </div>
                         </div>
+                  `;
+        // this will only fire for the therapist details
+        if (response.Average_Rating) {
+          data += `
+                      <div class="eachDetail">
+                        <h4 class="detailName">Average Rating</h4>
+                        <div class="textEditArea">
+                            <div class="detailValue">
+                                ${response.Average_Rating}
+                            </div>
+                        </div>
+                      </div>
 
-                    </div>
-                `;
+                      <div class="eachDetail">
+                        <h4 class="detailName">Attending to</h4>
+                        <div class="textEditArea">
+                            <div class="detailValue">
+                                ${response.Clients_Count} Client(s)
+                            </div>
+                        </div>
+                      </div>
+
+                    `;
+        }
+
+        data += `</div>`;
 
         infoPanel.innerHTML = data;
       } else {
@@ -1071,6 +1104,11 @@ function showExtraInfo(userId, picId) {
 
 function ratingModalInfo(roomId) {
   let modalInfo = document.getElementById("ratingEquivalentText");
+  modalInfo.dataset.roomId = roomId;
+}
+
+function caseFileModalInfo(roomId) {
+  let modalInfo = document.getElementById("caseFileSubmitBtn");
   modalInfo.dataset.roomId = roomId;
 }
 
@@ -1100,8 +1138,14 @@ function showRatingText(msg, starId) {
 
 function rate(rating) {
   let roomId = document.getElementById("ratingEquivalentText").dataset.roomId;
-  let starsContainer = document.getElementById("stars");
   let textBox = document.getElementById("ratingEquivalentText");
+
+  let starSection = document.getElementById("ratingStars");
+  let commentSection = document.getElementById("ratingComment");
+  let commentBtn = document.getElementById("commentSubmitBtn");
+  let ratingCancelBtn = document.getElementById("ratingCancelBtn");
+
+  ratingCancelBtn.innerHTML = "Processing...";
 
   let xhr = new XMLHttpRequest();
   xhr.open("PUT", "ratetherapist", true);
@@ -1109,15 +1153,17 @@ function rate(rating) {
   xhr.onreadystatechange = function () {
     if (this.readyState === 4) {
       if (this.status === 200) {
-        starsContainer.innerHTML = `
-                    <h5 class="ratingSuccess">Thank you for your feedback.</h5>
-                `;
         textBox.innerHTML = "";
+
+        commentBtn.dataset.ratingId = JSON.parse(this.responseText);
+
+        starSection.classList.add("hide");
+        commentSection.classList.remove("hide");
       } else if (this.status === 429) {
         showToastMsg(
           "Sorry we are unable to process your request. you have to wait at least 1 hour before rating this therapist again"
         );
-      } else if (this.status === 401) {
+      } else if (this.status === 400) {
         showToastMsg(
           "Sorry we are unable to process your request as it may have been malformed"
         );
@@ -1126,6 +1172,8 @@ function rate(rating) {
           "Sorry we are unable to process your request at this time"
         );
       }
+
+      ratingCancelBtn.innerHTML = "Cancel";
     }
   };
   const data = {
@@ -1135,150 +1183,235 @@ function rate(rating) {
   xhr.send(JSON.stringify(data));
 }
 
+function addRatingComment() {
+  let starsContainer = document.getElementById("stars");
+  let commentBtn = document.getElementById("commentSubmitBtn");
+  let comment = document.getElementById("ratingCommentText").value.trim();
 
-function toggleDisabledStatus(userId, newValue, typeOfUser) {
+  let starSection = document.getElementById("ratingStars");
+  let commentSection = document.getElementById("ratingComment");
 
-  let clientRow = document.getElementById('client-'+userId)
-  let reportInfo;
+  let ratingDocsId = commentBtn.dataset.ratingId;
 
-  if (clientRow) {
-    reportInfo = document.getElementById('reportInfo-'+userId)
+  if (!comment) {
+    commentSection.classList.add("hide");
+    starSection.classList.remove("hide");
+    return (starsContainer.innerHTML = `<h5 class="ratingSuccess">Thank you for your feedback.</h5>`);
   }
-  
-  fieldInstance = document.getElementById('disable'+userId);
-  const parent = fieldInstance.parentNode;
-  parent.innerHTML = '<i class="preloader spinner-border"></i>';
-  
+
+  commentBtn.innerHTML = "Processing...";
   let xhr = new XMLHttpRequest();
-  xhr.open('put', '/a/toggleDisabledStatus', true);
-  xhr.setRequestHeader('content-type', 'application/json');
+  xhr.open("PUT", `updateRating`, true);
+  xhr.setRequestHeader("content-type", "application/json");
   xhr.onreadystatechange = function () {
     if (this.readyState === 4) {
       if (this.status === 200) {
-        if (this.responseText === 'false') {
+        commentSection.classList.add("hide");
+        starSection.classList.remove("hide");
+        starsContainer.innerHTML = `<h5 class="ratingSuccess">Thank you for your feedback.</h5>`;
+      } else if (this.status === 400) {
+        showToastMsg(
+          "Sorry we are unable to process your request as it may have been malformed"
+        );
+      } else {
+        showToastMsg(
+          "Sorry we are unable to process your request at this time"
+        );
+      }
+
+      commentBtn.innerHTML = "Leave a comment";
+    }
+  };
+  let data = {
+    docsId: ratingDocsId,
+    comment: comment,
+  };
+  xhr.send(JSON.stringify(data));
+}
+
+function toggleDisabledStatus(userId, newValue, typeOfUser) {
+  let clientRow = document.getElementById("client-" + userId);
+  let reportInfo;
+
+  if (clientRow) {
+    reportInfo = document.getElementById("reportInfo-" + userId);
+  }
+
+  fieldInstance = document.getElementById("disable" + userId);
+  const parent = fieldInstance.parentNode;
+  parent.innerHTML = '<i class="preloader spinner-border"></i>';
+
+  let xhr = new XMLHttpRequest();
+  xhr.open("put", "/a/toggleDisabledStatus", true);
+  xhr.setRequestHeader("content-type", "application/json");
+  xhr.onreadystatechange = function () {
+    if (this.readyState === 4) {
+      if (this.status === 200) {
+        if (this.responseText === "false") {
           parent.innerHTML = `<td><i id="disable${userId}" title="Disable this user" class="adminIcon fas fa-ban" onclick="toggleDisabledStatus(\'${userId}\', true, \'${typeOfUser}\')"></i></td>`;
-          showToastMsg('This user has been re-enabled successfully');
+          showToastMsg("This user has been re-enabled successfully");
         } else {
           parent.innerHTML = `<td><i id="disable${userId}" title="Re-enable this user" class="adminIcon fas fa-ban disabled" onclick="toggleDisabledStatus(\'${userId}\', false, \'${typeOfUser}\')"></i></td>`;
-          showToastMsg('This user has been disabled successfully');
+          showToastMsg("This user has been disabled successfully");
 
           if (clientRow) {
             clientRow.removeChild(reportInfo);
           }
-        }        
+        }
       } else {
         // if i was trying to enable the user and it fails i need to update the ui to show where you where before
-        if (newValue === 'false') {
+        if (newValue === "false") {
           parent.innerHTML = `<td><i id="disable${userId}" title="Re-enable this user" class="adminIcon fas fa-ban disabled" onclick="toggleDisabledStatus(\'${userId}\', false, \'${typeOfUser}\')"></i></td>`;
-          showToastMsg('Sorry, that operation failed kindly try again.');
+          showToastMsg("Sorry, that operation failed kindly try again.");
         } else {
           parent.innerHTML = `<td><i id="disable${userId}" title="Disable this user" class="adminIcon fas fa-ban" onclick="toggleDisabledStatus(\'${userId}\', true, \'${typeOfUser}\')"></i></td>`;
-          showToastMsg('Sorry, that operation failed kindly try again.');
+          showToastMsg("Sorry, that operation failed kindly try again.");
         }
       }
     }
-  }
+  };
   const data = {
     userId: userId,
     newValue: newValue,
-    user: typeOfUser
-  }
+    user: typeOfUser,
+  };
 
   xhr.send(JSON.stringify(data));
 }
 
 function prepareToDeleteUser(userId, typeOfUser) {
-  
-  let btn = document.getElementById('deleteUserBtn');
+  let btn = document.getElementById("deleteUserBtn");
 
   btn.dataset.userId = userId;
   btn.dataset.typeOfUser = typeOfUser;
-
 }
 
 function deleteUser() {
- 
-  let btn = document.getElementById('deleteUserBtn'); // this is the button from th modal
+  let btn = document.getElementById("deleteUserBtn"); // this is the button from th modal
 
   let userId = btn.dataset.userId;
   let typeOfUser = btn.dataset.typeOfUser;
 
-  let preloader = document.getElementById("preloader-"+userId);
-  let deleteBtn = document.getElementById("deleteBtn-"+userId); // this is the btn from the table
+  let preloader = document.getElementById("preloader-" + userId);
+  let deleteBtn = document.getElementById("deleteBtn-" + userId); // this is the btn from the table
 
-  let modalCloseBtn = document.getElementById('deleteUserCloseBtn');
+  let modalCloseBtn = document.getElementById("deleteUserCloseBtn");
 
   let parent, fieldInstance;
-  if (typeOfUser === 'therapist') {
-    parent = document.getElementById('therapistSection');
-    fieldInstance = document.getElementById('therapist-'+userId);
+  if (typeOfUser === "therapist") {
+    parent = document.getElementById("therapistSection");
+    fieldInstance = document.getElementById("therapist-" + userId);
   } else {
-    parent = document.getElementById('clientSection');
-    fieldInstance = document.getElementById('client-'+userId);
+    parent = document.getElementById("clientSection");
+    fieldInstance = document.getElementById("client-" + userId);
   }
 
-  deleteBtn.classList.add('hide');
-  preloader.classList.remove('hide');
+  deleteBtn.classList.add("hide");
+  preloader.classList.remove("hide");
 
   let xhr = new XMLHttpRequest();
-  xhr.open('delete', '/a/deleteUser', true);
-  xhr.setRequestHeader('content-type', 'application/json');
+  xhr.open("delete", "/a/deleteUser", true);
+  xhr.setRequestHeader("content-type", "application/json");
   xhr.onreadystatechange = function () {
     if (this.readyState === 4) {
       if (this.status === 200) {
-        showToastMsg('The user account has been deleted successfully');
+        showToastMsg("The user account has been deleted successfully");
         parent.removeChild(fieldInstance);
       } else {
-        showToastMsg('Sorry, that operation failed kindly try again.');
+        showToastMsg("Sorry, that operation failed kindly try again.");
 
-        preloader.classList.add('hide');
-        deleteBtn.classList.remove('hide');
+        preloader.classList.add("hide");
+        deleteBtn.classList.remove("hide");
       }
 
       modalCloseBtn.click();
     }
-  }
+  };
   let data = {
     userId: userId,
-    user: typeOfUser
-  }
+    user: typeOfUser,
+  };
   xhr.send(JSON.stringify(data));
-
 }
 
 function getReport(userId, fieldInstance) {
+  let reportModalBtn = document.getElementById("reportModalBtn");
 
-  let reportModalBtn = document.getElementById('reportModalBtn');
-  
-  fieldInstance.classList.remove('fas', 'fa-exclamation-circle');
-  fieldInstance.classList.add('preloader', 'spinner-border')
+  fieldInstance.classList.remove("fas", "fa-exclamation-circle");
+  fieldInstance.classList.add("preloader", "spinner-border");
 
   let xhr = new XMLHttpRequest();
-  xhr.open('get', `/a/getreport/${userId}`, true);
-  xhr.setRequestHeader('content-type', 'application/json');
+  xhr.open("get", `/a/getreport/${userId}`, true);
+  xhr.setRequestHeader("content-type", "application/json");
   xhr.onreadystatechange = function () {
     if (this.readyState === 4) {
-      if (this.status === 200) {        
+      if (this.status === 200) {
         let response = JSON.parse(this.responseText);
 
-        console.log(response.clientEmail)
+        console.log(response.clientEmail);
         // setting the info in the modal
-        document.getElementById('inReportTId1').innerText = response.therapistEmail;
-        document.getElementById('inReportTId2').innerText = response.therapistEmail;
-        document.getElementById('inReportCId').innerText = response.clientEmail;
-        document.getElementById('inReportCat').innerText = response.category;
-        document.getElementById('inReportComment').innerText = response.comment;
+        document.getElementById("inReportTId1").innerText =
+          response.therapistEmail;
+        document.getElementById("inReportTId2").innerText =
+          response.therapistEmail;
+        document.getElementById("inReportCId").innerText = response.clientEmail;
+        document.getElementById("inReportCat").innerText = response.category;
+        document.getElementById("inReportComment").innerText = response.comment;
 
         reportModalBtn.click();
-
       } else {
-        showToastMsg('Sorry, this report information could not be retrived try again later.');
+        showToastMsg(
+          "Sorry, this report information could not be retrived try again later."
+        );
       }
 
-      fieldInstance.classList.remove('preloader', 'spinner-border')
-      fieldInstance.classList.add('fas', 'fa-exclamation-circle');
+      fieldInstance.classList.remove("preloader", "spinner-border");
+      fieldInstance.classList.add("fas", "fa-exclamation-circle");
+    }
+  };
+  xhr.send();
+}
+
+function submitCaseFile() {
+  let roomId = document.getElementById('caseFileSubmitBtn').dataset.roomId;
+  let modalCloseBtn = document.getElementById('caseFileCancelBtn');
+  let caseFileForm = document.getElementById('caseFIleForm');
+
+  let xhr = new XMLHttpRequest();
+  xhr.open('POST', 'addCaseFile', true);
+  xhr.setRequestHeader('content-type', 'application/json');
+  xhr.onreadystatechange = function () {
+    if (this.readyState) {
+      if (this.status === 200) {
+        caseFileForm.reset();
+        modalCloseBtn.click();
+
+        showToastMsg(
+          "Thank you, your request has been processed"
+        );
+      } else if (this.status === 429) {
+        showToastMsg(
+          "Sorry we are unable to process your request. you have made too many requests"
+        );
+      } else if (this.status === 400) {
+        showToastMsg(
+          "Sorry we are unable to process your request as it may have been malformed"
+        );
+      } else {
+        showToastMsg(
+          "Sorry we are unable to process your request at this time"
+        );
+      }
     }
   }
-  xhr.send();
+  let data = {
+    RoomId: roomId,
+    Observation: caseFileForm.elements['observation'].value,
+    Instruments: caseFileForm.elements['instruments'].value,
+    Recommendation: caseFileForm.elements['recommendation'].value,
+    Conclusion: caseFileForm.elements['conclusion'].value
+  }
+  xhr.send(JSON.stringify(data));
 
+  return false;
 }

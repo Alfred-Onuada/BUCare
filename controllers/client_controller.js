@@ -308,10 +308,21 @@ Router.get("/getinfo/:userId", verify, (req, res) => {
               Email: t_docs.Email,
               Telephone: t_docs.Telephone,
               Sex: t_docs.Sex,
+              Average_Rating: t_docs.Average_Rating,
             };
 
-            res.status(200).send(t_docs);
-          } else {
+            Rooms.find({ TherapistId: req.params.userId, Status: true })
+              .then(r_docs => {
+                if (r_docs) {
+                  // this for now returns all the clients this therapist is attending to
+                  t_docs.Clients_Count = r_docs.length;
+
+                  res.status(200).send(t_docs);
+
+                }
+              })
+
+            } else {
             res.status(401).send("User not found");
           }
         });
@@ -436,7 +447,8 @@ Router.put("/ratetherapist", verify, (req, res) => {
                       if (err) {
                         return res.status(500).send();
                       } else {
-                        return res.status(200).send();
+                        // send back the id of the newly creaated rating so i can use it to append the comment
+                        return res.status(200).send(docs._id);
                       }
                     });
                   })
@@ -461,6 +473,29 @@ Router.put("/ratetherapist", verify, (req, res) => {
   } else {
     return res.status(401).send();
   }
+});
+
+Router.put('/updateRating', (req, res) => {  
+  const id = req.body.docsId;
+  const comment = req.body.comment;
+
+  if (!id || !comment) {
+    return res.status(400).send();
+  }
+
+  Ratings.findByIdAndUpdate(id, { Comment: req.body.comment })
+    .then(docs => {
+      if (docs) {
+        return res.status(200).send();
+      } else {
+        return res.status(400).send();
+      }
+    })
+    .catch(err => {
+      if (err) console.error(err);
+
+      return res.status(500).send();
+    })
 });
 
 // This makes sure all normal routes called from the client route c/ will redirect backwards

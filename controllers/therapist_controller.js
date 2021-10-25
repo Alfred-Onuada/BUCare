@@ -5,6 +5,7 @@ const Clients = require("./../models/client");
 const Users = require("./../models/user");
 const Therapists = require("./../models/therapist");
 const Reports = require("./../models/report");
+const CaseFile = require("../models/caseFile");
 
 // Initialize Packages
 const Router = require("express").Router();
@@ -485,6 +486,33 @@ Router.get("/getinfo/:userId", (req, res) => {
     .catch((err) => {
       res.status(500).send("Sorry something went wrong");
     });
+});
+
+// Validation for the casefile
+const caseFileSchema = Joi.object({
+  RoomId: Joi.string().required(),
+  Observation: Joi.string().required(),
+  Instruments: Joi.string().required(),
+  Recommendation: Joi.string().required(),
+  Conclusion: Joi.string().required()
+});
+
+Router.post('/addCaseFile', verify, async (req, res) => {
+  let data = req.body;
+
+  const { error } = await caseFileSchema.validateAsync(req.body);
+
+  if (error) {
+    return res.status(400).send(error.details[0].message);
+  } else {
+    CaseFile(req.body).save((err, docs) => {
+      if (err) throw err;
+
+      res.status(200).send();
+    });
+  }
+
+
 });
 
 // This makes sure all normal routes called from the client route c/ will redirect backwards
