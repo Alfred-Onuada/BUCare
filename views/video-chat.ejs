@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Video Chat | BUCare</title>
+  </head>
+  <body>
+
+    <div id="details" style="display: none;" data-room-id="<%= details.roomId %>" data-name="<%= details.name %>" data-api-key="<%= details.key %>" data-type="<%= details.type %>"></div>
+
+    <script>
+      const meetingDetails = document.getElementById('details').dataset;
+
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      //
+      script.addEventListener("load", function (event) {
+        // Initialize the factory function
+        const meeting = new VideoSDKMeeting();
+
+        // Set apikey, meetingId and participant name
+        const apiKey = meetingDetails.apiKey; // generated from app.videosdk.live
+        const meetingId = meetingDetails.roomId;
+        const name = meetingDetails.name;
+
+        const config = {
+          name: name,
+          apiKey: apiKey,
+          meetingId: meetingId,
+
+          containerId: null,
+          redirectOnLeave: "https://www.videosdk.live/",
+
+          micEnabled: true,
+          webcamEnabled: meetingDetails.type === 'video' ? true : false,
+          participantCanToggleSelfWebcam: meetingDetails.type === 'video' ? true : false,
+          participantCanToggleSelfMic: true,
+
+          chatEnabled: true,
+          screenShareEnabled: true,
+          pollEnabled: true,
+          whiteBoardEnabled: true,
+          raiseHandEnabled: true,
+
+          // recordingEnabled: true,
+          // recordingWebhookUrl: "https://www.videosdk.live/callback",
+          // participantCanToggleRecording: true,
+
+          // brandingEnabled: true,
+          // brandLogoURL: "media/imgs/",
+          // brandName: "Awesome startup",
+          // poweredBy: true,
+
+          participantCanLeave: true, // if false, leave button won't be visible
+
+          // Live stream meeting to youtube
+          livestream: {
+            autoStart: true,
+            outputs: [
+              // {
+              //   url: "rtmp://x.rtmp.youtube.com/live2",
+              //   streamKey: "<STREAM KEY FROM YOUTUBE>",
+              // },
+            ],
+          },
+        permissions: {
+          askToJoin: false, // Ask joined participants for entry in meeting
+          toggleParticipantMic: true, // Can toggle other participant's mic
+          toggleParticipantWebcam: true, // Can toggle other participant's webcam
+        },
+
+        joinScreen: {
+          visible: true, // Show the join screen ?
+          title: "BUcare E-Therapy Video Conferencing", // Meeting title
+          meetingUrl: window.location.href, // Meeting joining url
+        },
+      };
+
+        meeting.init(config);
+      });
+
+      script.src =
+        "https://sdk.videosdk.live/rtc-js-prebuilt/0.1.5/rtc-js-prebuilt.js";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    </script>
+  </body>
+</html>

@@ -378,8 +378,8 @@ Author URL: http://w3layouts.com
                                         <h4 id="statusIn-<%= room._id %>" class="status">Offline</h4>
                                     </div>
                                     <div class="videoandvoice">
-                                        <i onclick="featureNotAvailable()" class="bi bi-telephone videoandvoiceIcons"></i>
-                                        <i onclick="featureNotAvailable()" class="bi bi-camera-video videoandvoiceIcons"></i>
+                                        <i onclick="startVoiceCall('<%= room._id %>')" class="bi bi-telephone videoandvoiceIcons"></i>
+                                        <i onclick="startVideoCall('<%= room._id %>')" class="bi bi-camera-video videoandvoiceIcons"></i>
 
                                         <div class="videoandvoiceIcons" style="display: relative;">
                                             <i class="bi bi-three-dots-vertical" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"></i>

@@ -8,23 +8,24 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const fs = require('fs')
 const fileUpload = require('express-fileupload');
+const cors = require('cors');
 
 // when you start working with voip feature may only need it on development as heroku or the web server may already provide a secure connection
-// const https = require('https');
+const https = require('https');
 
 // Initializing server with http
-const http = require('http');
+// const http = require('http');
 
 // Reading the SSL certificates and appending it to the server
-// const options = {
-//     key: fs.readFileSync('key.pem'),
-//     cert: fs.readFileSync('cert.pem')
-// }
+const options = {
+    key: fs.readFileSync('key.pem'),
+    cert: fs.readFileSync('cert.pem')
+}
 
 // when you start working with voip feature may only need it on development as heroku or the web server may already provide a secure connection
-// const server = https.createServer(options, app);
+const server = https.createServer(options, app);
 
-const server = http.createServer(app);
+// const server = http.createServer(app);
 
 // Using socket Io for web sockets
 const { Server } = require("socket.io");
@@ -45,7 +46,7 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
 
         // use multi core cpu feature here via cluster module
         server.listen(port);
-        console.log(`App is now active at http://localhost:${port}`);
+        console.log(`App is now active at https://localhost:${port}`);
 
     })
     .catch((err) => {
@@ -66,6 +67,9 @@ app.use(express.json());
 
 // for parsing uploaded files
 app.use(fileUpload());
+
+// for securing the app against csrf attack
+app.use(cors())
 
 // adding authetication middlewares
 const accountsManagementRoute = require('./controllers/auths/auth');

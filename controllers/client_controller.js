@@ -202,6 +202,34 @@ Router.get("/rooms", verify, (req, res) => {
         });
     });
 
+    socket.on('start_voice_call', roomId => {
+      Rooms.findById(roomId)
+        .then(docs => {
+          if (docs) {
+            const data = {
+              RoomId: docs._id,
+              Message: `Voice chat started at <a href="/video/${roomId}/voice" target="_blank">Here</a>`
+            }
+            Io.to(docs.TherapistId).emit('voip_started', data);
+            Io.to(docs.ClientId).emit('voip_started', data);
+          }
+        })
+    });
+
+    socket.on('start_video_call', roomId => {
+      Rooms.findById(roomId)
+        .then(docs => {
+          if (docs) {
+            const data = {
+              RoomId: docs._id,
+              Message: `Voice chat started at <a href="/video/${roomId}/video" target="_blank">Here</a>`
+            }
+            Io.to(docs.TherapistId).emit('voip_started', data);
+            Io.to(docs.ClientId).emit('voip_started', data);
+          }
+        })
+    });
+
     const wentOffline = () => {
       // get all rooms that this person participates in
       Rooms.find({ ClientId: req.user._id })

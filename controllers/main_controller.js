@@ -1,12 +1,11 @@
 const Users = require("./../models/user");
 const Rooms = require("./../models/room");
+const Clients = require('./../models/client');
 
 const Joi = require("@hapi/joi");
 
 const verify = require("./auths/verify");
 const checkUser = require("./auths/checkUser");
-
-const { v4: uuidV4 } = require("uuid");
 
 const Io = require("./../main");
 
@@ -121,32 +120,40 @@ module.exports = (app) => {
 
   app.put("/updatePhoto", verify, updatePhoto);
 
-  // video chat routes
+  app.get('/video/:roomId/:type', verify, async (req, res) => {
+    
+    console.log(`Request made to : ${req.url}`);
 
-  // not sure but this route should just send the meeting link back to the frontend and then it will show in the
-  // chat room for you to click on and then have the video chat.
-  // app.get('/v', (req, res) => {
+    let details = {
+      roomId: req.params.roomId,
+      key: process.env.API_KEY_VOIP,
+      type: req.params.type,
+      name: null
+    }
 
-  //     console.log(`Request made to : ${req.url}`);
+    if (req.user.isClient) {
+      await Users.findById(req.user._id)
+        .then(async u_docs => {
+          if (u_docs) {
+             await Clients.findOne({ Email: u_docs.Email })
+              .then(docs => {
+                if (docs) {
+                  details.name = `${docs.Username}`;
+                }
+              })
+          }
+        })
+      
+    } else if (req.user.isTherapist) {
+      await Users.findById(req.user._id)
+        .then(docs => {
+          if (docs) {
+            details.name = `${docs.First_Name} ${docs.Last_Name}`;
+          }
+        })
+    }
 
-  //     res.redirect(`v-chat/${uuidV4()}`);
-  // })
+    res.render('video-chat', { details });
+  })
 
-  // app.get('/v-chat/:vid', (req, res) => {
-
-  //     console.log(`Request made to : ${req.url}`);
-
-  //     Io.on('connection', socket => {
-  //         socket.on('join-room', (roomId, userId) => {
-  //             socket.join(roomId)
-  //             socket.broadcast.to(roomId).emit('user-connected', userId)
-
-  //             socket.on('disconnect', () => {
-  //                 socket.broadcast.to(roomId).emit('user-disconnected', userId)
-  //             })
-  //         })
-  //     })
-
-  //     res.render('video-chat', {RoomID: req.params.vid});
-  // })
 };

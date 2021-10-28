@@ -1,5 +1,5 @@
 // this creates global functions even thou they are defined inside another function
-let displayRoom, leaveChat, leaveChatModal, toggleSession;
+let displayRoom, leaveChat, leaveChatModal, toggleSession, startVideoCall, startVoiceCall;
 
 // there may be several pages that needs sockets so this function will be called on the body.onload from the html
 function init(userId) {
@@ -253,6 +253,14 @@ function init(userId) {
       xhr.send(JSON.stringify(data));
     };
 
+    startVideoCall = (roomId) => {
+      socket.emit('start_video_call', roomId);
+    };
+    
+    startVoiceCall = (roomId) => {
+      socket.emit('start_voice_call', roomId);
+    };
+
     // this function is called once the user opens the chat room page, it changes all the pending messages to delievered
     deliverAll(userId);
 
@@ -328,6 +336,10 @@ function init(userId) {
 
         // because for the session_expired event to fire it must have name from the server i need to toggle the therapist controls, true means it was from the server
         toggleSession(roomId, true);
+      });
+
+      socket.on('voip_started', data => {
+        createSystemMessage(data);
       });
 
       // to update the ui when new users disconnect
@@ -835,33 +847,33 @@ function closeToastMsg(toast) {
   toastContainer.removeChild(toast);
 }
 
-function featureNotAvailable() {
-  let toastContainer = document.getElementById("toastContainer");
+// function featureNotAvailable() {
+//   let toastContainer = document.getElementById("toastContainer");
 
-  let toast = document.createElement("div");
-  // add all the default attributes from bootstrap
-  toast.classList.add("myToast", "toast");
-  toast.ariaRoleDescription = "alert";
-  toast.ariaLive = "assertive";
-  toast.ariaAtomic = true;
-  toast.innerHTML = `
-        <div class="toast-header">
-            <span class="fa fa-smile-o mr-2"></span>
-            <span class="mr-auto">BUCare</span>
-            <small>a few moments ago</small>
-            <button onclick="closeToastMsg(this.parentNode)" type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div id="serverMsg" class="toast-body">Sorry, this feature is currently not available, <br> we are working to get it out as soon as possible. thank you</div>
-    `;
+//   let toast = document.createElement("div");
+//   // add all the default attributes from bootstrap
+//   toast.classList.add("myToast", "toast");
+//   toast.ariaRoleDescription = "alert";
+//   toast.ariaLive = "assertive";
+//   toast.ariaAtomic = true;
+//   toast.innerHTML = `
+//         <div class="toast-header">
+//             <span class="fa fa-smile-o mr-2"></span>
+//             <span class="mr-auto">BUCare</span>
+//             <small>a few moments ago</small>
+//             <button onclick="closeToastMsg(this.parentNode)" type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+//                 <span aria-hidden="true">&times;</span>
+//             </button>
+//         </div>
+//         <div id="serverMsg" class="toast-body">Sorry, this feature is currently not available, <br> we are working to get it out as soon as possible. thank you</div>
+//     `;
 
-  toastContainer.appendChild(toast);
+//   toastContainer.appendChild(toast);
 
-  setTimeout(() => {
-    closeToastMsg(toast);
-  }, 5000);
-}
+//   setTimeout(() => {
+//     closeToastMsg(toast);
+//   }, 5000);
+// }
 
 function showToastMsg(msg) {
   let toastContainer = document.getElementById("toastContainer");
