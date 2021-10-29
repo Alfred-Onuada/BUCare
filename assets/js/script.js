@@ -233,7 +233,7 @@ function init(userId) {
           document.querySelector("#sndMsg-" + roomId).innerHTML = `
                         <center>
                             <div class="inactive-room">
-                                <h4 class="inactive-room-text">sorry, your no longer a participant in this room</h4>
+                                <h4 class="inactive-room-text">sorry, you are no longer a participant in this room</h4>
                             </div>
                         </center>
                     `;
@@ -414,7 +414,7 @@ function init(userId) {
         document.querySelector("#sndMsg-" + roomId).innerHTML = `
                     <center>
                         <div class="inactive-room">
-                            <h4 class="inactive-room-text">sorry, your no longer a participant in this room</h4>
+                            <h4 class="inactive-room-text">sorry, you are no longer a participant in this room</h4>
                         </div>
                     </center>
                 `;
