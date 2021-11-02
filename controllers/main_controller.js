@@ -1,6 +1,7 @@
 const Users = require("./../models/user");
 const Rooms = require("./../models/room");
 const Clients = require('./../models/client');
+const Therapists = require('./../models/therapist');
 
 const Joi = require("@hapi/joi");
 
@@ -50,11 +51,6 @@ module.exports = (app) => {
     res.render("services", { userStatus: req.userInfo });
   });
 
-  /*
-        What i have now to do is to split this code into the appropraite controllers check where that can take effect on the rooms route,
-        probably this main controller shouls only handle register, login, logout and as many routes that will render same view 
-    */
-
   app.get("/rooms", verify, (req, res) => {
     console.log(`Request made to : ${req.url}`);
 
@@ -74,6 +70,29 @@ module.exports = (app) => {
       .catch((err) => {
         if (err) throw err;
       });
+  });
+
+  app.get('/getMatchingTherapist/:challenge', (req, res) => {
+    console.log(`Request made to : ${req.url}`);
+
+    const challenge = req.params.challenge;
+
+    Therapists.find({ Specialization: challenge })
+      .then(docs => {
+        let data = [];
+        docs.forEach(therapist => {
+          data.push(therapist.First_Name + ' ' + therapist.Last_Name);
+        })
+
+        res.status(200).send(data);
+      })
+      .catch(err => {
+        if (err) {
+          console.log(err);
+          res.status(500).send();
+        }
+      })
+
   });
 
   // This routes are here because the header file doesnt explicitly specify /a or /t in any of it urls so these routes

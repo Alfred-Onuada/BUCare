@@ -212,15 +212,15 @@
                                                                     Support needs/challenges:
                                                                     <div class="appointment-form-field">
 
-                                                                        <select name="Case" id="department"
+                                                                        <select onchange="getMatchingTherapist(this.value)" name="Case" id="department"
                                                                             required>
                                                                             <option value="">Challenges*</option>
                                                                             <option value="Emotional instability">Emotional instability</option>
                                                                             <option value="Bereavement">Bereavement</option>
-                                                                            <option value="Ill Health">Ill Health</option>
+                                                                            <option value="Ill health">Ill health</option>
                                                                             <option value="Family disruptions">Family disruptions</option>
                                                                             <option value="Lack of motivation">Lack of motivation</option>
-                                                                            <option value="Drugs and misbehaviours">Drugs and misbehaviours</option>
+                                                                            <option value="Drugs and misbehaviour">Drugs and misbehaviour</option>
                                                                             <option value="Others">Others</option>
                                                                         </select>
                                                                     </div>
@@ -229,15 +229,8 @@
                                                                     Pick A Consellor:
                                                                     <div class="appointment-form-field">
 
-                                                                        <select name="Assigned_Therapist" id="doctor" required="Select Consellor">
-                                                                            <option value="">Select Consellor</option>
-                                                                            <option value="Elizabeth Okonkwo">Okonkwo Elizabeth Ph.D</option>
-                                                                            <option value="Ajayi Gbenga">Gbenga Ajayi</option>
-                                                                            <option value="Tominiyi Omotosho">Tominiyi Omotosho</option>
-                                                                            <option value="Iyadunmi Ajibola">Iyadunmi Ajibola</option>
-                                                                            <option value="Adewole Makinde">Adewole Makinde</option>
-                                                                            <option value="Peter Ikonta">Peter Ikonta</option>
-                                                                            <option value="Chinyere Ezema">Chinyere Ezema</option>
+                                                                        <select name="Assigned_Therapist" id="assignedTherapist" required>
+                                                                            <option>Select Counsellor</option>
                                                                         </select>
 
                                                                     </div>

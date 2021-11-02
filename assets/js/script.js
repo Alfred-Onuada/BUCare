@@ -489,6 +489,35 @@ function displaySuccessMsg(msg, boxId) {
   }, 3500);
 }
 
+function getMatchingTherapist(challenge) {
+  const therapistsList = document.getElementById('assignedTherapist');
+
+  therapistsList.innerHTML = "<option>Loading...</option>";
+
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', `/getMatchingTherapist/${challenge}`, true);
+  xhr.onreadystatechange = function () {
+    if (this.readyState === 4) {
+    
+      therapistsList.innerHTML = "<option>Select Counsellor</option>";
+
+      if (this.status === 200) {
+        const data = JSON.parse(this.responseText);
+
+        data.forEach(item => {
+          let optionElement = document.createElement('option');
+          optionElement.value, optionElement.textContent = item;
+
+          therapistsList.appendChild(optionElement);
+        })
+
+      }
+    }
+  }
+  xhr.send();
+
+}
+
 function registerFunc() {
   const boxId = 1;
 
