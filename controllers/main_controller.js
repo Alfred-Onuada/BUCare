@@ -36,6 +36,7 @@ module.exports = (app) => {
   app.get("/about", checkUser, (req, res) => {
     console.log(`Request made to : ${req.url}`);
 
+    console.log(req.userInfo);
     res.render("about", { userStatus: req.userInfo });
   });
 

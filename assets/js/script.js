@@ -1,5 +1,10 @@
 // this creates global functions even thou they are defined inside another function
-let displayRoom, leaveChat, leaveChatModal, toggleSession, startVideoCall, startVoiceCall;
+let displayRoom,
+  leaveChat,
+  leaveChatModal,
+  toggleSession,
+  startVideoCall,
+  startVoiceCall;
 
 // there may be several pages that needs sockets so this function will be called on the body.onload from the html
 function init(userId) {
@@ -254,11 +259,11 @@ function init(userId) {
     };
 
     startVideoCall = (roomId) => {
-      socket.emit('start_video_call', roomId);
+      socket.emit("start_video_call", roomId);
     };
-    
+
     startVoiceCall = (roomId) => {
-      socket.emit('start_voice_call', roomId);
+      socket.emit("start_voice_call", roomId);
     };
 
     // this function is called once the user opens the chat room page, it changes all the pending messages to delievered
@@ -338,7 +343,7 @@ function init(userId) {
         toggleSession(roomId, true);
       });
 
-      socket.on('voip_started', data => {
+      socket.on("voip_started", (data) => {
         createSystemMessage(data);
       });
 
@@ -490,32 +495,29 @@ function displaySuccessMsg(msg, boxId) {
 }
 
 function getMatchingTherapist(challenge) {
-  const therapistsList = document.getElementById('assignedTherapist');
+  const therapistsList = document.getElementById("assignedTherapist");
 
   therapistsList.innerHTML = "<option>Loading...</option>";
 
   const xhr = new XMLHttpRequest();
-  xhr.open('GET', `/getMatchingTherapist/${challenge}`, true);
+  xhr.open("GET", `/getMatchingTherapist/${challenge}`, true);
   xhr.onreadystatechange = function () {
     if (this.readyState === 4) {
-    
       therapistsList.innerHTML = "<option>Select Counsellor</option>";
 
       if (this.status === 200) {
         const data = JSON.parse(this.responseText);
 
-        data.forEach(item => {
-          let optionElement = document.createElement('option');
-          optionElement.value, optionElement.textContent = item;
+        data.forEach((item) => {
+          let optionElement = document.createElement("option");
+          optionElement.value, (optionElement.textContent = item);
 
           therapistsList.appendChild(optionElement);
-        })
-
+        });
       }
     }
-  }
+  };
   xhr.send();
-
 }
 
 function registerFunc() {
@@ -737,9 +739,6 @@ function regTherapistFunc() {
       switch (this.status) {
         case 200:
           displaySuccessMsg("New therapist added succesfully", boxId);
-          setTimeout(() => {
-            modalClose.click();
-          }, 3600);
 
           registerForm.reset();
 
@@ -1228,16 +1227,25 @@ function addRatingComment() {
   let starsContainer = document.getElementById("stars");
   let commentBtn = document.getElementById("commentSubmitBtn");
   let comment = document.getElementById("ratingCommentText").value.trim();
+  let modalCloseBtn = document.getElementById("ratingCancelBtn");
+  let ratingQuestion = document.getElementById('ratingHeader');
 
   let starSection = document.getElementById("ratingStars");
   let commentSection = document.getElementById("ratingComment");
 
   let ratingDocsId = commentBtn.dataset.ratingId;
 
+  // if you dont leave a rating there is no need to run an AJAX request the code ends here.
   if (!comment) {
     commentSection.classList.add("hide");
     starSection.classList.remove("hide");
-    return (starsContainer.innerHTML = `<h5 class="ratingSuccess">Thank you for your feedback.</h5>`);
+    starsContainer.innerHTML = `
+      <h5 class="ratingSuccess">Thank you for your feedback.</h5>
+      <small>You will be able to leave another feedback in one hour.</small>
+    `;
+    ratingQuestion.classList.add('hide');
+    modalCloseBtn.innerText = "Close";
+    return true; // just returning true doesn't really matter
   }
 
   commentBtn.innerHTML = "Processing...";
@@ -1249,7 +1257,12 @@ function addRatingComment() {
       if (this.status === 200) {
         commentSection.classList.add("hide");
         starSection.classList.remove("hide");
-        starsContainer.innerHTML = `<h5 class="ratingSuccess">Thank you for your feedback.</h5>`;
+        starsContainer.innerHTML = `
+          <h5 class="ratingSuccess">Thank you for your feedback.</h5>
+          <small>You will be able to leave another feedback in one hour.</small>
+        `;
+        ratingQuestion.classList.add('hide');
+        modalCloseBtn.innerText = "Close";
       } else if (this.status === 400) {
         showToastMsg(
           "Sorry we are unable to process your request as it may have been malformed"
@@ -1414,22 +1427,20 @@ function getReport(userId, fieldInstance) {
 }
 
 function submitCaseFile() {
-  let roomId = document.getElementById('caseFileSubmitBtn').dataset.roomId;
-  let modalCloseBtn = document.getElementById('caseFileCancelBtn');
-  let caseFileForm = document.getElementById('caseFIleForm');
+  let roomId = document.getElementById("caseFileSubmitBtn").dataset.roomId;
+  let modalCloseBtn = document.getElementById("caseFileCancelBtn");
+  let caseFileForm = document.getElementById("caseFIleForm");
 
   let xhr = new XMLHttpRequest();
-  xhr.open('POST', 'addCaseFile', true);
-  xhr.setRequestHeader('content-type', 'application/json');
+  xhr.open("POST", "addCaseFile", true);
+  xhr.setRequestHeader("content-type", "application/json");
   xhr.onreadystatechange = function () {
     if (this.readyState) {
       if (this.status === 200) {
         caseFileForm.reset();
         modalCloseBtn.click();
 
-        showToastMsg(
-          "Thank you, your request has been processed"
-        );
+        showToastMsg("Thank you, your request has been processed");
       } else if (this.status === 429) {
         showToastMsg(
           "Sorry we are unable to process your request. you have made too many requests"
@@ -1444,14 +1455,14 @@ function submitCaseFile() {
         );
       }
     }
-  }
+  };
   let data = {
     RoomId: roomId,
-    Observation: caseFileForm.elements['observation'].value,
-    Instruments: caseFileForm.elements['instruments'].value,
-    Recommendation: caseFileForm.elements['recommendation'].value,
-    Conclusion: caseFileForm.elements['conclusion'].value
-  }
+    Observation: caseFileForm.elements["observation"].value,
+    Instruments: caseFileForm.elements["instruments"].value,
+    Recommendation: caseFileForm.elements["recommendation"].value,
+    Conclusion: caseFileForm.elements["conclusion"].value,
+  };
   xhr.send(JSON.stringify(data));
 
   return false;

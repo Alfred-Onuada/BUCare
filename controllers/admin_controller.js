@@ -2,7 +2,7 @@ const Users = require("./../models/user");
 const Therapists = require("./../models/therapist");
 const Clients = require("./../models/client");
 const Admin = require("./../models/admin");
-const Rooms = require('./../models/room');
+const Rooms = require("./../models/room");
 const Reports = require("./../models/report");
 
 // Initialize Packages
@@ -22,7 +22,7 @@ const therapistRegisterSchema = Joi.object({
   First_Name: Joi.string().min(2).required(),
   Last_Name: Joi.string().min(2).required(),
   Email: Joi.string().min(6).required().email(),
-  Telephone: Joi.string().min(6).required(),
+  Telephone: Joi.number().min(6).required(),
   Password: Joi.string().min(8).required(),
   Sex: Joi.string().required(),
   Specialization: Joi.array().required(),
@@ -31,6 +31,10 @@ const therapistRegisterSchema = Joi.object({
 });
 
 Router.post("/register", async (req, res) => {
+  if (!req.user.isAdmin) {
+    return res.status(401).send();
+  }
+
   // it uses an async function because of the encrytion processes it has
   Users.findOne({ Email: req.body.Email })
     .then(async (docs) => {
@@ -44,51 +48,47 @@ Router.post("/register", async (req, res) => {
       // this is a try catch because this process might fail
       try {
         // Now verify user input using hapi/joi
-        const { error } = await therapistRegisterSchema.validateAsync(req.body);
+        await therapistRegisterSchema.validateAsync(req.body);
 
-        if (error) {
-          return res.status(400).send(error.details[0].message); // AJAX will inteprete the result and find what fields on the form has an issue
-        } else {
-          // hashing the password
-          const salt = await bcrypt.genSalt(10);
-          const hashedPassword = await bcrypt.hash(req.body.Password, salt);
+        // if an error occured the code will jump out so don't bother because of the try and catch block
+        // hashing the password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(req.body.Password, salt);
 
-          // change the password that is stored in db
-          req.body.Password = hashedPassword;
+        // change the password that is stored in db
+        req.body.Password = hashedPassword;
 
-          // generate random code for user
-          req.body.Unique_Code = crypto.randomBytes(6).toString("hex");
+        // generate random code for user
+        req.body.Unique_Code = crypto.randomBytes(6).toString("hex");
 
-          // this variable holds only the fields that are available on the users model
-          var unwanted = ["Date_of_Birth", "Specialization", "Education_Level"];
-          var userData = Object.keys(req.body)
-            .filter((key) => unwanted.includes(key) == false)
-            .reduce((obj, key) => {
-              obj[key] = req.body[key];
-              return obj;
-            }, {});
+        // this variable holds only the fields that are available on the users model
+        var unwanted = ["Date_of_Birth", "Specialization", "Education_Level"];
+        var userData = Object.keys(req.body)
+          .filter((key) => unwanted.includes(key) == false)
+          .reduce((obj, key) => {
+            obj[key] = req.body[key];
+            return obj;
+          }, {});
 
-          // make user a client
-          userData["isTherapist"] = true;
+        // make user a client
+        userData["isTherapist"] = true;
 
-          var newUser = Users(userData).save((err, data) => {
+        var newUser = Users(userData).save((err, data) => {
+          if (err) throw err;
+
+          // remove the confirmPassword field
+          delete req.body.ConfirmPassword;
+
+          var newTherapist = Therapists(req.body).save((err, data) => {
             if (err) throw err;
 
-            // remove the confirmPassword field
-            delete req.body.ConfirmPassword;
-
-            var newTherapist = Therapists(req.body).save((err, data) => {
-              if (err) throw err;
-
-              return res
-                .status(200)
-                .send("Therapist has been added successfully");
-            });
+            return res
+              .status(200)
+              .send("Therapist has been added successfully");
           });
-        }
+        });
       } catch (error) {
-        console.log(error);
-        return res.status(500).send(error); // AJAX intepretes this and display appropiate error messages
+        return res.status(400).send(error.details[0].message); // AJAX intepretes this and display appropiate error messages
       }
     })
     .catch((err) => {
@@ -98,6 +98,10 @@ Router.post("/register", async (req, res) => {
 
 Router.get("/summary", verify, (req, res) => {
   console.log(`Request made to : a${req.url}`);
+
+  if (!req.user.isAdmin) {
+    return res.status(401).send();
+  }
 
   let data = {};
   Clients.find()
@@ -173,9 +177,12 @@ Router.put("/toggleDisabledStatus", verify, (req, res) => {
       .then((users_docs) => {
         const userEmail = users_docs.Email;
 
-        const statusValue = (data.newValue === false) ? 'active' : 'disabled';
+        const statusValue = data.newValue === false ? "active" : "disabled";
 
-        Clients.findByIdAndUpdate(data.userId, { Disabled: data.newValue, Status: statusValue })
+        Clients.findByIdAndUpdate(data.userId, {
+          Disabled: data.newValue,
+          Status: statusValue,
+        })
           .then((info) => {
             Users.findOneAndUpdate(
               { Email: userEmail },
@@ -215,120 +222,121 @@ Router.delete("/deleteUser", verify, (req, res) => {
 
   const data = req.body;
 
-  if (data.user === 'therapist') {
+  if (data.user === "therapist") {
+    Therapists.findByIdAndDelete(data.userId).then((t_docs) => {
+      if (t_docs) {
+        let email = t_docs.Email;
 
-    Therapists.findByIdAndDelete(data.userId)
-      .then(t_docs => {
-        if (t_docs) {
-          let email = t_docs.Email;
+        Users.findOneAndDelete({ Email: email }).then((u_docs) => {
+          if (u_docs) {
+            Rooms.deleteMany({ TherapistId: u_docs._id }).then((r_docs) => {
+              return res.status(200).send();
+            });
+          } else {
+            return res.status(400).send("This user doesn't exist");
+          }
+        });
+      }
+    });
+  } else if (data.user === "client") {
+    Clients.findByIdAndDelete(data.userId).then((c_docs) => {
+      if (c_docs) {
+        let email = c_docs.Email;
 
-          Users.findOneAndDelete({ Email: email })
-            .then(u_docs => {
-              if (u_docs) {
-                Rooms.deleteMany({ TherapistId: u_docs._id })
-                  .then(r_docs => {
-                    return res.status(200).send();
-                  })
-              } else {
-                return res.status(400).send("This user doesn't exist");
+        Users.findOneAndDelete({ Email: email }).then((u_docs) => {
+          if (u_docs) {
+            Rooms.deleteMany({ ClientId: u_docs._id }).then((r_docs) => {
+              if (r_docs) {
+                return res.status(200).send();
               }
-            })
-        }
-      })
-
-  } else if (data.user === 'client') {
-
-    Clients.findByIdAndDelete(data.userId)
-      .then(c_docs => {
-        if (c_docs) {
-          let email = c_docs.Email;
-
-          Users.findOneAndDelete({ Email: email })
-            .then(u_docs => {
-              if (u_docs) {
-                Rooms.deleteMany({ ClientId: u_docs._id })
-                  .then(r_docs => {
-                    if (r_docs) {
-                      return res.status(200).send();
-                    }
-                  })
-              } else {
-                return res.status(400).send("This user doesn't exist");
-              }
-            })
-        }
-      })
-
+            });
+          } else {
+            return res.status(400).send("This user doesn't exist");
+          }
+        });
+      }
+    });
   } else {
     return res.status(400).send();
   }
-
 });
 
-Router.get('/getreport/:userId', verify, (req, res) => {
-
+Router.get("/getreport/:userId", verify, (req, res) => {
   console.log(`Request made to : ${req.url}`);
 
   if (!req.user.isAdmin) {
     return res.status(401).send();
   }
 
-  let reportData = {}
+  let reportData = {};
   // getting the client email
   Clients.findById(req.params.userId)
-    .then(docs => {
+    .then((docs) => {
       if (docs) {
         reportData.clientEmail = docs.Email;
 
         // getting the clients id from the user collection
         Users.findOne({ Email: docs.Email })
-          .then(u_docs => {
+          .then((u_docs) => {
             if (u_docs) {
-
               // getting the report data
               Reports.findOne({ ClientId: u_docs._id })
-                .then(r_docs => {
+                .then((r_docs) => {
                   if (r_docs) {
                     reportData.comment = r_docs.Case_Description;
                     reportData.category = r_docs.Case;
 
                     // getting the therapist email
                     Users.findById(r_docs.TherapistId)
-                      .then(u_docs => {
+                      .then((u_docs) => {
                         if (u_docs) {
                           reportData.therapistEmail = u_docs.Email;
 
                           return res.status(200).send(reportData);
-
                         } else {
-                          return res.status(400).send("Sorry, something went wrong while performing this operation 4");
+                          return res
+                            .status(400)
+                            .send(
+                              "Sorry, something went wrong while performing this operation 4"
+                            );
                         }
                       })
-                      .catch(err => {
+                      .catch((err) => {
                         if (err) console.error(err);
-                      })
+                      });
                   } else {
-                    return res.status(400).send("Sorry, something went wrong while performing this operation 3");
+                    return res
+                      .status(400)
+                      .send(
+                        "Sorry, something went wrong while performing this operation 3"
+                      );
                   }
                 })
-                .catch(err => {
+                .catch((err) => {
                   if (err) console.error(err);
-                })
-
+                });
             } else {
-              return res.status(400).send("Sorry, something went wrong while performing this operation 2");
+              return res
+                .status(400)
+                .send(
+                  "Sorry, something went wrong while performing this operation 2"
+                );
             }
           })
-          .catch(err => {
+          .catch((err) => {
             if (err) console.error(err);
-          })
+          });
       } else {
-        return res.status(400).send("Sorry, something went wrong while performing this operation 1");
+        return res
+          .status(400)
+          .send(
+            "Sorry, something went wrong while performing this operation 1"
+          );
       }
     })
-    .catch(err => {
+    .catch((err) => {
       if (err) console.error(err);
-    })
+    });
 });
 
 // This makes sure all normal routes called from the client route c/ will redirect backwards
@@ -337,38 +345,26 @@ Router.get("/", (req, res) => {
 });
 
 Router.get("/index", (req, res) => {
-  console.log("Here");
-
   res.redirect("../index");
 });
 
 Router.get("/about", (req, res) => {
-  console.log("Here");
-
   res.redirect("../about");
 });
 
 Router.get("/contact", (req, res) => {
-  console.log("Here");
-
   res.redirect("../contact");
 });
 
 Router.get("/services", (req, res) => {
-  console.log("Here");
-
   res.redirect("../services");
 });
 
 Router.get("/users/login", (req, res) => {
-  console.log("Here");
-
   res.redirect("../users/login");
 });
 
 Router.get("/users/logout", (req, res) => {
-  console.log("Here");
-
   res.redirect("../users/logout");
 });
 
@@ -379,7 +375,7 @@ Router.get("/users/logout", (req, res) => {
 //     First_Name: Joi.string().min(2).required(),
 //     Last_Name: Joi.string().min(2).required(),
 //     Email: Joi.string().min(6).required().email(),
-//     Telephone: Joi.string().min(6).required(),
+//     Telephone: Joi.number().min(6).required(),
 //     Sex: Joi.string().required(),
 //     Password: Joi.string().min(8).required(),
 //     ConfirmPassword: Joi.string().min(8),
@@ -388,75 +384,60 @@ Router.get("/users/logout", (req, res) => {
 //     Unique_Code: Joi.string()
 // });
 
-// Router.post('/register-admin', async (req, res) => {
+// Router.post("/register-admin", async (req, res) => {
+//   // it uses an async function because of the encrytion processes it has
+//   Users.findOne({ Email: req.body.Email })
+//     .then(async (docs) => {
+//       if (docs != null) {
+//         return res.status(400).send("Email already exists"); // register users using AJAX request so you can get the error message in JS without overwriting the page
+//       }
 
-//     // it uses an async function because of the encrytion processes it has
-//     Users.findOne({ Email: req.body.Email })
-//         .then(async (docs) => {
+//       // this is a try catch because this process might fail
+//       try {
+//         // Now verify user input using hapi/joi
+//         await adminRegisterSchema.validateAsync(req.body);
 
-//             if (docs != null) {
-//                 return res.status(400).send("Email already exists"); // register users using AJAX request so you can get the error message in JS without overwriting the page
-//             }
+//         // hashing the password
+//         const salt = await bcrypt.genSalt(10);
+//         const hashedPassword = await bcrypt.hash(req.body.Password, salt);
 
-//             // this is a try catch because this process might fail
-//             try {
+//         // change the password that is stored in db
+//         req.body.Password = hashedPassword;
 
-//                 // Now verify user input using hapi/joi
-//                 const { error } = await adminRegisterSchema.validateAsync(req.body);
+//         // generate random code for user
+//         req.body.Unique_Code = crypto.randomBytes(6).toString("hex");
 
-//                 if (error) {
-//                     return res.status(400).send(error.details[0].message); // AJAX will inteprete the result and find what fields on the form has an issue
-//                 } else {
+//         // this variable holds only the fields that are available on the users model
+//         var unwanted = ["Security_Question", "Answer", "ConfirmPassword"];
+//         var userData = Object.keys(req.body)
+//           .filter((key) => unwanted.includes(key) == false)
+//           .reduce((obj, key) => {
+//             obj[key] = req.body[key];
+//             return obj;
+//           }, {});
 
-//                     // hashing the password
-//                     const salt = await bcrypt.genSalt(10);
-//                     const hashedPassword = await bcrypt.hash(req.body.Password, salt);
+//         // make user a client
+//         userData["isAdmin"] = true;
 
-//                     // change the password that is stored in db
-//                     req.body.Password = hashedPassword;
+//         var newUser = Users(userData).save((err, data) => {
+//           if (err) throw err;
 
-//                     // generate random code for user
-//                     req.body.Unique_Code = crypto.randomBytes(6).toString('hex');
+//           // remove the confirmPassword field
+//           delete req.body.ConfirmPassword;
 
-//                     // this variable holds only the fields that are available on the users model
-//                     var unwanted = ['Security_Question', 'Answer', 'ConfirmPassword'];
-//                     var userData = Object.keys(req.body)
-//                         .filter(key => unwanted.includes(key) == false)
-//                         .reduce((obj, key) => {
-//                             obj[key] = req.body[key];
-//                             return obj;
-//                         }, {});
-
-//                     // make user a client
-//                     userData['isAdmin'] = true;
-
-//                     var newUser = Users(userData).save((err, data) => {
-//                         if (err) throw err;
-
-//                         // remove the confirmPassword field
-//                         delete req.body.ConfirmPassword;
-
-//                         var newTherapist = Admin(req.body).save((err, data) => {
-//                             if (err) throw err;
-
-//                             return res.status(200).send("Admin has been added successfully");
-//                         })
-
-//                     })
-
-//                 }
-
-//             } catch (error) {
-
-//                 console.log(error);
-//                 return res.status(500).send(error); // AJAX intepretes this and display appropiate error messages
-//             }
-
-//         })
-//         .catch(err => {
+//           var newTherapist = Admin(req.body).save((err, data) => {
 //             if (err) throw err;
-//         });
 
-// })
+//             return res.status(200).send("Admin has been added successfully");
+//           });
+//         });
+//       } catch (error) {
+//         return res.status(400).send(error.details[0].message); // AJAX intepretes this and display appropiate error messages
+//       }
+//     })
+//     .catch((err) => {
+//       if (err) throw err;
+//     });
+// });
 
 module.exports = Router;

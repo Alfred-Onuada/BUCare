@@ -22,6 +22,9 @@ const chatSchema = Joi.object({
 Router.get("/rooms", verify, (req, res) => {
   console.log(`Request made to : c${req.url}`);
 
+  // the nav has to appear a bit differntly on only this page so this is how i know it is on this page
+  req.user.isVisitingRooms = true; 
+
   Io.on("connection", (socket) => {
     // Io tags the on('connection') event to itself with a callback containing the connected socket so for every new socket that connects it
     // attaches the connection event multiple time and fires again for all the old ones and the new ones. So i kill the event after it has finished below
@@ -52,14 +55,11 @@ Router.get("/rooms", verify, (req, res) => {
     nowOnline();
 
     socket.on("chat_message", async function (data) {
-      var { errors } = await chatSchema.validateAsync(data);
 
-      if (errors) {
-        // i dont think you can modify the headers again this may not be correct
+      try {
+        await chatSchema.validateAsync(data);
 
-        return res.status(400).send(errors.details[0].message);
-      } else {
-        var newMsg = Chats(data).save((err, chat_docs) => {
+        Chats(data).save((err, chat_docs) => {
           if (err) {
             console.log(err);
           } else {
@@ -79,8 +79,11 @@ Router.get("/rooms", verify, (req, res) => {
                 console.log(err);
               });
           }
-        });
+        });  
+      } catch (error) {
+        return res.status(400).send(errors.details[0].message);
       }
+      
     });
 
     socket.on("message_status", (data) => {
@@ -458,27 +461,28 @@ Router.put("/ratetherapist", verify, (req, res) => {
                     Average_Rating: newAverageRating,
                   }
                 )
-                  .then((docs) => {
+                  .then(async (docs) => {
                     const ratingData = {
                       ClientId: clientId,
                       TherapistId: therapistId,
                       Rating: data.rating,
                     };
 
-                    let { errors } = ratingSchema.validateAsync(ratingData);
+                    try {
+                      await ratingSchema.validateAsync(ratingData);
 
-                    if (errors) {
-                      return res.status(400).send();
+                      Ratings(ratingData).save((err, docs) => {
+                        if (err) {
+                          return res.status(500).send();
+                        } else {
+                          // send back the id of the newly creaated rating so i can use it to append the comment
+                          return res.status(200).send(docs._id);
+                        }
+                      });
+                    } catch (error) {
+                      res.status(400).send(error.details[0].message)
                     }
-
-                    Ratings(ratingData).save((err, docs) => {
-                      if (err) {
-                        return res.status(500).send();
-                      } else {
-                        // send back the id of the newly creaated rating so i can use it to append the comment
-                        return res.status(200).send(docs._id);
-                      }
-                    });
+                    
                   })
                   .catch((err) => {
                     console.log(err);

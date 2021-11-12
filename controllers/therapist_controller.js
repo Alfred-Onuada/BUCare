@@ -54,14 +54,11 @@ Router.get("/rooms", verify, (req, res) => {
     nowOnline();
 
     socket.on("chat_message", async function (data) {
-      var { errors } = await chatSchema.validateAsync(data);
 
-      if (errors) {
-        // i dont think you can modify the headers again this may not be correct
+      try {
+        await chatSchema.validateAsync(data);
 
-        return res.status(400).send(error.details[0].message);
-      } else {
-        var newMsg = Chats(data).save((err, chat_docs) => {
+        Chats(data).save((err, chat_docs) => {
           if (err) {
             console.log(err);
           } else {
@@ -82,7 +79,10 @@ Router.get("/rooms", verify, (req, res) => {
               });
           }
         });
+      } catch (error) {
+        res.status(400).send(error.details[0].message);
       }
+      
     });
 
     socket.on("message_status", (data) => {
@@ -222,28 +222,29 @@ Router.get("/rooms", verify, (req, res) => {
         Message: "A new session started",
       };
 
-      let { errors } = chatSchema.validateAsync(newChat);
+      try {
+        await chatSchema.validateAsync(newChat);
 
-      if (errors) {
-        return res.status(500).send();
+        Chats(newChat).save((err, docs) => {
+          if (err) {
+            console.log(err);
+            return res.status(500).send();
+          }
+
+          // has to be sent back to both client and therapist
+          socket.to(clientId).emit("session_started", docs);
+          Io.to(therapistId).emit("session_started", docs); // Io.to().emit() because a socket won't broadcast to itself (you can make it to but no need)
+
+          // the server manages the session so it doesnt matter if you guys go offline it will still end at the appropriate time.
+          sessionTimer = setTimeout(() => {
+            socket.to(clientId).emit('session_expired', docs.RoomId);
+            Io.to(therapistId).emit('session_expired', docs.RoomId); // the true means that this session ended automatically
+          }, 60 * 60 * 1000); // 1 hour
+        });
+      } catch (error) {
+        res.status(500).send(error.details[0].message);
       }
-
-      Chats(newChat).save((err, docs) => {
-        if (err) {
-          console.log(err);
-          return res.status(500).send();
-        }
-
-        // has to be sent back to both client and therapist
-        socket.to(clientId).emit("session_started", docs);
-        Io.to(therapistId).emit("session_started", docs); // Io.to().emit() because a socket won't broadcast to itself (you can make it to but no need)
-
-        // the server manages the session so it doesnt matter if you guys go offline it will still end at the appropriate time.
-        sessionTimer = setTimeout(() => {
-          socket.to(clientId).emit('session_expired', docs.RoomId);
-          Io.to(therapistId).emit('session_expired', docs.RoomId); // the true means that this session ended automatically
-        }, 60 * 60 * 1000); // 1 hour
-      });
+      
     });
 
     socket.on('start_voice_call', roomId => {
@@ -297,22 +298,23 @@ Router.get("/rooms", verify, (req, res) => {
         Message: "This session ended",
       };
 
-      let { errors } = chatSchema.validateAsync(newChat);
+      try {
+        chatSchema.validateAsync(newChat);
 
-      if (errors) {
-        return res.status(500).send();
+        Chats(newChat).save((err, docs) => {
+          if (err) {
+            console.log(err);
+            return res.status(500).send();
+          }
+
+          // has to be sent back to both client and therapist
+          socket.to(clientId).emit("session_ended", docs);
+          Io.to(therapistId).emit("session_ended", docs); // Io.to().emit() because a socket won't broadcast to itself (you can make it to but no need)
+        });  
+      } catch (error) {
+        res.status(500).send(error.details[0].message);
       }
-
-      Chats(newChat).save((err, docs) => {
-        if (err) {
-          console.log(err);
-          return res.status(500).send();
-        }
-
-        // has to be sent back to both client and therapist
-        socket.to(clientId).emit("session_ended", docs);
-        Io.to(therapistId).emit("session_ended", docs); // Io.to().emit() because a socket won't broadcast to itself (you can make it to but no need)
-      });
+      
     });
 
     const wentOffline = () => {
@@ -413,8 +415,6 @@ Router.get("/clientsList", verify, async (req, res) => {
       if (docs) {
         var therapistName = docs.First_Name + " " + docs.Last_Name;
 
-        console.log(therapistName);
-
         // retrieve all the clients associated with the logged in therapist
         Clients.find({ Assigned_Therapist: therapistName })
           .then((docs) => {
@@ -456,28 +456,25 @@ Router.post("/report", (req, res) => {
       req.body.ClientId = docs._id.toString();
       try {
         // validate report details
-        const { error } = await reportSchema.validateAsync(req.body);
-        if (error) {
-          return res.status(400).send(error.details[0].message);
-        } else {
-          Reports(req.body).save((err, rData) => {
-            if (err) throw err;
+        await reportSchema.validateAsync(req.body);
+      
+        Reports(req.body).save((err, rData) => {
+          if (err) throw err;
 
-            Clients.findOneAndUpdate({ Email: docs.Email }, { // docs is from the users collection
-              Status: "pending case",
+          Clients.findOneAndUpdate({ Email: docs.Email }, { // docs is from the users collection
+            Status: "pending case",
+          })
+            .then((c_docs) => {
+              return res.status(200).send("Case successfully filed");
             })
-              .then((c_docs) => {
-                return res.status(200).send("Case successfully filed");
-              })
-              .catch((err) => {
-                res.status(400).send("Somthing went wrong");
+            .catch((err) => {
+              res.status(400).send("Somthing went wrong");
 
-                return Reports.findByIdAndDelete(rData._id);
-              });
-          });
-        }
+              return Reports.findByIdAndDelete(rData._id);
+            });
+        });
       } catch (error) {
-        return console.log(error);
+        return res.status(400).send(error.details[0].message);
       }
     })
     .catch((err) => {
@@ -528,18 +525,17 @@ const caseFileSchema = Joi.object({
 Router.post('/addCaseFile', verify, async (req, res) => {
   let data = req.body;
 
-  const { error } = await caseFileSchema.validateAsync(req.body);
+  try {
+    await caseFileSchema.validateAsync(req.body);
 
-  if (error) {
-    return res.status(400).send(error.details[0].message);
-  } else {
     CaseFile(req.body).save((err, docs) => {
       if (err) throw err;
-
+  
       res.status(200).send();
-    });
+    }); 
+  } catch (error) {
+    return res.status(400).send(error.details[0].message);
   }
-
 
 });
 
