@@ -40,8 +40,8 @@ module.exports = function (req, res, next) {
           req.user.isTherapist = docs.isTherapist;
           req.user.Sex = docs.Sex;
 
-          if (req.user.isTherapist) {
-            await Therapists.findOne({ Email: docs.Email })
+          if (req.user.isTherapist || req.user.isAdmin) {
+            await Users.findOne({ Email: docs.Email })
               .then((extradocs) => {
                 req.user.Name = extradocs.First_Name != null ? extradocs.First_Name : extradocs.Email;
               })
