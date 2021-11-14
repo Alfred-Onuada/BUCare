@@ -1,7 +1,7 @@
 <!--header-->
 <section class="w3l-header">
   <header id="site-header" class="">
-    <section id="topHeader" class="w3l-top-header py-3" style="background: rgb(185,141,59) !important;" >
+    <section id="topHeader" class="w3l-top-header py-3" style="background: rgb(185, 141, 59) !important">
       <div class="container">
         <div class="d-grid main-top">
           <div class="top-header-left">
@@ -45,16 +45,17 @@
     <div class="header-2hny py-3">
       <div class="container">
         <nav class="navbar navbar-expand-lg navbar-dark stroke">
-         <!-- if logo is text enable this
+          <!-- if logo is text enable this
           <h1>
             <a class="navbar-brand mr-xl-5" href="index">
              <span class="fa fa-smile-o mr-1"></span>BUCare
             </a>
           </h1> -->
-          <!-- if logo is image enable this -->   
-                    <a class="navbar-brand" href="#index">
-                        <img src="media/imgs/template/bu_logo.jpg" alt="BU Logo" title="Babcock University Logo" style="height:80px;" />BUCare
-                    </a> 
+          <!-- if logo is image enable this -->
+          <a class="navbar-brand" href="#index">
+            <img src="media/imgs/template/bu_logo.jpg" alt="BU Logo" title="Babcock University Logo"
+              class="bu_logo" />BUCare
+          </a>
           <button class="navbar-toggler collapsed bg-gradient" type="button" data-toggle="collapse"
             data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false"
             aria-label="Toggle navigation">
@@ -80,75 +81,62 @@
               </ul>
               <ul class="navbar-nav search-right mt-lg-0 mt-2">
                 <div class="navGreeting">
-                  <h4>Hello, <%= userStatus.Name %></h4>
+                  <h4>Hello, <%= userStatus.Name %>
+                  </h4>
                 </div>
               </ul>
             </div>
-          <% } else { %>
-            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-              <ul class="navbar-nav mx-lg-auto">
-                <li class="nav-item">
-                  <a class="nav-link" href="index">Home</a>
-                </li>
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
-                    About Us
-                    <span class="fa fa-caret-down"></span>
-                  </a>
-                  <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="services">Services</a>
-                    <a class="dropdown-item" href="about">Department</a>
-                    <a class="dropdown-item" href="contact">Contact</a>
-                    <a class="dropdown-item" href="#">FAQs</a>
-                  </div>
-                </li>
-
-                <li class="nav-item">
-                  <a class="nav-link" href="about">Our Therapists</a>
-                </li>
-
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
-                    E-therapy
-                    <span class="fa fa-caret-down"></span>
-                  </a>
-                  <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink2">
-                    <a class="dropdown-item" href="services">How it works</a>
-                    <a class="dropdown-item" href="about">Benefits</a>
-                    <% if (userStatus && !userStatus.isAdmin) { %>
-                    <a class="dropdown-item" href="rooms">Therapy room</a>
-                    <% } %>
-                    <!-- reason for checking if its defined is because it return null when your not logged in -->
-                    <% if (userStatus && userStatus.isTherapist) { %>
-                    <a class="dropdown-item" href="clientsList">Clients list</a>
-                    <% } %>
-                    <% if (userStatus && userStatus.isAdmin) { %>
-                    <a class="dropdown-item" data-toggle="modal" data-target="#myModal4regTherapist">Register a
-                      new therapist</a>
-                    <a class="dropdown-item" href="/summary">Users summary</a>
-                    <% } %>
-                  </div>
-                </li>
-
-                <!-- checks if the user has an account or not -->
-
-                <% if (userStatus !=null) { %>
-
+            <% } else { %>
+              <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                <ul class="navbar-nav mx-lg-auto">
+                  <li class="nav-item">
+                    <a class="nav-link" href="index">Home</a>
+                  </li>
                   <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink3" data-toggle="dropdown"
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                       aria-haspopup="true" aria-expanded="false">
-                      Account
+                      About Us
                       <span class="fa fa-caret-down"></span>
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink3">
-                      <a class="dropdown-item" data-toggle="modal" data-target="#myModal4Login">Login</a>
-                      <a class="dropdown-item" onclick="return logout()">Logout</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                      <a class="dropdown-item" href="services">Services</a>
+                      <a class="dropdown-item" href="about">Department</a>
+                      <a class="dropdown-item" href="contact">Contact</a>
+                      <a class="dropdown-item" href="#">FAQs</a>
                     </div>
                   </li>
 
-                  <% } else { %>
+                  <li class="nav-item">
+                    <a class="nav-link" href="about">Our Therapists</a>
+                  </li>
+
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false">
+                      E-therapy
+                      <span class="fa fa-caret-down"></span>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink2">
+                      <a class="dropdown-item" href="services">How it works</a>
+                      <a class="dropdown-item" href="about">Benefits</a>
+                      <% if (userStatus && !userStatus.isAdmin) { %>
+                        <a class="dropdown-item" href="rooms">Therapy room</a>
+                        <% } %>
+                          <!-- reason for checking if its defined is because it return null when your not logged in -->
+                          <% if (userStatus && userStatus.isTherapist) { %>
+                            <a class="dropdown-item" href="clientsList">Clients list</a>
+                            <% } %>
+                              <% if (userStatus && userStatus.isAdmin) { %>
+                                <a class="dropdown-item" data-toggle="modal"
+                                  data-target="#myModal4regTherapist">Register a new therapist</a>
+                                <a class="dropdown-item" href="/summary">Users summary</a>
+                                <% } %>
+                    </div>
+                  </li>
+
+                  <!-- checks if the user has an account or not -->
+
+                  <% if (userStatus !=null) { %>
 
                     <li class="nav-item dropdown">
                       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink3" data-toggle="dropdown"
@@ -158,358 +146,374 @@
                       </a>
                       <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink3">
                         <a class="dropdown-item" data-toggle="modal" data-target="#myModal4Login">Login</a>
-                        <a class="dropdown-item" data-toggle="modal" data-target="#myModal4reg">Register</a>
+                        <a class="dropdown-item" onclick="return logout()">Logout</a>
                       </div>
                     </li>
 
-                    <% } %>
-              </ul>
+                    <% } else { %>
 
-              <ul class="navbar-nav search-right mt-lg-0 mt-2">
-
-                <% if (userStatus && userStatus.Name) { %>
-                  <div class="navGreeting">
-                    <h4>Hello, <%= userStatus.Name %></h4>
-                  </div>
-                <% } else { %>
-                  <li class="nav-item">
-                    <a href="#download" class="btn btn-style btn-primary d-block" data-toggle="modal"
-                      data-target="#myModal4reg">Get Started</a>
-    
-                    <!-- //modal-popup for register-->
-                    <div class="selectpackage">
-                      <div class="modal fade" id="myModal4reg" tabindex="-1" role="dialog"
-                        aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                                &times;
-                              </button>
-                              <h4 class="modal-title" id="myModalLabel">
-                                Get started with our E-Therapy
-                              </h4>
-                            </div>
-                            <div class="modal-body packages">
-                              <div class="appointment-form">
-                                <form id="registerForm" onsubmit="return registerFunc()">
-                                  <!-- Error Alert box -->
-                                  <div id="errorBox1" class="alert alert-danger hide" role="alert"></div>
-    
-                                  <!-- Success Alert box -->
-                                  <div id="successBox1" class="alert alert-success hide" role="alert"></div>
-    
-                                  <div class="fields-grid">
-                                    <div class="styled-input">
-                                      <div class="appointment-form-field">
-                                        Username
-                                        <input type="text" name="Username" placeholder="Username" required />
-                                        <span id="blankMsg" style="color: red"></span>
-                                      </div>
-                                    </div>
-                                    <div class="styled-input">
-                                      <div class="appointment-form-field">
-                                        E-mail Address:
-                                        <input type="email" name="Email" placeholder="me@babcock.edu.ng" required />
-                                      </div>
-                                    </div>
-                                    <div class="styled-input">
-                                      <div class="appointment-form-field">
-                                        <label for="password">Enter password</label>
-                                        <input type="password" name="Password" id="password11"
-                                          placeholder="minimum of 8 characters" required />
-                                      </div>
-                                    </div>
-                                    <div class="styled-input">
-                                      <div class="appointment-form-field">
-                                        <label for="password2">Confirm Password</label>
-                                        <input type="password" name="ConfirmPassword" id="password12"
-                                          placeholder="minimum of 8 characters" required />
-                                      </div>
-                                    </div>
-    
-                                    <div class="styled-input">
-                                      Telephone No:
-                                      <div class="appointment-form-field">
-                                        <input type="tel" name="Telephone" placeholder="Enter Your Telephone Number"
-                                          required />
-                                      </div>
-                                    </div>
-    
-                                    <div class="styled-input">
-                                      <label for="Sex">Specify Your Sex</label>
-                                      <select name="Sex" required>
-                                        <option value="">Sex*</option>
-                                        <option value="Male">Male</option>
-                                        <option value="Female">Female</option>
-                                      </select>
-                                    </div>
-    
-                                    <div class="styled-input">
-                                      Support needs/challenges:
-                                      <div class="appointment-form-field">
-                                        <select onchange="getMatchingTherapist(this.value)" name="Case" id="department"
-                                          required>
-                                          <option value="">Challenges*</option>
-                                          <option value="Emotional instability">
-                                            Emotional instability
-                                          </option>
-                                          <option value="Bereavement">
-                                            Bereavement
-                                          </option>
-                                          <option value="Ill health">
-                                            Ill health
-                                          </option>
-                                          <option value="Family disruptions">
-                                            Family disruptions
-                                          </option>
-                                          <option value="Lack of motivation">
-                                            Lack of motivation
-                                          </option>
-                                          <option value="Drugs and misbehaviour">
-                                            Drugs and misbehaviour
-                                          </option>
-                                          <option value="Others">Others</option>
-                                        </select>
-                                      </div>
-                                    </div>
-                                    <div class="styled-input">
-                                      Pick A Consellor:
-                                      <div class="appointment-form-field">
-                                        <select name="Assigned_Therapist" id="assignedTherapist" required>
-                                          <option>Select Counsellor</option>
-                                        </select>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="appointment-btn text-lg-right">
-                                    <button id="registerSubmitBtn" type="submit" value="submit"
-                                      class="btn btn-style btn-primary mt-4">
-                                      Create Profile
-                                    </button>
-                                  </div>
-                                </form>
-                              </div>
-                            </div>
-                          </div>
+                      <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink3" data-toggle="dropdown"
+                          aria-haspopup="true" aria-expanded="false">
+                          Account
+                          <span class="fa fa-caret-down"></span>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink3">
+                          <a class="dropdown-item" data-toggle="modal" data-target="#myModal4Login">Login</a>
+                          <a class="dropdown-item" data-toggle="modal" data-target="#myModal4reg">Register</a>
                         </div>
-                      </div>
-                      <script>
-                        $("#myModal4reg").modal("show");
-                      </script>
+                      </li>
+
+                      <% } %>
+                </ul>
+
+                <ul class="navbar-nav search-right mt-lg-0 mt-2">
+                  <% if (userStatus && userStatus.Name) { %>
+                    <div class="navGreeting">
+                      <h4>Hello, <%= userStatus.Name %>
+                      </h4>
                     </div>
-                    <!-- //modal-popup for registrations ends-->
-                  </li>
-                <% } %>
+                    <% } else { %>
+                      <li class="nav-item">
+                        <a href="#download" class="btn btn-style btn-primary d-block" data-toggle="modal"
+                          data-target="#myModal4reg">Get Started</a>
 
-                <!-- //modal-popup 4 Login-->
-                <div class="selectpackage">
-                  <div class="modal fade" id="myModal4Login" tabindex="-1" role="dialog"
-                    aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            &times;
-                          </button>
-                          <h4 class="modal-title" id="myModalLabel">
-                            Login to your Account
-                          </h4>
-                        </div>
-                        <div class="modal-body packages">
-                          <div class="appointment-form">
-                            <form id="loginForm" onsubmit="return loginFunc()">
-                              <!-- Error Alert box -->
-                              <div id="errorBox2" class="alert alert-danger hide" role="alert"></div>
-
-                              <!-- Success Alert box -->
-                              <div id="successBox2" class="alert alert-success hide" role="alert"></div>
-
-                              <div class="loginFormMod fields-grid">
-                                <div class="styled-input">
-                                  <div class="appointment-form-field">
-                                    Email
-                                    <input type="email" name="Email" placeholder="example@example.com" required />
-                                    <span id="blankMsg" style="color: red"></span>
-                                  </div>
-                                </div>
-                                <div class="styled-input">
-                                  <div class="appointment-form-field">
-                                    Password
-                                    <input type="password" name="Password" placeholder="********" required />
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="appointment-btn text-lg-right">
-                                <button id="loginSubmitBtn" type="submit" value="submit"
-                                  class="btn btn-style btn-primary mt-4">
-                                  Login
-                                </button>
-                              </div>
-                            </form>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <script>
-                    $("#myModal4Login").modal("show");
-                  </script>
-                </div>
-                <!-- //modal-popup 4 Login-->
-
-                <% if (userStatus && userStatus.isAdmin) { %>
-
-                  <!-- //modal-popup 4 registering therapist-->
-                  <div class="selectpackage">
-                    <div class="modal fade" id="myModal4regTherapist" tabindex="-1" role="dialog"
-                      aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                      <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <button id="regTherapistModal" type="button" class="close" data-dismiss="modal"
-                              aria-hidden="true">
-                              &times;
-                            </button>
-                            <h4 class="modal-title" id="myModalLabel">
-                              Add A New Therapist
-                            </h4>
-                          </div>
-                          <div class="modal-body packages">
-                            <div class="appointment-form">
-                              <form id="regTherapistForm" onsubmit="return regTherapistFunc()">
-                                <!-- Error Alert box -->
-                                <div id="errorBox4" class="alert alert-danger hide" role="alert"></div>
-
-                                <!-- Success Alert box -->
-                                <div id="successBox4" class="alert alert-success hide" role="alert"></div>
-
-                                <div class="fields-grid">
-                                  <div class="styled-input">
-                                    <div class="appointment-form-field">
-                                      First Name
-                                      <input type="text" name="First_Name" placeholder="John" required />
-                                      <span id="blankMsg" style="color: red"></span>
-                                    </div>
-                                  </div>
-
-                                  <div class="styled-input">
-                                    <div class="appointment-form-field">
-                                      Last Name
-                                      <input type="text" name="Last_Name" placeholder="Doe" required />
-                                      <span id="blankMsg" style="color: red"></span>
-                                    </div>
-                                  </div>
-
-                                  <div class="styled-input">
-                                    <div class="appointment-form-field">
-                                      E-mail Address:
-                                      <input type="email" name="Email" placeholder="me@babcock.edu.ng" required />
-                                    </div>
-                                  </div>
-
-                                  <div class="styled-input">
-                                    Telephone No:
-                                    <div class="appointment-form-field">
-                                      <input type="tel" name="Telephone" placeholder="Enter Telephone Number" required />
-                                    </div>
-                                  </div>
-
-                                  <div class="styled-input">
-                                    <div class="appointment-form-field">
-                                      <label for="password">Enter password</label>
-                                      <input type="password" name="Password" id="password21"
-                                        placeholder="minimum of 8 characters" required />
-                                    </div>
-                                  </div>
-
-                                  <div class="styled-input">
-                                    <div class="appointment-form-field">
-                                      <label for="password2">Confirm Password</label>
-                                      <input type="password" name="ConfirmPassword" id="password22"
-                                        placeholder="minimum of 8 characters" required />
-                                    </div>
-                                  </div>
-
-                                  <div class="styled-input">
-                                    <label for="Sex">Specify Your Sex</label>
-                                    <select name="Sex" required>
-                                      <option value="">Sex*</option>
-                                      <option value="Male">Male</option>
-                                      <option value="Female">Female</option>
-                                    </select>
-                                  </div>
-
-                                  <div class="styled-input">
-                                    <label for="Education_Level">Specify Highest level of education</label>
-                                    <select name="Education_Level" required>
-                                      <option value="">Education Level*</option>
-                                      <option value="Bs.C">Bs.C</option>
-                                      <option value="Ms.C">Ms.C</option>
-                                      <option value="Ph.D">Ph.D</option>
-                                      <option value="Doctor">Doctor</option>
-                                    </select>
-                                  </div>
-                                </div>
-
-                                <div class="appointment-form-field">
-                                  Specialization
-                                  <textarea name="Specialization" cols="30" rows="10"
-                                    placeholder="Enter therapist's specialization seperated by commas e.g (Bereavement services, Academic services etc.)"
-                                    style="padding-top: 10px" required></textarea>
-                                </div>
-
-                                <div class="appointment-btn text-lg-right">
-                                  <button id="regTherapistSubmitBtn" type="submit" value="submit"
-                                    class="btn btn-style btn-primary mt-4">
-                                    Add Therapist
+                        <!-- //modal-popup for register-->
+                        <div class="selectpackage">
+                          <div class="modal fade" id="myModal4reg" tabindex="-1" role="dialog"
+                            aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                    &times;
                                   </button>
+                                  <h4 class="modal-title" id="myModalLabel">
+                                    Get started with our E-Therapy
+                                  </h4>
                                 </div>
-                              </form>
+                                <div class="modal-body packages">
+                                  <div class="appointment-form">
+                                    <form id="registerForm" onsubmit="return registerFunc()">
+                                      <!-- Error Alert box -->
+                                      <div id="errorBox1" class="alert alert-danger hide" role="alert"></div>
+
+                                      <!-- Success Alert box -->
+                                      <div id="successBox1" class="alert alert-success hide" role="alert"></div>
+
+                                      <div class="fields-grid">
+                                        <div class="styled-input">
+                                          <div class="appointment-form-field">
+                                            Username
+                                            <input type="text" name="Username" placeholder="Username" required />
+                                            <span id="blankMsg" style="color: red"></span>
+                                          </div>
+                                        </div>
+                                        <div class="styled-input">
+                                          <div class="appointment-form-field">
+                                            E-mail Address:
+                                            <input type="email" name="Email" placeholder="me@babcock.edu.ng" required />
+                                          </div>
+                                        </div>
+                                        <div class="styled-input">
+                                          <div class="appointment-form-field">
+                                            <label for="password">Enter password</label>
+                                            <input type="password" name="Password" id="password11"
+                                              placeholder="minimum of 8 characters" required />
+                                          </div>
+                                        </div>
+                                        <div class="styled-input">
+                                          <div class="appointment-form-field">
+                                            <label for="password2">Confirm Password</label>
+                                            <input type="password" name="ConfirmPassword" id="password12"
+                                              placeholder="minimum of 8 characters" required />
+                                          </div>
+                                        </div>
+
+                                        <div class="styled-input">
+                                          Telephone No:
+                                          <div class="appointment-form-field">
+                                            <input type="tel" name="Telephone" placeholder="Enter Your Telephone Number"
+                                              required />
+                                          </div>
+                                        </div>
+
+                                        <div class="styled-input">
+                                          <label for="Sex">Specify Your Sex</label>
+                                          <select name="Sex" required>
+                                            <option value="">Sex*</option>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                          </select>
+                                        </div>
+
+                                        <div class="styled-input">
+                                          Support needs/challenges:
+                                          <div class="appointment-form-field">
+                                            <select onchange="getMatchingTherapist(this.value)" name="Case"
+                                              id="department" required>
+                                              <option value="">Challenges*</option>
+                                              <option value="Emotional instability">
+                                                Emotional instability
+                                              </option>
+                                              <option value="Bereavement">
+                                                Bereavement
+                                              </option>
+                                              <option value="Ill health">
+                                                Ill health
+                                              </option>
+                                              <option value="Family disruptions">
+                                                Family disruptions
+                                              </option>
+                                              <option value="Lack of motivation">
+                                                Lack of motivation
+                                              </option>
+                                              <option value="Drugs and misbehaviour">
+                                                Drugs and misbehaviour
+                                              </option>
+                                              <option value="Others">Others</option>
+                                            </select>
+                                          </div>
+                                        </div>
+                                        <div class="styled-input">
+                                          Pick A Consellor:
+                                          <div class="appointment-form-field">
+                                            <select name="Assigned_Therapist" id="assignedTherapist" required>
+                                              <option>Select Counsellor</option>
+                                            </select>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="appointment-btn text-lg-right">
+                                        <button id="registerSubmitBtn" type="submit" value="submit"
+                                          class="btn btn-style btn-primary mt-4">
+                                          Create Profile
+                                        </button>
+                                      </div>
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
                           </div>
+                          <script>
+                            $("#myModal4reg").modal("show");
+                          </script>
                         </div>
-                      </div>
-                    </div>
-                    <script>
-                      $("#myModal4regTherapist").modal("show");
-                    </script>
+                        <!-- //modal-popup for registrations ends-->
+                      </li>
+                      <% } %>
+
+                        <!-- //modal-popup 4 Login-->
+                        <div class="selectpackage">
+                          <div class="modal fade" id="myModal4Login" tabindex="-1" role="dialog"
+                            aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                    &times;
+                                  </button>
+                                  <h4 class="modal-title" id="myModalLabel">
+                                    Login to your Account
+                                  </h4>
+                                </div>
+                                <div class="modal-body packages">
+                                  <div class="appointment-form">
+                                    <form id="loginForm" onsubmit="return loginFunc()">
+                                      <!-- Error Alert box -->
+                                      <div id="errorBox2" class="alert alert-danger hide" role="alert"></div>
+
+                                      <!-- Success Alert box -->
+                                      <div id="successBox2" class="alert alert-success hide" role="alert"></div>
+
+                                      <div class="loginFormMod fields-grid">
+                                        <div class="styled-input">
+                                          <div class="appointment-form-field">
+                                            Email
+                                            <input type="email" name="Email" placeholder="example@example.com"
+                                              required />
+                                            <span id="blankMsg" style="color: red"></span>
+                                          </div>
+                                        </div>
+                                        <div class="styled-input">
+                                          <div class="appointment-form-field">
+                                            Password
+                                            <input type="password" name="Password" placeholder="********" required />
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="appointment-btn text-lg-right">
+                                        <button id="loginSubmitBtn" type="submit" value="submit"
+                                          class="btn btn-style btn-primary mt-4">
+                                          Login
+                                        </button>
+                                      </div>
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <script>
+                            $("#myModal4Login").modal("show");
+                          </script>
+                        </div>
+                        <!-- //modal-popup 4 Login-->
+
+                        <% if (userStatus && userStatus.isAdmin) { %>
+
+                          <!-- //modal-popup 4 registering therapist-->
+                          <div class="selectpackage">
+                            <div class="modal fade" id="myModal4regTherapist" tabindex="-1" role="dialog"
+                              aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                              <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <button id="regTherapistModal" type="button" class="close" data-dismiss="modal"
+                                      aria-hidden="true">
+                                      &times;
+                                    </button>
+                                    <h4 class="modal-title" id="myModalLabel">
+                                      Add A New Therapist
+                                    </h4>
+                                  </div>
+                                  <div class="modal-body packages">
+                                    <div class="appointment-form">
+                                      <form id="regTherapistForm" onsubmit="return regTherapistFunc()">
+                                        <!-- Error Alert box -->
+                                        <div id="errorBox4" class="alert alert-danger hide" role="alert"></div>
+
+                                        <!-- Success Alert box -->
+                                        <div id="successBox4" class="alert alert-success hide" role="alert"></div>
+
+                                        <div class="fields-grid">
+                                          <div class="styled-input">
+                                            <div class="appointment-form-field">
+                                              First Name
+                                              <input type="text" name="First_Name" placeholder="John" required />
+                                              <span id="blankMsg" style="color: red"></span>
+                                            </div>
+                                          </div>
+
+                                          <div class="styled-input">
+                                            <div class="appointment-form-field">
+                                              Last Name
+                                              <input type="text" name="Last_Name" placeholder="Doe" required />
+                                              <span id="blankMsg" style="color: red"></span>
+                                            </div>
+                                          </div>
+
+                                          <div class="styled-input">
+                                            <div class="appointment-form-field">
+                                              E-mail Address:
+                                              <input type="email" name="Email" placeholder="me@babcock.edu.ng"
+                                                required />
+                                            </div>
+                                          </div>
+
+                                          <div class="styled-input">
+                                            Telephone No:
+                                            <div class="appointment-form-field">
+                                              <input type="tel" name="Telephone" placeholder="Enter Telephone Number"
+                                                required />
+                                            </div>
+                                          </div>
+
+                                          <div class="styled-input">
+                                            <div class="appointment-form-field">
+                                              <label for="password">Enter password</label>
+                                              <input type="password" name="Password" id="password21"
+                                                placeholder="minimum of 8 characters" required />
+                                            </div>
+                                          </div>
+
+                                          <div class="styled-input">
+                                            <div class="appointment-form-field">
+                                              <label for="password2">Confirm Password</label>
+                                              <input type="password" name="ConfirmPassword" id="password22"
+                                                placeholder="minimum of 8 characters" required />
+                                            </div>
+                                          </div>
+
+                                          <div class="styled-input">
+                                            <label for="Sex">Specify Your Sex</label>
+                                            <select name="Sex" required>
+                                              <option value="">Sex*</option>
+                                              <option value="Male">Male</option>
+                                              <option value="Female">Female</option>
+                                            </select>
+                                          </div>
+
+                                          <div class="styled-input">
+                                            <label for="Education_Level">Specify Highest level of education</label>
+                                            <select name="Education_Level" required>
+                                              <option value="">Education Level*</option>
+                                              <option value="Bs.C">Bs.C</option>
+                                              <option value="Ms.C">Ms.C</option>
+                                              <option value="Ph.D">Ph.D</option>
+                                              <option value="Doctor">Doctor</option>
+                                            </select>
+                                          </div>
+                                        </div>
+
+                                        <div class="appointment-form-field">
+                                          Specialization
+                                          <textarea name="Specialization" cols="30" rows="10"
+                                            placeholder="Enter therapist's specialization seperated by commas e.g (Bereavement services, Academic services etc.)"
+                                            style="padding-top: 10px" required></textarea>
+                                        </div>
+
+                                        <div class="appointment-btn text-lg-right">
+                                          <button id="regTherapistSubmitBtn" type="submit" value="submit"
+                                            class="btn btn-style btn-primary mt-4">
+                                            Add Therapist
+                                          </button>
+                                        </div>
+                                      </form>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <script>
+                              $("#myModal4regTherapist").modal("show");
+                            </script>
+                          </div>
+                          <!-- //modal-popup 4 registering therapist-->
+
+                          <% } %>
+                </ul>
+
+                <!-- //toggle switch for light and dark theme -->
+                <!-- search popup -->
+                <div id="search" class="pop-overlay">
+                  <div class="popup">
+                    <form action="#" method="GET" class="d-sm-flex">
+                      <input type="search" placeholder="Search.." name="search" required="required" autofocus />
+                      <button type="submit">Search</button>
+                      <a class="close" href="#url">&times;</a>
+                    </form>
                   </div>
-                  <!-- //modal-popup 4 registering therapist-->
-
-                  <% } %>
-              </ul>
-
-              <!-- //toggle switch for light and dark theme -->
-              <!-- search popup -->
-              <div id="search" class="pop-overlay">
-                <div class="popup">
-                  <form action="#" method="GET" class="d-sm-flex">
-                    <input type="search" placeholder="Search.." name="search" required="required" autofocus />
-                    <button type="submit">Search</button>
-                    <a class="close" href="#url">&times;</a>
-                  </form>
                 </div>
+                <!-- /search popup -->
               </div>
-              <!-- /search popup -->
-            </div>
-            <!-- toggle switch for light and dark theme -->
-            <div class="mobile-position">
-              <nav class="navigation">
-                <div class="theme-switch-wrapper">
-                  <label class="theme-switch" for="checkbox">
-                    <input type="checkbox" id="checkbox" />
-                    <div class="mode-container py-1">
-                      <i class="gg-sun"></i>
-                      <i class="gg-moon"></i>
-                    </div>
-                  </label>
-                </div>
-              </nav>
-            </div>
-            <!-- //toggle switch for light and dark theme -->
-          <% } %>
-
+              <!-- toggle switch for light and dark theme -->
+              <div class="mobile-position">
+                <nav class="navigation">
+                  <div class="theme-switch-wrapper">
+                    <label class="theme-switch" for="checkbox">
+                      <input type="checkbox" id="checkbox" />
+                      <div class="mode-container py-1">
+                        <i class="gg-sun"></i>
+                        <i class="gg-moon"></i>
+                      </div>
+                    </label>
+                  </div>
+                </nav>
+              </div>
+              <!-- //toggle switch for light and dark theme -->
+              <% } %>
         </nav>
       </div>
     </div>
