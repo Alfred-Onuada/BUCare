@@ -8,14 +8,17 @@ Author URL: http://w3layouts.com
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
+    <base href="../">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Preventive Medical Category Bootstrap Responsive Template | About :: W3Layouts</title>
+    <title>Therapy Room | BUCare</title>
     <link href="//fonts.googleapis.com/css?family=Nunito:400,600,700&display=swap" rel="stylesheet">
+	<link rel="shortcut icon" href="media/imgs/template/favicon.ico" type="image/x-icon">
+
     <!-- Template CSS -->
-    <link rel="stylesheet" href="../css/template_styles/style-starter.css">
+    <link rel="stylesheet" href="css/template_styles/style-starter.css">
 
     <!-- My Styles -->
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 </head>
 
@@ -54,7 +57,7 @@ Author URL: http://w3layouts.com
                 </div>
                 <div class="modal-body">
                     <center id="ratingStars">
-                        <h5 class="ratingHeader">How likely are you to continue with this therapist?</h5>
+                        <h5 class="ratingHeader" id="ratingHeader">How likely are you to continue with this therapist?</h5>
                         <div onmouseleave="showRatingText('', -1)" class="stars" id="stars">
                             <i onclick="rate(1)" onmouseover="showRatingText('😒nah! I\'ll pass', 0)" class="bi bi-star"></i>
                             <i onclick="rate(2)" onmouseover="showRatingText('I may consider it', 1)" class="bi bi-star"></i>
@@ -136,7 +139,7 @@ Author URL: http://w3layouts.com
                                     <% if (userStatus.Display_Picture != undefined) { %>
                                         <img src="<%= userStatus.Display_Picture %>" alt="your profile picture" id="displayPicture">
                                     <% } else { %>
-                                        <img src="../defaults/<%= userStatus.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture" id="displayPicture">
+                                        <img src="defaults/<%= userStatus.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture" id="displayPicture">
                                     <% } %>
                                     <div class="changePhoto">
                                         <label for="changePhoto">
@@ -318,7 +321,7 @@ Author URL: http://w3layouts.com
                             <% if (userStatus.Display_Picture != undefined) { %>
                                 <img class="profileIconImg" src="<%= userStatus.Display_Picture %>" alt="your profile picture" id="tinyDisplayPicture">
                             <% } else { %>
-                                <img class="profileIconImg" src="../defaults/<%= userStatus.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture" id="tinyDisplayPicture">
+                                <img class="profileIconImg" src="defaults/<%= userStatus.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture" id="tinyDisplayPicture">
                             <% } %>
                         </div>
                         <div>
@@ -338,7 +341,7 @@ Author URL: http://w3layouts.com
                                     <% if (room.Display_Picture != undefined) { %>
                                         <img id="pic4<%= index %>" src="<%= room.Display_Picture %>" alt="your profile picture">
                                     <% } else { %>
-                                        <img id="pic4<%= index %>" src="../defaults/<%= room.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture">
+                                        <img id="pic4<%= index %>" src="defaults/<%= room.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture">
                                     <% } %>
                                 </div>
                                 <div class="previousChat">
@@ -511,8 +514,8 @@ Author URL: http://w3layouts.com
 
     <!-- //copyright -->
     <!-- Template JavaScript -->
-    <script src="../js/template_scripts/jquery-3.3.1.min.js"></script>
-    <script src="../js/template_scripts/theme-change.js"></script>
+    <script src="js/template_scripts/jquery-3.3.1.min.js"></script>
+    <script src="js/template_scripts/theme-change.js"></script>
     <!--/MENU-JS-->
     <script>
         $(window).on("scroll", function() {
@@ -541,13 +544,13 @@ Author URL: http://w3layouts.com
         });
     </script>
     <!--//MENU-JS-->
-    <script src="../js/template_scripts/bootstrap.bundle.min.js"></script>
-    <script src="../js/template_scripts/bootstrap.min.js"></script>
+    <script src="js/template_scripts/bootstrap.bundle.min.js"></script>
+    <script src="js/template_scripts/bootstrap.min.js"></script>
 
     <!-- My Script -->
     <!-- This has to come first so the socket variable is available before the script calls it -->
-    <script src="../socket.io/socket.io.js"></script>
-    <script src="../js/script.js"></script>
+    <script src="socket.io/socket.io.js"></script>
+    <script src="js/script.js"></script>
 
 </body>
 

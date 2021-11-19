@@ -613,3 +613,17 @@
 .disabled:hover{
     color: grey;
 }
+
+.navGreeting > h4{
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.navbar-brand{
+    display: flex;
+    align-items: center;
+}
+
+.bu_logo{
+    height: 40px;
+}

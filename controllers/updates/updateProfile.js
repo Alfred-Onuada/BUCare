@@ -38,7 +38,8 @@ function updateProfile(req, res) {
           if (users_docs.isTherapist) {
             Therapists.findOneAndUpdate(
               { Email: userEmail },
-              { $set: ((o = {}), (o[data.affectedField] = data.newValue), o) }
+              { [data.affectedField]: data.newValue } 
+              // lol😂😂, rather than write complex mongoose code to use variable field name, Js builtin symbols does the trick
             )
               .then((info) => {
                 res.status(200).send(data.newValue);
