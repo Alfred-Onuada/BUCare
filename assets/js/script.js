@@ -1,3 +1,17 @@
+function getRelativeURLSection() {
+  let fullUrl = location.toString();
+
+  if (fullUrl.includes('/t/')) {
+    return 't/';
+  } else if (fullUrl.includes('/c/')) {
+    return 'c/';
+  } else if (fullUrl.includes('/a/')) {
+    return 'a/';
+  } else {
+    return '';
+  }
+}
+
 // this creates global functions even thou they are defined inside another function
 let displayRoom,
   leaveChat,
@@ -1034,7 +1048,7 @@ function showExtraInfo(userId, picId) {
     `;
 
   let xhr = new XMLHttpRequest();
-  xhr.open("GET", `getinfo/${userId}`, true);
+  xhr.open("GET", getRelativeURLSection() + `getinfo/${userId}`, true);
   xhr.onreadystatechange = function () {
     if (this.readyState == 4) {
       if (this.status == 200) {
@@ -1188,7 +1202,7 @@ function rate(rating) {
   ratingCancelBtn.innerHTML = "Processing...";
 
   let xhr = new XMLHttpRequest();
-  xhr.open("PUT", "ratetherapist", true);
+  xhr.open("PUT", getRelativeURLSection() + "ratetherapist", true);
   xhr.setRequestHeader("content-type", "application/json");
   xhr.onreadystatechange = function () {
     if (this.readyState === 4) {
@@ -1250,7 +1264,7 @@ function addRatingComment() {
 
   commentBtn.innerHTML = "Processing...";
   let xhr = new XMLHttpRequest();
-  xhr.open("PUT", `updateRating`, true);
+  xhr.open("PUT", getRelativeURLSection() + `updateRating`, true);
   xhr.setRequestHeader("content-type", "application/json");
   xhr.onreadystatechange = function () {
     if (this.readyState === 4) {
@@ -1432,7 +1446,7 @@ function submitCaseFile() {
   let caseFileForm = document.getElementById("caseFIleForm");
 
   let xhr = new XMLHttpRequest();
-  xhr.open("POST", "addCaseFile", true);
+  xhr.open("POST", getRelativeURLSection() + "addCaseFile", true);
   xhr.setRequestHeader("content-type", "application/json");
   xhr.onreadystatechange = function () {
     if (this.readyState) {

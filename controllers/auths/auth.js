@@ -167,7 +167,7 @@ Router.post("/login", async (req, res) => {
   // check if user exists using email
   Users.findOne({ Email: req.body.Email })
     .then(async (docs) => {
-      if (docs.Disabled) {
+      if (docs && docs.Disabled) {
         return res
           .status(401)
           .send(
