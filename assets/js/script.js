@@ -889,33 +889,87 @@ function closeToastMsg(toast) {
   toastContainer.removeChild(toast);
 }
 
-// function featureNotAvailable() {
-//   let toastContainer = document.getElementById("toastContainer");
+function search() {
 
-//   let toast = document.createElement("div");
-//   // add all the default attributes from bootstrap
-//   toast.classList.add("myToast", "toast");
-//   toast.ariaRoleDescription = "alert";
-//   toast.ariaLive = "assertive";
-//   toast.ariaAtomic = true;
-//   toast.innerHTML = `
-//         <div class="toast-header">
-//             <span class="fa fa-smile-o mr-2"></span>
-//             <span class="mr-auto">BUCare</span>
-//             <small>a few moments ago</small>
-//             <button onclick="closeToastMsg(this.parentNode)" type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-//                 <span aria-hidden="true">&times;</span>
-//             </button>
-//         </div>
-//         <div id="serverMsg" class="toast-body">Sorry, this feature is currently not available, <br> we are working to get it out as soon as possible. thank you</div>
-//     `;
+  const searchContainer = document.getElementById('contacts-search');
+  const contactsContainer = document.getElementById('contacts-list');
+  let query = document.getElementById('search-box').value;
 
-//   toastContainer.appendChild(toast);
+  query = query.trim();
 
-//   setTimeout(() => {
-//     closeToastMsg(toast);
-//   }, 5000);
-// }
+  if (query == '') {
+    contactsContainer.classList.remove('hide');
+    searchContainer.classList.add('hide');
+    return;
+  } 
+
+  contactsContainer.classList.add('hide');
+  searchContainer.classList.remove('hide');
+  
+  searchContainer.innerHTML = 'Searching...';
+
+  let xhr = new XMLHttpRequest();
+  xhr.open('GET', getRelativeURLSection() + `search/${query}`, true);
+  xhr.onreadystatechange =  function () {
+    if (this.readyState === 4) {
+      if (this.status === 200) {
+
+        searchContainer.innerHTML =  '';
+        
+        const rooms_info = JSON.parse(this.responseText);
+
+        let data =  ``;
+
+          for( let index = 0; index < rooms_info.length; index++ ) {
+            let room = rooms_info[index];
+            let chat = room.Chats;
+        
+        data +=  `
+            <div class="eachContact" onclick="displayRoom('${room._id}')">
+              <div class="contactPicture">
+              `;
+        
+              if (room.Display_Picture != undefined) {
+                data +=  `<img id="pic4${index}" src="${room.Display_Picture}" alt="your profile picture">`;
+              } else {
+                data += `<img id="pic4${index}" src="defaults/${room.Sex == 'Male' ? 'male' : 'female'}.png" alt="your profile picture">`;
+              }
+        data += `</div>
+              <div class="previousChat">
+                <h4 class="contactName">
+                  ${room.Username}
+                </h4>
+                <div class="recent">
+                  <h4 id="recentChats-${room._id}" class="recentChat">
+                  `;
+
+                    console.log(chat);
+                    if (chat.length > 0) {
+                      data += chat[chat.length-1].Message;
+                    } else {
+                      data += `<i>tap to begin a conversation</i>`;
+                    }
+        data += `
+                  </h4>
+                  <!-- This index refers to the very last chat -->
+                  <div id="dot4-${room._id}" class="hide notifcation-dot"></div>
+                </div>
+              </div>
+            </div>
+            <hr style="margin: 5px 0px !important;">
+          `;
+          }
+
+        searchContainer.innerHTML += data;
+
+      } else {
+
+      }
+    }
+  }
+  xhr.send();
+  
+}
 
 function showToastMsg(msg) {
   let toastContainer = document.getElementById("toastContainer");

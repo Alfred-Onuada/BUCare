@@ -324,14 +324,14 @@ Author URL: http://w3layouts.com
                                 <img class="profileIconImg" src="defaults/<%= userStatus.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture" id="tinyDisplayPicture">
                             <% } %>
                         </div>
-                        <div>
-                            <form class="form-inline">
-                                <input class="searchBox form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                        <div class="search-div">
+                            <form role="searchbox">
+                                <input class="search-box" type="search" name="" id="search-box" onkeyup="search()" placeholder="Start typing">
                             </form>
                         </div>
                     </div>
                     <hr style="margin-top: 0px !important;">
-                    <div class="contacts-list">
+                    <div class="contacts-list" id="contacts-list">
 
                         <% for( let index = 0; index < rooms_info.length; index++ ) { %>
                             <% room = rooms_info[index] %>
@@ -364,6 +364,8 @@ Author URL: http://w3layouts.com
                             <hr style="margin: 5px 0px !important;">
                         <% } %>
                     </div>
+
+                    <div class="hide contacts-list" id="contacts-search"></div>
 
                 </div>
                 <div id="chatBox" style="padding: 0px !important;" class="allRooms col-sm-8 col-md-8 col-lg-8 col-xl-8">

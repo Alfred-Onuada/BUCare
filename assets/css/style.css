@@ -128,10 +128,16 @@
 
 .searchandprofile {
     height: 70px;
+    max-width: 100%;
     display: flex;
     place-items: center;
     place-content: center;
     background-color: whitesmoke;
+}
+
+.profileIcon {
+    width: 12%;
+    text-align: center;
 }
 
 .profileIcon:hover{
@@ -144,9 +150,16 @@
     border-radius: 50%;
 }
 
-.searchBox {
-    width: 400px !important;
-    margin: 0px 10px;
+.search-div {
+    width: 88%;
+}
+
+.search-box {
+    width: 95%;
+    border: 1px solid gray;
+    border-radius: 10px;
+    height: 35px;
+    padding: 0px 10px;
 }
 
 .eachContact {

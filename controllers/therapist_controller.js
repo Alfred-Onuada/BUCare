@@ -539,6 +539,16 @@ Router.post('/addCaseFile', verify, async (req, res) => {
 
 });
 
+Router.get('/search/:query', verify, (req, res) => {
+  console.log(`Request made to : t${req.url}`);
+
+  const { query } = req.params;
+  const { _id: userId } = req.user;
+
+  res.send();
+
+});
+
 // This makes sure all normal routes called from the client route c/ will redirect backwards
 Router.get("/", (req, res) => {
   res.redirect("../");

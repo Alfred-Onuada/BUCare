@@ -23,7 +23,7 @@ Router.get("/rooms", verify, (req, res) => {
   console.log(`Request made to : c${req.url}`);
 
   // the nav has to appear a bit differntly on only this page so this is how i know it is on this page
-  req.user.isVisitingRooms = true; 
+  req.user.isVisitingRooms = true;
 
   Io.on("connection", (socket) => {
     // Io tags the on('connection') event to itself with a callback containing the connected socket so for every new socket that connects it
@@ -79,11 +79,11 @@ Router.get("/rooms", verify, (req, res) => {
                 console.log(err);
               });
           }
-        });  
+        });
       } catch (error) {
         return res.status(400).send(errors.details[0].message);
       }
-      
+
     });
 
     socket.on("message_status", (data) => {
@@ -353,7 +353,7 @@ Router.get("/getinfo/:userId", verify, (req, res) => {
                 }
               })
 
-            } else {
+          } else {
             res.status(401).send("User not found");
           }
         });
@@ -482,7 +482,7 @@ Router.put("/ratetherapist", verify, (req, res) => {
                     } catch (error) {
                       res.status(400).send(error.details[0].message)
                     }
-                    
+
                   })
                   .catch((err) => {
                     console.log(err);
@@ -507,7 +507,7 @@ Router.put("/ratetherapist", verify, (req, res) => {
   }
 });
 
-Router.put('/updateRating', (req, res) => {  
+Router.put('/updateRating', (req, res) => {
   const id = req.body.docsId;
   const comment = req.body.comment;
 
@@ -528,6 +528,77 @@ Router.put('/updateRating', (req, res) => {
 
       return res.status(500).send();
     })
+});
+
+Router.get('/search/:query', verify, async (req, res) => {
+  console.log(`Request made to : t${req.url}`);
+
+  const { query } = req.params;
+  const { _id: userId } = req.user;
+
+  let results = [];
+
+  let therapist_info;
+  await Users.find({ isTherapist: true, $or: [{ First_Name: { $regex: query, $options: 'i' } }, { Last_Name: { $regex: query, $options: 'i' } },] })
+    .then(docs => {
+      if (docs) {
+        therapist_info = docs;
+      } else {
+        return res.status(400);
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      return res.status(500).send('Something went wrong');
+    })
+
+  const loop1 = async function () {
+    for (let index = 0; index < therapist_info.length; index++) {
+      await Rooms.find({ ClientId: userId, TherapistId: therapist_info[index]._id })
+        .then(r_docs => {
+          if (r_docs.length > 0) {
+            results.push({
+              _id: r_docs._id,
+              Display_Picture: therapist_info[index].Display_Picture,
+              Sex: therapist_info[index].Sex,
+              Chats: [],
+              Username: therapist_info[index].First_Name + ' ' + therapist_info[index].Last_Name,
+            })
+          } else {
+            return res.status(400);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          return res.status(500).send('Something went wrong');
+        })
+    }
+  }
+
+  await loop1();
+
+  const loop2 = async function () {
+    for (let index = 0; index < results.length; index++) {
+      await Chats.find({ RoomId: results[index]._id })
+        .limit(1)
+        .then(c_docs => {
+          if (c_docs) {
+            results[index].Chats = c_docs;
+          } else {
+            return res.status(400);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          return res.status(500).send('Something went wrong');
+        })
+    }
+  }
+
+  await loop2();
+
+  res.status(200).send(results);
+
 });
 
 // This makes sure all normal routes called from the client route c/ will redirect backwards
