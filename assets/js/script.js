@@ -943,7 +943,6 @@ function search() {
                   <h4 id="recentChats-${room._id}" class="recentChat">
                   `;
 
-                    console.log(chat);
                     if (chat.length > 0) {
                       data += chat[chat.length-1].Message;
                     } else {

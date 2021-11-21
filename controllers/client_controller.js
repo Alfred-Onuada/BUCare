@@ -557,12 +557,14 @@ Router.get('/search/:query', verify, async (req, res) => {
       await Rooms.find({ ClientId: userId, TherapistId: therapist_info[index]._id })
         .then(r_docs => {
           if (r_docs.length > 0) {
-            results.push({
-              _id: r_docs._id,
-              Display_Picture: therapist_info[index].Display_Picture,
-              Sex: therapist_info[index].Sex,
-              Chats: [],
-              Username: therapist_info[index].First_Name + ' ' + therapist_info[index].Last_Name,
+            r_docs.forEach(data => {
+              results.push({
+                _id: data._id,
+                Display_Picture: therapist_info[index].Display_Picture,
+                Sex: therapist_info[index].Sex,
+                Chats: [],
+                Username: therapist_info[index].First_Name + ' ' + therapist_info[index].Last_Name,
+              })
             })
           } else {
             return res.status(400);
@@ -580,9 +582,10 @@ Router.get('/search/:query', verify, async (req, res) => {
   const loop2 = async function () {
     for (let index = 0; index < results.length; index++) {
       await Chats.find({ RoomId: results[index]._id })
+        .sort({ _id: -1 }) // means descending order the _id has time builtin
         .limit(1)
         .then(c_docs => {
-          if (c_docs) {
+          if (c_docs.length > 0) {
             results[index].Chats = c_docs;
           } else {
             return res.status(400);

@@ -14,6 +14,7 @@ const Joi = require("@hapi/joi");
 
 // verification route
 const verify = require("./auths/verify");
+const { restart } = require("nodemon");
 
 const chatSchema = Joi.object({
   RoomId: Joi.string().required(),
@@ -539,13 +540,111 @@ Router.post('/addCaseFile', verify, async (req, res) => {
 
 });
 
-Router.get('/search/:query', verify, (req, res) => {
+Router.get('/search/:query', verify, async (req, res) => {
   console.log(`Request made to : t${req.url}`);
 
   const { query } = req.params;
   const { _id: userId } = req.user;
 
-  res.send();
+  let results = [];
+
+  let therapistName;
+  await Users.findById(userId)
+    .then(docs => {
+      if (docs) {
+        therapistName = docs.First_Name + ' ' + docs.Last_Name;
+      } else {
+        return res.status(400).send();
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      return res.status(400).send("Something isn't right");
+    })
+  
+  await Clients.find({ Assigned_Therapist: therapistName, Username: { $regex: query, $options: 'i' }})
+    .then(docs => {
+      if (docs.length > 0) {
+        docs.forEach(doc => {
+          // push returns the new length of the array
+          results.push({
+            Username: doc.Username,
+            Display_Picture: doc.Display_Picture,
+            Sex: doc.Sex,
+            Chats: [],
+            Email: doc.Email,
+          });
+        })
+      } else {
+        return res.status(400);
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      return res.status(400).send("Something isn't right");
+    })  
+
+  const loop = async function () {
+    for (let index = 0; index < results.length; index++) {
+      
+      await Users.findOne({ Email: results[index].Email })
+        .then(u_docs => {
+          if (u_docs) {
+            delete results[index].Email;
+            results[index].userId = u_docs._id;
+          } else {
+            return res.status(400).send();
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          return res.status(400).send("Something isn't right");
+        })
+      
+    }
+  }
+
+  await loop();
+    
+  const loop1 = async function () {
+    for (let index = 0; index < results.length; index++) {
+      await Rooms.findOne({ ClientId: results[index].userId, TherapistId: userId })
+        .then(docs => {
+          if (docs) {
+            results[index]._id = docs._id;
+          } else {
+            return res.status(400);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          return res.status(400).send("Something isn't right");
+        })
+    }
+  }
+
+  await loop1();
+
+  const loop2 = async function () {
+    for (let index = 0; index < results.length; index++) {
+      await Chats.find({ RoomId: results[index]._id })
+        .sort({ _id: -1 })
+        .limit(1)
+        .then(c_docs => {
+          if (c_docs.length > 0) {
+            results[index].Chats = c_docs;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          return res.status(400).send("Something isn't right");
+        })
+    }
+  }
+
+  await loop2();
+
+  res.status(200).send(results);
 
 });
 
