@@ -14,7 +14,6 @@ const Joi = require("@hapi/joi");
 
 // verification route
 const verify = require("./auths/verify");
-const { restart } = require("nodemon");
 
 const chatSchema = Joi.object({
   RoomId: Joi.string().required(),
