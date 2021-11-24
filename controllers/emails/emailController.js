@@ -4,6 +4,15 @@ const Router = require('express').Router();
 //  for credentials
 const env = require('dotenv').config();
 
+// db models
+const TempUsers = require('./../../models/tempUser');
+
+// hapi is used for validation
+const Joi = require("@hapi/joi");
+
+// package for generating tokens
+const crypto = require('crypto');
+
 // packages to handle emails
 const nodemailer = require('nodemailer');
 const hbs = require('nodemailer-express-handlebars');
@@ -36,33 +45,69 @@ const handlebarOptions = {
 };
 
 // use template file with nodemailer
-transporter.use('compile', hbs(handlebarOptions))
+transporter.use('compile', hbs(handlebarOptions));
 
-Router.post('/registration', (req, res) => {
+const tempUserSchema = Joi.object({
+  Email: Joi.string().pattern(/\d{4}@student.babcock.edu.ng$/i).required(),
+  Unique_Code: Joi.string().min(6).max(6).required(),
+  Expires_In: Joi.number().required()
+})
 
+Router.post('/registration', async (req, res) => {
   console.log(`Request made to : ${req.url}`);
 
-  // setting up the options for this email
-	let mailOptions = {
-		from: `Alfred at BUCare`,
-		to: req.body.email,
-		subject: 'Confirm Email Address',
-		template: 'registration',
-		context: {
-			token: req.body.token,
-      website_url: req.body.website_url
-		}
-	};
+  // this produces exactly six random characters
+  const token = crypto.randomBytes(3).toString('hex');
+  const expirationDate = new Date().getTime() + 600000; // this adds a ten minute expiration
 
-  transporter.sendMail(mailOptions, (err, info) => {
-    if (err) {
-      console.log(err);
-      return res.status(500).send('failed');
-    }
+  const data = {
+    Email: req.body.Email,
+    Unique_Code: token,
+    Expires_In: expirationDate
+  }
 
-    console.log('success');
-    res.status(200).send('success');
-  })
+  try {
+    
+    await tempUserSchema.validateAsync(data);
+
+    // this makes sure to delete old data from the system
+    await TempUsers.findOneAndDelete({ Email: data.Email })
+      .catch(err => {
+        console.log(err.message);
+        return res.status(500).send("Something went wrong");
+      })
+
+    await TempUsers(data).save((err, data) => {
+      if (err) {
+        throw err;
+      } else {
+        // setting up the options for this email
+        let mailOptions = {
+          from: `Alfred at BUCare`,
+          to: req.body.Email,
+          subject: 'Confirm Email Address',
+          template: 'registration',
+          context: {
+            token,
+            website_url: req.body.Website_Url
+          }
+        };
+
+        transporter.sendMail(mailOptions, (err, info) => {
+          if (err) {
+            console.log(err);
+            return res.status(500).send('failed');
+          } 
+
+          res.status(200).send('success');
+        })
+      }
+    })
+
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).send();
+  }
 
 })
 

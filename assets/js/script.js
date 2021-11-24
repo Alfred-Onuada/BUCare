@@ -534,6 +534,132 @@ function getMatchingTherapist(challenge) {
   xhr.send();
 }
 
+function checkStudent() {
+  const boxId = 3;
+
+  const modalBody = document.getElementById('modal-body');
+  const modalFooter = document.getElementById('modal-footer');
+  const modalCloseBtn = document.getElementById('confirmStudentModalCloseBtn'); 
+
+  // removes the footer
+  modalFooter.classList.add('hide');
+
+  modalBody.innerHTML = `
+  <!-- Error Alert box -->
+  <div id="errorBox3" class="alert alert-danger hide" role="alert"></div>
+
+  <center id="modal-body-question-2">
+    <h5 class="email-question">Enter your Babcock email address</h5>
+    <input type="email" name="checkStudentEmail" id="checkStudentEmail" placeholder="Type in your email">
+    <button type="button" class="btn btn-secondary" id="emailCheckSubmitBtn">Submit</button>
+  </center>
+  `;
+
+  const emailSubBtn = document.getElementById('emailCheckSubmitBtn');
+  const emailInput = document.getElementById('checkStudentEmail');
+
+  emailSubBtn.onclick = function () {
+
+    emailSubBtn.textContent = "Checking email...";
+
+    let value = emailInput.value
+      .trim()
+      .toLowerCase();
+
+    if (value == "") {
+      emailSubBtn.textContent = "Submit";
+      return displayErrorMsg("Email field cannot be empty", boxId);
+    }
+
+    buEmailRegex = /\d{4}@student.babcock.edu.ng$/i;
+
+    if (buEmailRegex.test(value) === false) {
+      emailSubBtn.textContent = "Submit";
+      return displayErrorMsg("Invalid Babcock email address", boxId);
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/email/registration', true);
+    xhr.setRequestHeader('content-type', 'application/json');
+    xhr.onreadystatechange = function () {
+      if (this.readyState === 4) {
+        if (this.status === 200) {
+
+          emailSubBtn.textContent = "Submit";
+
+          // add the 2 minutes delay between sending intervals and add the 10 minute expiration date
+          modalBody.innerHTML = `
+          <center>
+            <!-- Error Alert box -->
+            <div id="errorBox3" class="alert alert-danger hide" role="alert"></div>
+
+            <!-- Success Alert box -->
+            <div id="successBox3" class="alert alert-success hide" role="alert"></div>
+            
+            <h5 class="code-question">Enter the six digit authentication token that has been sent to ${value}</h5>
+            <input type="text" name="checkStudentCode" id="checkStudentCode" maxlength="6" minlength="6" placeholder="Type in your six digit code">
+            <button type="button" class="btn btn-secondary" id="codeCheckSubmitBtn">Validate</button>
+          </center>
+          `;
+
+          let codeCheckBtn = document.getElementById('codeCheckSubmitBtn');
+          let codeInput = document.getElementById('checkStudentCode');
+
+          codeCheckBtn.onclick = function () {
+            const enteredCode = codeInput.value.trim();
+
+            if (enteredCode == '') {
+              return displayErrorMsg("Input field cannot be empty", boxId);
+            }
+
+            codeCheckBtn.textContent = "Validating...";
+
+            // this disables the button so the user can only click it after the response from the server has come
+            codeCheckBtn.setAttribute('disabled', true);
+
+            // add the 2 minutes countdown after the server response comes in
+            
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", "/checkVerificationToken", true);
+            xhr.setRequestHeader("content-type", "application/json");
+            xhr.onreadystatechange = function () {
+              if (this.readyState === 4) {
+                if (this.status === 200) {
+                  displaySuccessMsg("Email validation successful", boxId);
+
+                  setTimeout(() => {
+                    modalCloseBtn.click();
+                    // activate the actual modal
+                    $("#myModal4reg").modal("show");
+                  }, 2000);
+                } else {
+                  displayErrorMsg(this.responseText, boxId);
+                }
+
+                codeCheckBtn.removeAttribute('disabled');
+                codeCheckBtn.textContent = "Validate";
+              }
+            }
+            xhr.send(JSON.stringify({
+              token: enteredCode,
+              email: value
+            }));
+
+          }
+        } else {
+          displayErrorMsg("Sorry something went wrong", boxId);
+        }
+      }
+    }
+    xhr.send(JSON.stringify({
+        Email: value,
+        Website_Url: location.origin
+      }))
+
+  }
+  
+}
+
 function registerFunc() {
   const boxId = 1;
 

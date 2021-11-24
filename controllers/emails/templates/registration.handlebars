@@ -1,81 +1,24 @@
 <html>
 
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-    .emailBody{
-      font-family: 'Roboto';
-    }
-    .header{
-      display: flex;
-      place-items: center;
-    }
-    .header > img{
-      height: 50px;
-      width: 50px;
-    }
-    .header > h4{
-      margin: 0px 0px 0px 5px;
-      font-size: 20px;
-      font-weight: 400;
-    }
-    .title > h4{
-      font-size: 20px;
-      font-weight: 600;
-      margin: 10px 0px;
-    }
-    .content > h4{
-      margin: 0px 0px 10px 0px;
-      font-size: 18px;
-      font-weight: 100;
-    }
-    .footer{
-      display: flex;
-      place-items: center;
-      place-content: center;
-      flex-direction: column;
-    }
-    .footer > img{
-      margin: 20px 0px 10px 0px;
-      height: 70px;
-      width: 70px;
-    }
-    .made-in{
-      font-size: 16px !important;
-      font-weight: 100;
-      margin: 5px 0px;
-    }
-    .footer > h4{
-      font-size: 13px;
-      font-weight: 100;
-      margin: 5px 0px;
-    }
-    .divider{
-      height: 1px;
-      width: 90%;
-      border-top: 1px solid grey;
-      margin-left: 5%;
-    }
-  </style>
-
-  <div class="emailBody">
-    <div class="header">
-      <img src="../../../assets/media/imgs/template/bu_logo.jpg" alt="Babcock University Logo">
-      <h4 class="orgName">BUCare</h4>
+  <div style="@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap'); font-family: 'Roboto';">
+    <div style="display: flex; place-items: center;">
+      <img style="height: 50px; width: 50px;" src="https://bucare.herokuapp.com/media/imgs/template/bu_logo.jpg" alt="Babcock University Logo">
+      <h4 style="margin: 0px 0px 0px 5px; font-size: 20px; font-weight: 400;">BUCare</h4>
     </div>
-    <div class="title">
-      <h4>Confirm your email address to proceed to registration</h4>
+    <div>
+      <h4 style="font-size: 20px; font-weight: 600; margin: 10px 0px;">Confirm your email address to proceed to registration</h4>
     </div>
-    <div class="content">
-      <h4>Hello, if you recieved this email it confirms you have access to it, and can use it on BUCare</h4>
-      <h4>This is your 6 digit confirmation token - {{token}}</h4>
-      <h4>If you didn't initiate this request, kindly ignore it and we will remove this email from our database after 3 days</h4>
+    <div>
+      <h4 style="margin: 0px 0px 10px 0px; font-size: 18px; font-weight: 100;">Hello, if you recieved this email it confirms you have access to it, and can use it on BUCare</h4>
+      <h4 style="margin: 0px 0px 10px 0px; font-size: 18px; font-weight: 100;">This is your 6 digit confirmation token - <b>{{token}}</b></h4>
+      <h4 style="margin: 0px 0px 10px 0px; font-size: 18px; font-weight: 100;">If you didn't initiate this request, kindly ignore it and we will remove this email from our database after 3 days</h4>
     </div>
-    <div class="divider"></div>
-    <div class="footer">
-      <img src="../../../assets/media/imgs/template/bu_logo.jpg" alt="Babcock University Logo">
-      <h4 class="made-in">Made with 💖 in Babcock University</h4>
-      <h4>121103, Ilishan-Remo Ogun State, Nigeria</h4>
-      <h4><a href="{{website_url}}">{{website_url}}</a></h4>
+    <div style="height: 1px; width: 90%; border-top: 1px solid grey; margin-left: 5%;"></div>
+    <div style="display: flex; place-items: center; place-content: center; flex-direction: column;">
+      <img style=" margin: 20px 0px 10px 0px; height: 70px; width: 70px;" src="https://bucare.herokuapp.com/media/imgs/template/bu_logo.jpg" alt="Babcock University Logo">
+      <h4 style="font-size: 16px !important; font-weight: 100; margin: 5px 0px;">Made with 💖 in Babcock University</h4>
+      <h4 style="font-size: 13px; font-weight: 100; margin: 5px 0px;">121103, Ilishan-Remo Ogun State, Nigeria</h4>
+      <h4 style="font-size: 13px; font-weight: 100; margin: 5px 0px;"><a href="{{website_url}}">{{website_url}}</a></h4>
     </div>
   </div>
   
