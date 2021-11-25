@@ -16545,6 +16545,7 @@ h2.title {
 .w3l-team .team-grids img {
   border-radius: 6px;
   width: 100%;
+  height: 300px;
 }
 
 .w3l-team .social-icons-section a:hover {
