@@ -87,5 +87,11 @@ app.use('/a', adminController); // a represents admin
 app.use('/c', clientController); // c represents client
 app.use('/t', therapistController); // t represents therapist
 
+// adding routing middleware for email
+const emailController = require('./controllers/emails/emailController');
+
+// using the email route
+app.use('/email', emailController);
+
 var mainController = require('./controllers/main_controller');
 mainController(app);
