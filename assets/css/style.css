@@ -640,3 +640,8 @@
 .bu_logo{
     height: 40px;
 }
+
+.email-question, .code-question{
+    font-weight: 200;
+    margin: 0px 0px 10px 0px;
+}

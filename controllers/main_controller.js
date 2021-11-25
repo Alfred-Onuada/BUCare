@@ -2,6 +2,7 @@ const Users = require("./../models/user");
 const Rooms = require("./../models/room");
 const Clients = require('./../models/client');
 const Therapists = require('./../models/therapist');
+const TempUsers = require('./../models/tempUser');
 
 const Joi = require("@hapi/joi");
 
@@ -36,7 +37,6 @@ module.exports = (app) => {
   app.get("/about", checkUser, (req, res) => {
     console.log(`Request made to : ${req.url}`);
 
-    console.log(req.userInfo);
     res.render("about", { userStatus: req.userInfo });
   });
 
@@ -134,6 +134,47 @@ module.exports = (app) => {
       .catch((err) => {
         if (err) console.log(err);
       });
+  });
+
+  app.post('/checkVerificationToken', async (req, res) => {
+    console.log(`Request made to : ${req.url}`);
+
+    const { token, email } = req.body;
+
+    await TempUsers.findOne({ Email: email })
+      .then(user_info => {
+        if (user_info) {
+
+          let currentTime = new Date().getTime();
+
+          // check for expired token
+          if (currentTime > user_info.Expires_In) {
+            return res.status(400).send("This token is expired, please request a new one");
+          }
+
+          // validate token
+          if (token !== user_info.Unique_Code) {
+            return res.status(400).send("Invalid token");
+          }
+
+          // if everything goes well
+          if (token === user_info.Unique_Code) {
+            return res.status(200).send();
+          }
+
+          // this handles any unforseen circumstances
+          return res.status(500).send("Something went wrong");
+        } else {
+          // the reason this is a 500 error is because the user is not the one providing the data
+          return res.status(500).send();
+        }
+      })
+      .catch(err => {
+        console.log(err.message);
+        return res.status(500).send("Something went wrong");
+      })
+
+
   });
 
   app.put("/updateProfile", verify, updateProfile);
