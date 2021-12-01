@@ -1660,3 +1660,119 @@ function submitCaseFile() {
 
   return false;
 }
+
+function showPassword(elementInstance) {
+  const parent = elementInstance.parentNode;
+
+  if (parent.children.length === 3) {
+    // the parent contains just 3 elements 0 - the input, 1 - the showBtn, 2 - the hideBtn
+    parent.children[0].setAttribute('type', 'text');
+    parent.children[1].classList.add('hide');
+    parent.children[2].classList.remove('hide');  
+  } else if (parent.children.length === 4) {
+    // the parent contains just 4 elements 1 - the input, 2 - the showBtn, 3 - the hideBtn
+    parent.children[1].setAttribute('type', 'text');
+    parent.children[2].classList.add('hide');
+    parent.children[3].classList.remove('hide');  
+  }
+
+}
+
+function hidePassword(elementInstance) {
+  const parent = elementInstance.parentNode;
+
+  if (parent.children.length === 3) {
+    // the parent contains just 3 elements 0 - the input, 1 - the showBtn, 2 - the hideBtn
+    parent.children[0].setAttribute('type', 'password');
+    parent.children[1].classList.remove('hide');
+    parent.children[2].classList.add('hide');
+  } else if (parent.children.length === 4) {
+    // the parent contains just 4 elements 1 - the input, 2 - the showBtn, 3 - the hideBtn
+    parent.children[1].setAttribute('type', 'password');
+    parent.children[2].classList.remove('hide');
+    parent.children[3].classList.add('hide');
+  }
+  
+}
+
+function beginPageEdit(contentName, index) {
+
+  // holds the element containing the content to be edited
+  const contentBox = document.getElementById("content4"+contentName+index);
+  let originalValue = contentBox.textContent;
+
+  // get data
+  const pageToEdit = contentBox.dataset.pTE;
+
+  // holds the controllers for editing
+  const editBtn = document.getElementById('pen4'+contentName+index);
+  const saveEditBtn = document.getElementById('saveEdit4'+contentName+index);
+  const closeEditBtn = document.getElementById('closeEdit4'+contentName+index);
+
+  // toggle the controls
+  editBtn.classList.add('hide');
+  saveEditBtn.classList.remove('hide');
+  closeEditBtn.classList.remove('hide');
+
+  // attach custom data-set to the elements which will be used to check the events later to prevent adding multiple listeners
+  if (saveEditBtn.dataset.hasClickEvent === undefined) {
+    saveEditBtn.onclick = function () {
+
+      const newValue = contentBox.textContent.trim();
+
+      if (newValue === '') {
+        return showToastMsg("Sorry, the new value cannot be empty");
+      }
+
+      let xhr = new XMLHttpRequest();
+      xhr.open('PUT', `/updatePages/${pageToEdit}`, true);
+      xhr.setRequestHeader('content-type', 'application/json');
+      xhr.onreadystatechange = function () {
+        if (this.readyState === 4) {
+          if (this.status === 200) {
+            contentBox.textContent = this.responseText;
+            originalValue = this.responseText;
+
+            // toggle the controls
+            saveEditBtn.classList.add('hide');
+            closeEditBtn.classList.add('hide');
+            editBtn.classList.remove('hide');
+
+            showToastMsg("Hurray! Page edit was successfully saved.");
+            
+          } else {
+            showToastMsg(this.responseText);
+          }
+        }
+      }
+      xhr.send(JSON.stringify({
+        newValue,
+        affectedField: contentName,
+        index
+      }))
+
+    }
+    saveEditBtn.dataset.hasClickEvent = true;
+
+  }
+
+  if (closeEditBtn.dataset.hasClickEvent === undefined) {
+
+    closeEditBtn.onclick = function () {
+      // toggle the controls
+      saveEditBtn.classList.add('hide');
+      closeEditBtn.classList.add('hide');
+      editBtn.classList.remove('hide');
+
+      contentBox.setAttribute('contenteditable', false);
+      // resets it to the original value if the user doesn't save
+      contentBox.textContent = originalValue;
+    }  
+
+    closeEditBtn.dataset.hasClickEvent = true;
+
+  }
+  
+  // make box editable
+  contentBox.setAttribute('contenteditable', true);
+}

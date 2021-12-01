@@ -14562,7 +14562,7 @@ input:checked+.mode-container i.gg-moon {
 
 .main-top {
   display: grid;
-  grid-template-columns: 5fr 1fr;
+  /* grid-template-columns: 5fr 1fr; */
   grid-gap: 20px 20px;
   align-items: center;
 }
