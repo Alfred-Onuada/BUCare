@@ -113,9 +113,9 @@ Router.get("/summary", verify, (req, res) => {
           .then((t_docs) => {
             if (t_docs) {
               data.therapists = t_docs;
-              res.render("summary", { userStatus: req.user, info: data });
+              res.render("summary", { userStatus: req.user, info: data, pages: req.pages });
             } else {
-              res.render("summary", { userStatus: req.user, info: data });
+              res.render("summary", { userStatus: req.user, info: data, pages: req.pages });
             }
           })
           .catch((err) => {
@@ -123,7 +123,7 @@ Router.get("/summary", verify, (req, res) => {
           });
       } else {
         // this will only run is the one above it doesn't
-        res.render("summary", { userStatus: req.user });
+        res.render("summary", { userStatus: req.user, pages: req.pages });
       }
     })
     .catch((err) => {

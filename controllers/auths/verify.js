@@ -1,6 +1,6 @@
 const Users = require("./../../models/user");
-const Therapists = require("./../../models/therapist");
 const Clients = require("../../models/client");
+const HeaderInfo = require('../../models/pages/header.page');
 
 //  this module is a middle ware used to verify if a user is logged in
 const jwt = require("jsonwebtoken");
@@ -54,6 +54,22 @@ module.exports = function (req, res, next) {
               .catch((err) => console.log(err));
           }
 
+          // this query is not tied to any specific user it is for the header and footer that's why it is here
+          req.pages = {};
+          await HeaderInfo.find({})
+          .then(docs => {
+            if (docs) {
+              req.pages.header = docs;
+            } else {
+              res.status(500).send("The page could not load properly");
+            }
+          })
+          .catch((err) => {
+            console.log(err.message);
+            throw err;
+          });
+
+
           next();
         } else {
           // this also makes sure that is for any reason you no longer exist on the database you are also logged out
@@ -64,6 +80,7 @@ module.exports = function (req, res, next) {
       })
       .catch((err) => {
         if (err) console.log(err);
+        res.status(500).send("Oops! page edit failed, try again later");
       });
   } catch (error) {
     // if token is expired
@@ -73,6 +90,7 @@ module.exports = function (req, res, next) {
     res.status(401).render("index", {
       userStatus: req.user,
       errorMessage: req.errorMessage,
+      pages: req.pages
     });
   }
 };

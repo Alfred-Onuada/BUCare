@@ -312,6 +312,7 @@ Router.get("/rooms", verify, (req, res) => {
           rooms_info: rooms,
           userStatus: req.user,
           user: req.user._id,
+          pages: req.pages
         });
       })
       .catch((err) => {

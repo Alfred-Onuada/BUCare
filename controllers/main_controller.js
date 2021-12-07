@@ -23,6 +23,7 @@ module.exports = (app) => {
     res.render("index", {
       userStatus: req.userInfo,
       errorMessage: req.errorMessage,
+      pages: req.pages
     });
   });
 
@@ -32,25 +33,26 @@ module.exports = (app) => {
     res.render("index", {
       userStatus: req.userInfo,
       errorMessage: req.errorMessage,
+      pages: req.pages
     });
   });
 
   app.get("/about", checkUser, (req, res) => {
     console.log(`Request made to : ${req.url}`);
 
-    res.render("about", { userStatus: req.userInfo });
+    res.render("about", { userStatus: req.userInfo, pages: req.pages });
   });
 
   app.get("/contact", checkUser, (req, res) => {
     console.log(`Request made to : ${req.url}`);
 
-    res.render("contact", { userStatus: req.userInfo });
+    res.render("contact", { userStatus: req.userInfo, pages: req.pages });
   });
 
   app.get("/services", checkUser, (req, res) => {
     console.log(`Request made to : ${req.url}`);
 
-    res.render("services", { userStatus: req.userInfo });
+    res.render("services", { userStatus: req.userInfo, pages: req.pages });
   });
 
   app.get("/rooms", verify, (req, res) => {
@@ -254,7 +256,7 @@ module.exports = (app) => {
 
 
   // delete me
-  const Header = require('./../models/pages/header.page');
+  const HeaderInfo = require('./../models/pages/header.page');
 
   app.post('/updateHeader', verify, (req, res) => {
     const data = req.body;
@@ -299,7 +301,7 @@ module.exports = (app) => {
 
   // this is the 404 error page, it has to be the last route here
   app.get('*', checkUser, (req, res) => {
-    res.render("404", { userStatus: req.userInfo });
+    res.render("404", { userStatus: req.userInfo, pages: req.pages });
   })
 
 };

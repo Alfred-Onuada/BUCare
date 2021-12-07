@@ -48,7 +48,9 @@ const handlebarOptions = {
 transporter.use('compile', hbs(handlebarOptions));
 
 const tempUserSchema = Joi.object({
-  Email: Joi.string().pattern(/\d{4}@student.babcock.edu.ng$/i).required(),
+  Email: Joi.string()
+    .pattern(/(\d{4}@student.babcock.edu.ng|@babcock.edu.ng)$/i) 
+    .required(),
   Unique_Code: Joi.string().min(6).max(6).required(),
   Expires_In: Joi.number().required()
 })

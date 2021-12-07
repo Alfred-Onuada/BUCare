@@ -571,7 +571,7 @@ function checkStudent() {
       return displayErrorMsg("Email field cannot be empty", boxId);
     }
 
-    buEmailRegex = /\d{4}@student.babcock.edu.ng$/i;
+    buEmailRegex = /(\d{4}@student.babcock.edu.ng|@babcock.edu.ng)$/i;
 
     if (buEmailRegex.test(value) === false) {
       emailSubBtn.textContent = "Submit";
@@ -1455,6 +1455,7 @@ function addRatingComment() {
           <small>You will be able to leave another feedback in one hour.</small>
         `;
         ratingQuestion.classList.add('hide');
+        starsContainer.onmouseleave = null; // removes the eventlistener after it has finished
         modalCloseBtn.innerText = "Close";
       } else if (this.status === 400) {
         showToastMsg(

@@ -1,4 +1,4 @@
-const Header = require('./../../models/pages/header.page');
+const HeaderInfo = require('./../../models/pages/header.page');
 
 function updateHeader(req, res) {
   console.log(`Request made to : ${req.url}`);
@@ -7,7 +7,7 @@ function updateHeader(req, res) {
   
   // This query looks for and empty object {} which matches all the documents
   // but because there will only be one document per model it matches the correct one
-  Header.findOne({})
+  HeaderInfo.findOne({})
     .then(docs => {
       if (docs) {
         
@@ -16,7 +16,7 @@ function updateHeader(req, res) {
         newData[index] = newValue;
       
         // make the edit
-        Header.findByIdAndUpdate(docs._id, { [affectedField]: newData })
+        HeaderInfo.findByIdAndUpdate(docs._id, { [affectedField]: newData })
           .then(docs => {
             return res.status(200).send(newValue);
           })
