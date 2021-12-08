@@ -13,6 +13,7 @@ const Io = require("./../main");
 
 // modules for edits
 const { updatePhoto, updateProfile } = require("./updates/updateProfile");
+const { updateHeader } = require("./updates/updatePages");
 
 // checkuser simply returns information about the logged in user, it doesn't protect the route
 module.exports = (app) => {
@@ -22,6 +23,7 @@ module.exports = (app) => {
     res.render("index", {
       userStatus: req.userInfo,
       errorMessage: req.errorMessage,
+      pages: req.pages
     });
   });
 
@@ -31,25 +33,26 @@ module.exports = (app) => {
     res.render("index", {
       userStatus: req.userInfo,
       errorMessage: req.errorMessage,
+      pages: req.pages
     });
   });
 
   app.get("/about", checkUser, (req, res) => {
     console.log(`Request made to : ${req.url}`);
 
-    res.render("about", { userStatus: req.userInfo });
+    res.render("about", { userStatus: req.userInfo, pages: req.pages });
   });
 
   app.get("/contact", checkUser, (req, res) => {
     console.log(`Request made to : ${req.url}`);
 
-    res.render("contact", { userStatus: req.userInfo });
+    res.render("contact", { userStatus: req.userInfo, pages: req.pages });
   });
 
   app.get("/services", checkUser, (req, res) => {
     console.log(`Request made to : ${req.url}`);
 
-    res.render("services", { userStatus: req.userInfo });
+    res.render("services", { userStatus: req.userInfo, pages: req.pages });
   });
 
   app.get("/rooms", verify, (req, res) => {
@@ -181,6 +184,28 @@ module.exports = (app) => {
 
   app.put("/updatePhoto", verify, updatePhoto);
 
+  // this route is only available to the admin
+  app.put("/updatePages/:page", verify, (req, res) => {
+
+    const { page } = req.params;
+
+    if (req.user.isAdmin) {
+
+      // sends it to the page specified
+      switch (page) {
+        case 'header':
+          updateHeader(req, res);
+          break;
+      
+        default:
+          break;
+      }
+
+    } else {
+      return res.status(401).send();
+    }
+  });
+
   app.get('/video/:roomId/:type', verify, async (req, res) => {
     
     console.log(`Request made to : ${req.url}`);
@@ -215,6 +240,68 @@ module.exports = (app) => {
     }
 
     res.render('video-chat', { details });
+  })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // delete me
+  const HeaderInfo = require('./../models/pages/header.page');
+
+  app.post('/updateHeader', verify, (req, res) => {
+    const data = req.body;
+
+    if (req.user.isAdmin) {
+
+      console.log(req.body);
+
+      Header(data).save((err, info) => {
+        if (err) {
+          return res.status(500).send(err.message);
+        }
+  
+        return res.status(200).send("Success");
+      })
+  
+    } else {
+      return res.status(401).send();
+    }
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // this is the 404 error page, it has to be the last route here
+  app.get('*', checkUser, (req, res) => {
+    res.render("404", { userStatus: req.userInfo, pages: req.pages });
   })
 
 };

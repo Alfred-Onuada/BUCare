@@ -14,6 +14,7 @@
 		<!-- Link for the fonts -->
 		<link href="//fonts.googleapis.com/css?family=Nunito:400,600,700 & display=swap" rel="stylesheet">
 	  <link rel="shortcut icon" href="media/imgs/template/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 
 		<!-- Template CSS -->
 		<link rel="stylesheet" href="css/template_styles/style-starter.css">
@@ -25,6 +26,8 @@
 	</head>
 
 	<body onload="displayErrorMsg('<%= errorMessage %>')">
+
+    <div id="toastContainer" class="toast4UpdateInfo"></div>
 
 		<div id="errorContainer" class="errorContainer hide">
 			<div id="errorText" class="alert alert-danger errorText" role="alert"></div>
@@ -622,6 +625,7 @@
 		<script>
 			$('.counter').countUp();
 		</script>
+
 		<!-- //stats number counter -->
 		<!--/MENU-JS-->
 		<script>

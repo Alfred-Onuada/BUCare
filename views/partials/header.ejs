@@ -9,15 +9,43 @@
               <li class="info-grid">
                 <div class="info-icon"><span class="fa fa-clock-o"></span></div>
                 <div class="info-text banner-info-bg">
-                  <p>Monday - Friday 08:00 - 17:00</p>
-                  <p>Saturday and Sunday - CLOSED</p>
+                  <p>
+                    <span id="content4Office_Hours0" data-p-t-e='header'><%= pages.header[0].Office_Hours[0] %></span>
+                    <% if (userStatus && userStatus.isAdmin) { %>
+                      <span id="pen4Office_Hours0" onclick="beginPageEdit('Office_Hours', 0)" class="adminEditIcons bi bi-pen"></span>
+                      <span id="saveEdit4Office_Hours0" class="hide adminEditIcons bi bi-check2"></span>
+                      <span id="closeEdit4Office_Hours0" class="hide adminEditIcons bi bi-x"></span>
+                    <% } %>
+                  </p>
+                  <p>
+                    <span id="content4Office_Hours1" data-p-t-e='header'><%= pages.header[0].Office_Hours[1] %></span>
+                    <% if (userStatus && userStatus.isAdmin) { %>
+                      <span id="pen4Office_Hours1" onclick="beginPageEdit('Office_Hours', 1)" class="adminEditIcons bi bi-pen"></span>
+                      <span id="saveEdit4Office_Hours1" class="hide adminEditIcons bi bi-check2"></span>
+                      <span id="closeEdit4Office_Hours1" class="hide adminEditIcons bi bi-x"></span>
+                    <% } %>
+                  </p>
                 </div>
               </li>
               <li class="info-grid">
                 <div class="info-icon"><span class="fa fa-mobile"></span></div>
                 <div class="info-text">
-                  <p>+ 081 2345 6789</p>
-                  <p>+ 081 3738 8316</p>
+                  <p>
+                    <span id="content4Telephones0" data-p-t-e='header'><%= pages.header[0].Telephones[0] %></span>
+                    <% if (userStatus && userStatus.isAdmin) { %>
+                      <span id="pen4Telephones0" onclick="beginPageEdit('Telephones', 0)" class="adminEditIcons bi bi-pen"></span>
+                      <span id="saveEdit4Telephones0" class="hide adminEditIcons bi bi-check2"></span>
+                      <span id="closeEdit4Telephones0" class="hide adminEditIcons bi bi-x"></span>
+                    <% } %>
+                  </p>
+                  <p>
+                    <span id="content4Telephones1" data-p-t-e='header'><%= pages.header[0].Telephones[1] %></span>
+                    <% if (userStatus && userStatus.isAdmin) { %>
+                      <span id="pen4Telephones1" onclick="beginPageEdit('Telephones', 1)" class="adminEditIcons bi bi-pen"></span>
+                      <span id="saveEdit4Telephones1" class="hide adminEditIcons bi bi-check2"></span>
+                      <span id="closeEdit4Telephones1" class="hide adminEditIcons bi bi-x"></span>
+                    <% } %>
+                  </p>
                 </div>
               </li>
               <li class="info-grid">
@@ -25,8 +53,22 @@
                   <span class="fa fa-map-marker"></span>
                 </div>
                 <div class="info-text">
-                  <p>Student Support Center</p>
-                  <p>BU Main Campus, besides First Bank</p>
+                  <p>
+                    <span id="content4Address0" data-p-t-e='header'><%= pages.header[0].Address[0] %></span>
+                    <% if (userStatus && userStatus.isAdmin) { %>
+                      <span id="pen4Address0" onclick="beginPageEdit('Address', 0)" class="adminEditIcons bi bi-pen"></span>
+                      <span id="saveEdit4Address0" class="hide adminEditIcons bi bi-check2"></span>
+                      <span id="closeEdit4Address0" class="hide adminEditIcons bi bi-x"></span>
+                    <% } %>
+                  </p>
+                  <p>
+                    <span id="content4Address1" data-p-t-e='header'><%= pages.header[0].Address[1] %></span>
+                    <% if (userStatus && userStatus.isAdmin) { %>
+                      <span id="pen4Address1" onclick="beginPageEdit('Address', 1)" class="adminEditIcons bi bi-pen"></span>
+                      <span id="saveEdit4Address1" class="hide adminEditIcons bi bi-check2"></span>
+                      <span id="closeEdit4Address1" class="hide adminEditIcons bi bi-x"></span>
+                    <% } %>
+                  </p>
                 </div>
               </li>
             </ul>
@@ -152,7 +194,7 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink3">
                           <a class="dropdown-item" data-toggle="modal" data-target="#myModal4Login">Login</a>
-                          <a class="dropdown-item" data-toggle="modal" data-target="#myModal4reg">Register</a>
+                          <a class="dropdown-item" data-toggle="modal" data-target="#confirmStudentModal">Register</a>
                         </div>
                       </li>
 
@@ -209,7 +251,7 @@
                             <div class="modal-dialog modal-lg">
                               <div class="modal-content">
                                 <div class="modal-header">
-                                  <button type="button" class="close" data-bs-dismiss="modal" aria-hidden="true">
+                                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                                     &times;
                                   </button>
                                   <h4 class="modal-title" id="myModalLabel">
@@ -244,6 +286,8 @@
                                             <label for="password">Enter password</label>
                                             <input type="password" name="Password" id="password11"
                                               placeholder="minimum of 8 characters" required />
+                                              <span onclick="showPassword(this)" class="showPasswordIcon bi bi-eye"></span>
+                                              <span onclick="hidePassword(this)" class="hide showPasswordIcon bi bi-eye-slash"></span>
                                           </div>
                                         </div>
                                         <div class="styled-input">
@@ -251,6 +295,8 @@
                                             <label for="password2">Confirm Password</label>
                                             <input type="password" name="ConfirmPassword" id="password12"
                                               placeholder="minimum of 8 characters" required />
+                                              <span onclick="showPassword(this)" class="showPasswordIcon bi bi-eye"></span>
+                                              <span onclick="hidePassword(this)" class="hide showPasswordIcon bi bi-eye-slash"></span>
                                           </div>
                                         </div>
 
@@ -361,6 +407,8 @@
                                           <div class="appointment-form-field">
                                             Password
                                             <input type="password" name="Password" placeholder="********" required />
+                                            <span onclick="showPassword(this)" class="showPasswordIcon bi bi-eye"></span>
+                                            <span onclick="hidePassword(this)" class="hide showPasswordIcon bi bi-eye-slash"></span>
                                           </div>
                                         </div>
                                       </div>
@@ -376,9 +424,6 @@
                               </div>
                             </div>
                           </div>
-                          <script>
-                            $("#myModal4Login").modal("show");
-                          </script>
                         </div>
                         <!-- //modal-popup 4 Login-->
 
@@ -446,6 +491,8 @@
                                               <label for="password">Enter password</label>
                                               <input type="password" name="Password" id="password21"
                                                 placeholder="minimum of 8 characters" required />
+                                                <span onclick="showPassword(this)" class="showPasswordIcon bi bi-eye"></span>
+                                                <span onclick="hidePassword(this)" class="hide showPasswordIcon bi bi-eye-slash"></span>  
                                             </div>
                                           </div>
 
@@ -454,6 +501,8 @@
                                               <label for="password2">Confirm Password</label>
                                               <input type="password" name="ConfirmPassword" id="password22"
                                                 placeholder="minimum of 8 characters" required />
+                                              <span onclick="showPassword(this)" class="showPasswordIcon bi bi-eye"></span>
+                                              <span onclick="hidePassword(this)" class="hide showPasswordIcon bi bi-eye-slash"></span>
                                             </div>
                                           </div>
 
@@ -497,27 +546,12 @@
                                 </div>
                               </div>
                             </div>
-                            <script>
-                              $("#myModal4regTherapist").modal("show");
-                            </script>
                           </div>
                           <!-- //modal-popup 4 registering therapist-->
 
                           <% } %>
                 </ul>
 
-                <!-- //toggle switch for light and dark theme -->
-                <!-- search popup -->
-                <div id="search" class="pop-overlay">
-                  <div class="popup">
-                    <form action="#" method="GET" class="d-sm-flex">
-                      <input type="search" placeholder="Search.." name="search" required="required" autofocus />
-                      <button type="submit">Search</button>
-                      <a class="close" href="#url">&times;</a>
-                    </form>
-                  </div>
-                </div>
-                <!-- /search popup -->
               </div>
               <!-- toggle switch for light and dark theme -->
               <div class="mobile-position">

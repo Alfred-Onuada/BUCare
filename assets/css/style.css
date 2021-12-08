@@ -645,3 +645,16 @@
     font-weight: 200;
     margin: 0px 0px 10px 0px;
 }
+
+.adminEditIcons{
+    font-size: 15px;
+    margin: 0px 0px 0px 5px;
+    color: white;
+}
+
+.showPasswordIcon{
+    float: right;
+    margin: 9px 0px 0px -40px;
+    position: absolute;
+    font-size: 25px;
+}

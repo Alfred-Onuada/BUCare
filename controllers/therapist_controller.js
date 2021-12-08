@@ -419,10 +419,10 @@ Router.get("/clientsList", verify, async (req, res) => {
         Clients.find({ Assigned_Therapist: therapistName })
           .then((docs) => {
             if (docs) {
-              res.render("clientsList", { userStatus: req.user, data: docs });
+              res.render("clientsList", { userStatus: req.user, data: docs, pages: req.pages });
             } else {
               // this will only run is the one above it doesn't
-              res.render("clientsList", { userStatus: req.user });
+              res.render("clientsList", { userStatus: req.user, pages: req.pages });
             }
           })
           .catch((err) => {
@@ -430,7 +430,7 @@ Router.get("/clientsList", verify, async (req, res) => {
           });
       } else {
         // this will only run is the one above it doesn't
-        res.render("clientsList", { userStatus: req.user });
+        res.render("clientsList", { userStatus: req.user, pages: req.pages });
       }
     })
     .catch((err) => {
