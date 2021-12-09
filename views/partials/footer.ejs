@@ -10,28 +10,30 @@
                             <img src="media/imgs/template/bu_logo.jpg" alt="BU Logo" title="Babcock University Logo" class="bu_logo" /> BUCare
                         </a> 
                     </div>
-                    <p>BUCare is Babcock University Student Support Online portal</p>
+                    <p>
+                        <span id="content4Intro0" data-p-t-e='footer'><%= pages.footer[0].Intro[0] %></span>
+                        <% if (userStatus && userStatus.isAdmin) { %>
+                            <span id="pen4Intro0" onclick="beginPageEdit('Intro', 0)" class="adminEditIcons bi bi-pen"></span>
+                            <span id="saveEdit4Intro0" class="hide adminEditIcons bi bi-check2"></span>
+                            <span id="closeEdit4Intro0" class="hide adminEditIcons bi bi-x"></span>
+                        <% } %>
+                    </p>
                     <br>
-                    <p class="mb-3">Our e-therapy gives you the opportunity to speak to a therapist, counsellor or
-                        analyst
-                        online, without having to meet them face to face.</p>
+                    <p class="mb-3">
+                        <span id="content4Intro1" data-p-t-e='footer'><%= pages.footer[0].Intro[1] %></span>
+                        <% if (userStatus && userStatus.isAdmin) { %>
+                            <span id="pen4Intro1" onclick="beginPageEdit('Intro', 1)" class="adminEditIcons bi bi-pen"></span>
+                            <span id="saveEdit4Intro1" class="hide adminEditIcons bi bi-check2"></span>
+                            <span id="closeEdit4Intro1" class="hide adminEditIcons bi bi-x"></span>
+                        <% } %>
+                    </p>
 
                     <div class="main-social-footer-29 mt-4">
                         <a href="https://www.facebook.com/babcocknigeria/" target="_blank" class="facebook"><span class="fa fa-facebook"></span></a>
                         <a href="https://twitter.com/babcock_univ?lang=en" target="_blank" class="twitter"><span class="fa fa-twitter"></span></a>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-6 col-sm-5 col-6 footer-list-29 footer-2 mt-sm-0 mt-5">
-
-                    <ul>
-                        <h6 class="footer-title-29">Useful Links</h6>
-                        <li><a href="about">About Us</a></li>
-                        <li><a href="services">Services</a></li>
-                        <li><a href="#">FAQs</a></li>
-                        <li><a href="contact">Contact us</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-2 col-md-6 col-sm-5 col-6 footer-list-29 footer-3 mt-lg-0 mt-5">
+                <div class="col-lg-4 col-md-6 col-sm-7 col-6 footer-list-29 footer-2 mt-lg-0 mt-5">
                     <h6 class="footer-title-29">Services</h6>
                     <ul>
                         <li><a href="about#academicSupport">Academic Support</a></li>
@@ -44,18 +46,31 @@
                     </ul>
 
                 </div>
-                <div class="col-lg-4 col-md-6 col-sm-7 footer-list-29 footer-4 mt-lg-0 mt-5">
-                    <h6 class="footer-title-29">What is Online Counselling?</h6>
-                    <p class="mb-3"> Online counselling can provide a valuable service to you if you require
-                        therapeutic help
-                        but have shied away from it before due to either emotional or practical reasons. </p>
-                    <p class="mb-3">Also known as internet counselling, e-counselling, web therapy or remote
-                        therapy, this kind
-                        of counselling is a good solution for people who need counselling but cannot get to a
-                        therapist’s office
-                        or those who prefer to keep in contact at a distance from wherever they are.</p>
-
-
+                <div class="col-lg-4 col-md-6 col-sm-7 footer-list-29 footer-3 mt-lg-0 mt-5">
+                    <h6 class="footer-title-29">
+                        <span id="content4Definition0" data-p-t-e='footer'><%= pages.footer[0].Definition[0] %></span>
+                        <% if (userStatus && userStatus.isAdmin) { %>
+                            <span id="pen4Definition0" onclick="beginPageEdit('Definition', 0)" class="adminEditIcons bi bi-pen"></span>
+                            <span id="saveEdit4Definition0" class="hide adminEditIcons bi bi-check2"></span>
+                            <span id="closeEdit4Definition0" class="hide adminEditIcons bi bi-x"></span>
+                        <% } %>
+                    </h6>
+                    <p class="mb-3">
+                        <span id="content4Definition1" data-p-t-e='footer'><%= pages.footer[0].Definition[1] %></span>
+                        <% if (userStatus && userStatus.isAdmin) { %>
+                            <span id="pen4Definition1" onclick="beginPageEdit('Definition', 1)" class="adminEditIcons bi bi-pen"></span>
+                            <span id="saveEdit4Definition1" class="hide adminEditIcons bi bi-check2"></span>
+                            <span id="closeEdit4Definition1" class="hide adminEditIcons bi bi-x"></span>
+                        <% } %>
+                    </p>
+                    <p class="mb-3">
+                        <span id="content4Definition2" data-p-t-e='footer'><%= pages.footer[0].Definition[2] %></span>
+                        <% if (userStatus && userStatus.isAdmin) { %>
+                            <span id="pen4Definition2" onclick="beginPageEdit('Definition', 2)" class="adminEditIcons bi bi-pen"></span>
+                            <span id="saveEdit4Definition2" class="hide adminEditIcons bi bi-check2"></span>
+                            <span id="closeEdit4Definition2" class="hide adminEditIcons bi bi-x"></span>
+                        <% } %>
+                    </p>
                 </div>
             </div>
         </div>

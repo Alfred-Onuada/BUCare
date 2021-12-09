@@ -1738,6 +1738,7 @@ function beginPageEdit(contentName, index) {
             saveEditBtn.classList.add('hide');
             closeEditBtn.classList.add('hide');
             editBtn.classList.remove('hide');
+            contentBox.setAttribute('contenteditable', false);
 
             showToastMsg("Hurray! Page edit was successfully saved.");
             

@@ -1,6 +1,7 @@
 const Users = require("./../../models/user");
 const Clients = require("../../models/client");
 const HeaderInfo = require('../../models/pages/header.page');
+const FooterInfo = require("./../../models/pages/footer.page");
 
 //  this module is a middle ware used to verify if a user is logged in
 const jwt = require("jsonwebtoken");
@@ -57,17 +58,30 @@ module.exports = function (req, res, next) {
           // this query is not tied to any specific user it is for the header and footer that's why it is here
           req.pages = {};
           await HeaderInfo.find({})
-          .then(docs => {
-            if (docs) {
-              req.pages.header = docs;
-            } else {
-              res.status(500).send("The page could not load properly");
-            }
-          })
-          .catch((err) => {
-            console.log(err.message);
-            throw err;
-          });
+            .then(docs => {
+              if (docs) {
+                req.pages.header = docs;
+              } else {
+                res.status(500).send("The page could not load properly");
+              }
+            })
+            .catch((err) => {
+              console.log(err.message);
+              throw err;
+            });
+
+          await FooterInfo.find({})
+            .then(docs => {
+              if (docs) {
+                req.pages.footer = docs;
+              } else {
+                res.status(500).send("The page could not load properly");
+              }
+            })
+            .catch((err) => {
+              console.log(err.message);
+              throw err;
+            });
 
 
           next();

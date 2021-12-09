@@ -13,7 +13,7 @@ const Io = require("./../main");
 
 // modules for edits
 const { updatePhoto, updateProfile } = require("./updates/updateProfile");
-const { updateHeader } = require("./updates/updatePages");
+const { updateHeader, updateFooter } = require("./updates/updatePages");
 
 // checkuser simply returns information about the logged in user, it doesn't protect the route
 module.exports = (app) => {
@@ -29,6 +29,7 @@ module.exports = (app) => {
 
   app.get("/index", checkUser, (req, res) => {
     console.log(`Request made to : ${req.url}`);
+    console.log(req.pages.footer[0], req.pages.footer[0].Info);
 
     res.render("index", {
       userStatus: req.userInfo,
@@ -196,6 +197,10 @@ module.exports = (app) => {
         case 'header':
           updateHeader(req, res);
           break;
+        
+        case 'footer':
+          updateFooter(req, res);
+          break;
       
         default:
           break;
@@ -256,16 +261,17 @@ module.exports = (app) => {
 
 
   // delete me
-  const HeaderInfo = require('./../models/pages/header.page');
+  const footerInfo = require('./../models/pages/footer.page');
 
-  app.post('/updateHeader', verify, (req, res) => {
+  app.post('/updateFooter', verify, (req, res) => {
+
     const data = req.body;
 
     if (req.user.isAdmin) {
 
       console.log(req.body);
 
-      Header(data).save((err, info) => {
+      footerInfo(data).save((err, info) => {
         if (err) {
           return res.status(500).send(err.message);
         }
