@@ -1709,6 +1709,9 @@ function beginPageEdit(contentName, index) {
   const editBtn = document.getElementById('pen4'+contentName+index);
   const saveEditBtn = document.getElementById('saveEdit4'+contentName+index);
   const closeEditBtn = document.getElementById('closeEdit4'+contentName+index);
+  const preloader = document.getElementById('editPreloader4'+contentName+index);
+
+  console.log('editPreloader4'+contentName+index);
 
   // toggle the controls
   editBtn.classList.add('hide');
@@ -1725,6 +1728,12 @@ function beginPageEdit(contentName, index) {
         return showToastMsg("Sorry, the new value cannot be empty");
       }
 
+      // set preloader
+      saveEditBtn.classList.add('hide');
+      closeEditBtn.classList.add('hide');
+      contentBox.setAttribute('contenteditable', false);
+      preloader.classList.remove('hide');
+
       let xhr = new XMLHttpRequest();
       xhr.open('PUT', `/updatePages/${pageToEdit}`, true);
       xhr.setRequestHeader('content-type', 'application/json');
@@ -1734,15 +1743,18 @@ function beginPageEdit(contentName, index) {
             contentBox.textContent = this.responseText;
             originalValue = this.responseText;
 
-            // toggle the controls
-            saveEditBtn.classList.add('hide');
-            closeEditBtn.classList.add('hide');
+            // toggle the controls, when adding the preloader the other buttons have already been toggled
+            preloader.classList.add('hide');
             editBtn.classList.remove('hide');
-            contentBox.setAttribute('contenteditable', false);
 
             showToastMsg("Hurray! Page edit was successfully saved.");
             
           } else {
+            
+            preloader.classList.add('hide');
+            saveEditBtn.classList.remove('hide');
+            closeEditBtn.classList.remove('hide');
+
             showToastMsg(this.responseText);
           }
         }

@@ -658,3 +658,69 @@
     position: absolute;
     font-size: 25px;
 }
+
+/* for the preloader when admin is editing */
+
+.editPreloader {
+    display: inline-block;
+    position: relative;
+    width: 40px;
+    height: 20px;
+}
+
+.editPreloader span {
+    position: absolute;
+    top: 10px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: white;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+
+.editPreloader span:nth-child(1) {
+    left: 4px;
+    animation: editPreloader1 0.6s infinite;
+}
+
+.editPreloader span:nth-child(2) {
+    left: 4px;
+    animation: editPreloader2 0.6s infinite;
+}
+
+.editPreloader span:nth-child(3) {
+    left: 16px;
+    animation: editPreloader2 0.6s infinite;
+}
+
+.editPreloader span:nth-child(4) {
+    left: 28px;
+    animation: editPreloader3 0.6s infinite;
+}
+
+@keyframes editPreloader1 {
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes editPreloader2 {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(12px, 0);
+    }
+}
+
+@keyframes editPreloader3 {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(0);
+    }
+}
