@@ -1696,22 +1696,40 @@ function hidePassword(elementInstance) {
   
 }
 
-function beginPageEdit(contentName, index) {
+function beginPageEdit(contentName, index=null) {
 
   // holds the element containing the content to be edited
   const contentBox = document.getElementById("content4"+contentName+index);
   let originalValue = contentBox.textContent;
 
+  // places cursor at the end of the text for ease in editing
+  function placeCursorAtDivEnd(elementInstance) {
+    const selection = window.getSelection();  
+    const range = document.createRange();  
+
+    selection.removeAllRanges();  
+    range.selectNodeContents(elementInstance);  
+    range.collapse(false);  
+    selection.addRange(range);  
+    elementInstance.focus();
+  }
+
+  // pauses the slider movement if the slider is being edited
+  if (/Carousel/.test(contentName)) {
+    $('.owl-carousel').trigger('stop.owl.autoplay');
+  }
+
   // get data
   const pageToEdit = contentBox.dataset.pTE;
+
+  // will only be available for complex pages like index
+  const pathToDBChange = contentBox.dataset.pTDBC;
 
   // holds the controllers for editing
   const editBtn = document.getElementById('pen4'+contentName+index);
   const saveEditBtn = document.getElementById('saveEdit4'+contentName+index);
   const closeEditBtn = document.getElementById('closeEdit4'+contentName+index);
   const preloader = document.getElementById('editPreloader4'+contentName+index);
-
-  console.log('editPreloader4'+contentName+index);
 
   // toggle the controls
   editBtn.classList.add('hide');
@@ -1757,13 +1775,27 @@ function beginPageEdit(contentName, index) {
 
             showToastMsg(this.responseText);
           }
+
+          // resumes the slider movement after edit
+          if (/Carousel/.test(contentName)) {
+            $('.owl-carousel').trigger('play.owl.autoplay');
+          }
         }
       }
-      xhr.send(JSON.stringify({
-        newValue,
-        affectedField: contentName,
-        index
-      }))
+      let data;
+      if (pathToDBChange) {
+        data = {
+          newValue,
+          pathToDBChange
+        }
+      } else {
+        data = {
+          newValue,
+          affectedField: contentName,
+          index
+        }
+      }
+      xhr.send(JSON.stringify(data));
 
     }
     saveEditBtn.dataset.hasClickEvent = true;
@@ -1789,4 +1821,5 @@ function beginPageEdit(contentName, index) {
   
   // make box editable
   contentBox.setAttribute('contenteditable', true);
+  placeCursorAtDivEnd(contentBox);
 }

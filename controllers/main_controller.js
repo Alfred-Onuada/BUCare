@@ -13,7 +13,7 @@ const Io = require("./../main");
 
 // modules for edits
 const { updatePhoto, updateProfile } = require("./updates/updateProfile");
-const { updateHeader, updateFooter } = require("./updates/updatePages");
+const { updateHeader, updateFooter, updateIndex } = require("./updates/updatePages");
 
 // checkuser simply returns information about the logged in user, it doesn't protect the route
 module.exports = (app) => {
@@ -29,7 +29,6 @@ module.exports = (app) => {
 
   app.get("/index", checkUser, (req, res) => {
     console.log(`Request made to : ${req.url}`);
-    console.log(req.pages.footer[0], req.pages.footer[0].Info);
 
     res.render("index", {
       userStatus: req.userInfo,
@@ -201,9 +200,13 @@ module.exports = (app) => {
         case 'footer':
           updateFooter(req, res);
           break;
+
+        case 'index':
+          updateIndex(req, res);
+          break;
       
         default:
-          break;
+          return res.send(400).send();
       }
 
     } else {
@@ -261,9 +264,9 @@ module.exports = (app) => {
 
 
   // delete me
-  const footerInfo = require('./../models/pages/footer.page');
+  const indexInfo = require('./../models/pages/index.page');
 
-  app.post('/updateFooter', verify, (req, res) => {
+  app.post('/updateIndex', verify, (req, res) => {
 
     const data = req.body;
 
@@ -271,7 +274,7 @@ module.exports = (app) => {
 
       console.log(req.body);
 
-      footerInfo(data).save((err, info) => {
+      indexInfo(data).save((err, info) => {
         if (err) {
           return res.status(500).send(err.message);
         }
@@ -283,7 +286,6 @@ module.exports = (app) => {
       return res.status(401).send();
     }
   });
-
 
 
 

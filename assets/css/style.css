@@ -724,3 +724,11 @@
         transform: scale(0);
     }
 }
+
+.black-edit {
+    color: black;
+}
+
+.black-edit-loader > span{
+    background: black;
+}
