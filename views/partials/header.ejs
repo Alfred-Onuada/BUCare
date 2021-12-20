@@ -33,21 +33,25 @@
                 <div class="info-icon"><span class="fa fa-mobile"></span></div>
                 <div class="info-text">
                   <p>
-                    <span id="content4Telephones0" data-p-t-e='header'><%= pages.header[0].Telephones[0] %></span>
                     <% if (userStatus && userStatus.isAdmin) { %>
+                      <span id="content4Telephones0" data-p-t-e='header'><%= pages.header[0].Telephones[0] %></span>
                       <span id="editPreloader4Telephones0" class="editPreloader hide"><span></span><span></span><span></span><span></span></span>
                       <span id="pen4Telephones0" onclick="beginPageEdit('Telephones', 0)" class="adminEditIcons bi bi-pen"></span>
                       <span id="saveEdit4Telephones0" class="hide adminEditIcons bi bi-check2"></span>
                       <span id="closeEdit4Telephones0" class="hide adminEditIcons bi bi-x"></span>
+                    <% } else { %>
+                      <a class="telAnchor" href="tel:<%= pages.header[0].Telephones[0] %>"><%= pages.header[0].Telephones[0] %></a>
                     <% } %>
                   </p>
                   <p>
-                    <span id="content4Telephones1" data-p-t-e='header'><%= pages.header[0].Telephones[1] %></span>
                     <% if (userStatus && userStatus.isAdmin) { %>
+                      <span id="content4Telephones1" data-p-t-e='header'><%= pages.header[0].Telephones[1] %></span>
                       <span id="editPreloader4Telephones1" class="editPreloader hide"><span></span><span></span><span></span><span></span></span>
                       <span id="pen4Telephones1" onclick="beginPageEdit('Telephones', 1)" class="adminEditIcons bi bi-pen"></span>
                       <span id="saveEdit4Telephones1" class="hide adminEditIcons bi bi-check2"></span>
                       <span id="closeEdit4Telephones1" class="hide adminEditIcons bi bi-x"></span>
+                    <% } else { %>
+                      <a class="telAnchor" href="tel:<%= pages.header[0].Telephones[1] %>"><%= pages.header[0].Telephones[1] %></a>
                     <% } %>
                   </p>
                 </div>

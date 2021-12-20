@@ -732,3 +732,12 @@
 .black-edit-loader > span{
     background: black;
 }
+
+.telAnchor{
+    color: white;
+}
+
+.telAnchor:hover{
+    color: white;
+    opacity: .7;
+}
