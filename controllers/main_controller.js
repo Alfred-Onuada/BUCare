@@ -13,7 +13,7 @@ const Io = require("./../main");
 
 // modules for edits
 const { updatePhoto, updateProfile } = require("./updates/updateProfile");
-const { updateHeader, updateFooter, updateIndex } = require("./updates/updatePages");
+const { updateHeader, updateFooter, updateIndex, updateContact } = require("./updates/updatePages");
 
 // checkuser simply returns information about the logged in user, it doesn't protect the route
 module.exports = (app) => {
@@ -204,9 +204,13 @@ module.exports = (app) => {
         case 'index':
           updateIndex(req, res);
           break;
+
+        case 'contact':
+          updateContact(req, res);
+          break;
       
         default:
-          return res.send(400).send();
+          return res.status(400).send();
       }
 
     } else {
@@ -264,9 +268,9 @@ module.exports = (app) => {
 
 
   // delete me
-  const indexInfo = require('./../models/pages/index.page');
+  const contactInfo = require('./../models/pages/contact.page');
 
-  app.post('/updateIndex', verify, (req, res) => {
+  app.post('/updateContact', verify, (req, res) => {
 
     const data = req.body;
 
@@ -274,7 +278,7 @@ module.exports = (app) => {
 
       console.log(req.body);
 
-      indexInfo(data).save((err, info) => {
+      contactInfo(data).save((err, info) => {
         if (err) {
           return res.status(500).send(err.message);
         }

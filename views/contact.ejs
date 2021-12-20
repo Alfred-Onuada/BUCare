@@ -23,13 +23,23 @@ Author URL: http://w3layouts.com
 
 <body>
 
+	<div id="toastContainer" class="toast4UpdateInfo"></div>
+
 	<%- include('./partials/header') %>
 
 	<!--/w3l-breadcrumb-->
 	<section class="w3l-about-breadcrumb">
 		<div class="breadcrumb-bg breadcrumb-bg-about py-5">
 			<div class="container">
-				<h2 class="title">Choose Confidently</h2>
+				<h2 class="title">
+					<span id="content4Title0" data-p-t-e='contact' data-p-t-d-b-c="Title"><%= pages.contact[0].Title %></span>
+					<% if (userStatus && userStatus.isAdmin) { %>
+						<span id="editPreloader4Title0" class="editPreloader hide"><span></span><span></span><span></span><span></span></span>
+						<span id="pen4Title0" onclick="beginPageEdit('Title', 0)" class="adminEditIcons bi bi-pen"></span>
+						<span id="saveEdit4Title0" class="hide adminEditIcons bi bi-check2"></span>
+						<span id="closeEdit4Title0" class="hide adminEditIcons bi bi-x"></span>
+					<% } %>
+				</h2>
 				<ul class="breadcrumbs-custom-path mt-3 text-center">
 					<li><a href="index">Home</a></li>
 					<li class="active"><span class="fa fa-arrow-right mx-2" aria-hidden="true"></span> Contact Us </li>
@@ -42,9 +52,25 @@ Author URL: http://w3layouts.com
 	<section class="w3l-contact-11 pt-5">
 		<div class="contacts-main pt-lg-5 pt-3">
 			<div class="title-content text-center">
-				<h6 class="sub-titlehny">Contact</h6>
-				<h3 class="hny-title mb-0">We’re Here to Help You</h3>
-				<p class="mb-md-5 mb-4">Have some suggestions or just want to say hi? Contact us:</p>
+				<h6 class="sub-titlehny">Contact Form</h6>
+				<h3 class="hny-title mb-0">
+					<span id="content4Form0" data-p-t-e='contact' data-p-t-d-b-c="Form,Form_header"><%= pages.contact[0].Form.Form_Header %></span>
+					<% if (userStatus && userStatus.isAdmin) { %>
+						<span id="editPreloader4Form0" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+						<span id="pen4Form0" onclick="beginPageEdit('Form', 0)" class="black-edit adminEditIcons bi bi-pen"></span>
+						<span id="saveEdit4Form0" class="hide black-edit adminEditIcons bi bi-check2"></span>
+						<span id="closeEdit4Form0" class="hide black-edit adminEditIcons bi bi-x"></span>
+					<% } %>
+				</h3>
+				<p class="mb-md-5 mb-4">
+					<span id="content4Form1" data-p-t-e='contact' data-p-t-d-b-c="Form,Form_Sub_header"><%= pages.contact[0].Form.Form_Sub_Header %></span>
+					<% if (userStatus && userStatus.isAdmin) { %>
+						<span id="editPreloader4Form1" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+						<span id="pen4Form1" onclick="beginPageEdit('Form', 1)" class="black-edit adminEditIcons bi bi-pen"></span>
+						<span id="saveEdit4Form1" class="hide black-edit adminEditIcons bi bi-check2"></span>
+						<span id="closeEdit4Form1" class="hide black-edit adminEditIcons bi bi-x"></span>
+					<% } %>
+				</p>
 			</div>
 			<div class="form-41-mian section-gap mt-5">
 				<div class="container">
@@ -79,25 +105,92 @@ Author URL: http://w3layouts.com
 						<div class="contact-info-left d-grid text-left">
 							<div class="contact-info">
 								<span class="fa fa-map-o" aria-hidden="true"></span>
-								<h4>Visit Us Daily:</h4>
-								<p class="mb-2">New York
-									United States, LY-90814 Hill Station 2nd Street.</p>
-
+								<h4>
+									<span id="content4ContactsAddress0" data-p-t-e='contact' data-p-t-d-b-c="Contacts,Address,title"><%= pages.contact[0].Contacts.Address.title %></span>
+									<% if (userStatus && userStatus.isAdmin) { %>
+										<span id="editPreloader4ContactsAddress0" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+										<span id="pen4ContactsAddress0" onclick="beginPageEdit('ContactsAddress', 0)" class="black-edit adminEditIcons bi bi-pen"></span>
+										<span id="saveEdit4ContactsAddress0" class="hide black-edit adminEditIcons bi bi-check2"></span>
+										<span id="closeEdit4ContactsAddress0" class="hide black-edit adminEditIcons bi bi-x"></span>
+									<% } %>
+								</h4>
+								<p style="color: var(--para-color);" class="mb-2 conp">
+									<span id="content4ContactsAddress1" data-p-t-e='contact' data-p-t-d-b-c="Contacts,Address,content"><%= pages.contact[0].Contacts.Address.content %></span>
+									<% if (userStatus && userStatus.isAdmin) { %>
+										<span id="editPreloader4ContactsAddress1" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+										<span id="pen4ContactsAddress1" onclick="beginPageEdit('ContactsAddress', 1)" class="black-edit adminEditIcons bi bi-pen"></span>
+										<span id="saveEdit4ContactsAddress1" class="hide black-edit adminEditIcons bi bi-check2"></span>
+										<span id="closeEdit4ContactsAddress1" class="hide black-edit adminEditIcons bi bi-x"></span>
+									<% } %>
+								</p>
 							</div>
 							<div class="contact-info">
 								<span class="fa fa-phone" aria-hidden="true"></span>
-								<h4>Phone Us 24/7:</h4>
-								<p class="mb-2 conp"> <a href="tel:+1-2345-678-11">+1-2345-678-11</a></p>
-								<p class="conp"> <a href="tel:+1-2345-678-11">+1-2345-678-11</a></p>
+								<h4>
+									<span id="content4ContactsTelephone0" data-p-t-e='contact' data-p-t-d-b-c="Contacts,Telephone,title"><%= pages.contact[0].Contacts.Telephone.title %></span>
+									<% if (userStatus && userStatus.isAdmin) { %>
+										<span id="editPreloader4ContactsTelephone0" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+										<span id="pen4ContactsTelephone0" onclick="beginPageEdit('ContactsTelephone', 0)" class="black-edit adminEditIcons bi bi-pen"></span>
+										<span id="saveEdit4ContactsTelephone0" class="hide black-edit adminEditIcons bi bi-check2"></span>
+										<span id="closeEdit4ContactsTelephone0" class="hide black-edit adminEditIcons bi bi-x"></span>
+									<% } %>
+								</h4>
+								<p class="mb-2 conp">
+									<% if (userStatus && userStatus.isAdmin) { %>
+										<span style="color: var(--para-color);" id="content4ContactsTelephone1" data-p-t-e='contact' data-p-t-d-b-c="Contacts,Telephone,content,0"><%= pages.contact[0].Contacts.Telephone.content[0] %></span>
+										<span id="editPreloader4ContactsTelephone1" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+										<span id="pen4ContactsTelephone1" onclick="beginPageEdit('ContactsTelephone', 1)" class="black-edit adminEditIcons bi bi-pen"></span>
+										<span id="saveEdit4ContactsTelephone1" class="hide black-edit adminEditIcons bi bi-check2"></span>
+										<span id="closeEdit4ContactsTelephone1" class="hide black-edit adminEditIcons bi bi-x"></span>
+									<% } else { %>
+										<a href="tel:<%= pages.contact[0].Contacts.Telephone.content[0] %>"><%= pages.contact[0].Contacts.Telephone.content[0] %></a>
+									<% } %>
+								</p>
+								<p class="conp">
+									<% if (userStatus && userStatus.isAdmin) { %>
+										<span style="color: var(--para-color);" id="content4ContactsTelephone2" data-p-t-e='contact' data-p-t-d-b-c="Contacts,Telephone,content,1"><%= pages.contact[0].Contacts.Telephone.content[1] %></span>
+										<span id="editPreloader4ContactsTelephone2" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+										<span id="pen4ContactsTelephone2" onclick="beginPageEdit('ContactsTelephone', 2)" class="black-edit adminEditIcons bi bi-pen"></span>
+										<span id="saveEdit4ContactsTelephone2" class="hide black-edit adminEditIcons bi bi-check2"></span>
+										<span id="closeEdit4ContactsTelephone2" class="hide black-edit adminEditIcons bi bi-x"></span>
+									<% } else { %>
+										<a href="tel:<%= pages.contact[0].Contacts.Telephone.content[1] %>"><%= pages.contact[0].Contacts.Telephone.content[1] %></a>
+									<% } %>
+								</p>
 							</div>
 							<div class="contact-info">
 								<span class="fa fa-envelope-o" aria-hidden="true"></span>
-								<h4>Mail Us 24/7:</h4>
-								<p class="mb-2 conp"><a href="mailto:Preventive@email.com"
-										class="email">Preventive@email.com</a></p>
-								<p class="conp"><a href="mailto:Preventive@email.com"
-										class="email">Preventive@email.com</a></p>
-
+								<h4>
+									<span id="content4ContactsEmails0" data-p-t-e='contact' data-p-t-d-b-c="Contacts,Emails,title"><%= pages.contact[0].Contacts.Emails.title %></span>
+									<% if (userStatus && userStatus.isAdmin) { %>
+										<span id="editPreloader4ContactsEmails0" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+										<span id="pen4ContactsEmails0" onclick="beginPageEdit('ContactsEmails', 0)" class="black-edit adminEditIcons bi bi-pen"></span>
+										<span id="saveEdit4ContactsEmails0" class="hide black-edit adminEditIcons bi bi-check2"></span>
+										<span id="closeEdit4ContactsEmails0" class="hide black-edit adminEditIcons bi bi-x"></span>
+									<% } %>
+								</h4>
+								<p class="mb-2 conp">
+									<% if (userStatus && userStatus.isAdmin) { %>
+										<span style="color: var(--para-color);" id="content4ContactsEmails1" data-p-t-e='contact' data-p-t-d-b-c="Contacts,Emails,content,0"><%= pages.contact[0].Contacts.Emails.content[0] %></span>
+										<span id="editPreloader4ContactsEmails1" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+										<span id="pen4ContactsEmails1" onclick="beginPageEdit('ContactsEmails', 1)" class="black-edit adminEditIcons bi bi-pen"></span>
+										<span id="saveEdit4ContactsEmails1" class="hide black-edit adminEditIcons bi bi-check2"></span>
+										<span id="closeEdit4ContactsEmails1" class="hide black-edit adminEditIcons bi bi-x"></span>
+									<% } else { %>
+										<a href="mailto:<%= pages.contact[0].Contacts.Emails.content[0] %>"class="email"><%= pages.contact[0].Contacts.Emails.content[0] %></a>
+									<% } %>
+								</p>
+								<p class="conp">
+									<% if (userStatus && userStatus.isAdmin) { %>
+										<span style="color: var(--para-color);" id="content4ContactsEmails2" data-p-t-e='contact' data-p-t-d-b-c="Contacts,Emails,content,1"><%= pages.contact[0].Contacts.Emails.content[1] %></span>
+										<span id="editPreloader4ContactsEmails2" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+										<span id="pen4ContactsEmails2" onclick="beginPageEdit('ContactsEmails', 2)" class="black-edit adminEditIcons bi bi-pen"></span>
+										<span id="saveEdit4ContactsEmails2" class="hide black-edit adminEditIcons bi bi-check2"></span>
+										<span id="closeEdit4ContactsEmails2" class="hide black-edit adminEditIcons bi bi-x"></span>
+									<% } else { %>
+										<a href="mailto:<%= pages.contact[0].Contacts.Emails.content[1] %>"class="email"><%= pages.contact[0].Contacts.Emails.content[1] %></a>
+									<% } %>
+								</p>
 							</div>
 						</div>
 					</div>

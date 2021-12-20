@@ -1,6 +1,7 @@
 const HeaderInfo = require('../pages/header.page');
 const FooterInfo = require('../pages/footer.page');
 const IndexInfo = require('../pages/index.page');
+const ContactInfo = require('../pages/contact.page');
 
 module.exports = async function (req) {
   
@@ -40,6 +41,19 @@ module.exports = async function (req) {
     .then(docs => {
       if (docs) {
         pageInfo.index = docs;
+      } else {
+        res.status(500).send("The page could not load properly");
+      }
+    })
+    .catch((err) => {
+      console.log(err.message);
+      throw err;
+    });
+
+  await ContactInfo.find({})
+    .then(docs => {
+      if (docs) {
+        pageInfo.contact = docs;
       } else {
         res.status(500).send("The page could not load properly");
       }
