@@ -356,10 +356,6 @@ Router.get("/contact", (req, res) => {
   res.redirect("../contact");
 });
 
-Router.get("/services", (req, res) => {
-  res.redirect("../services");
-});
-
 Router.get("/users/login", (req, res) => {
   res.redirect("../users/login");
 });

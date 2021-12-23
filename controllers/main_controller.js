@@ -49,12 +49,6 @@ module.exports = (app) => {
     res.render("contact", { userStatus: req.userInfo, pages: req.pages });
   });
 
-  app.get("/services", checkUser, (req, res) => {
-    console.log(`Request made to : ${req.url}`);
-
-    res.render("services", { userStatus: req.userInfo, pages: req.pages });
-  });
-
   app.get("/rooms", verify, (req, res) => {
     console.log(`Request made to : ${req.url}`);
 

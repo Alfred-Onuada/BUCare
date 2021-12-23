@@ -622,8 +622,4 @@ Router.get("/contact", (req, res) => {
   res.redirect("../contact");
 });
 
-Router.get("/services", (req, res) => {
-  res.redirect("../services");
-});
-
 module.exports = Router;
