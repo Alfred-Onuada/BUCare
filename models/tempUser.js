@@ -12,6 +12,11 @@ const tempUserSchema = mongoose.Schema({
   'Expires_In': {
     type: Number,
     required: true
+  },
+  expireAt: {
+    type: Date,
+    default: Date.now,
+    index: { expires: '5m' }
   }
 }, { timestamps: true });
 

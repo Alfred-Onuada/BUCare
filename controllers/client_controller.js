@@ -622,4 +622,8 @@ Router.get("/contact", (req, res) => {
   res.redirect("../contact");
 });
 
+Router.get("/resetpwd", (req, res) => {
+  res.redirect("../resetpwd");
+})
+
 module.exports = Router;

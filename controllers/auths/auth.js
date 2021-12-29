@@ -1,7 +1,8 @@
-const Users = require("./../../models/user");
 const Clients = require("./../../models/client");
 const Therapists = require("./../../models/therapist");
 const Rooms = require("./../../models/room");
+const Users = require("./../../models/user");
+const Admin = require("./../../models/admin");
 
 // Initialize Packages
 const Router = require("express").Router();
@@ -11,6 +12,9 @@ const crypto = require("crypto");
 
 // hapi jo helps carry out input validation
 const Joi = require("@hapi/joi");
+
+// middlewares
+const checkUser = require("./checkUser");
 
 /*
 
@@ -222,5 +226,80 @@ Router.get("/logout", (req, res) => {
     })
     .send(); // AJAX will recieve status code and force the browser to reload to another page
 });
+
+Router.post("/checkpwd", checkUser, async (req, res) => {
+
+  const { oldPwd } = req.body;
+
+  if (req.userInfo) {
+
+    const userData = await Users.findById(req.userInfo._id);
+
+    // if for any reason your record gets deleted from the database
+    if (userData == null) {
+      return res.status(401).send("Access Denied! Unauthorized request");
+    }    
+    
+    const validPassword = await bcrypt.compare(
+      oldPwd,
+      userData.Password
+    );
+
+    if (!validPassword) {
+      return res.status(401).send("Invalid Password");
+    }
+
+    // if the same
+    return res.status(200).send();
+
+  } else {
+    return res.status(401).send("Access Denied! Unauthorized request");
+  }
+
+})
+
+Router.post('/changepwd', checkUser, async (req, res) => {
+
+  const { newPwd } = req.body;
+
+  if (req.userInfo) {
+    try {
+    
+      // hashing the password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(newPwd, salt);
+  
+      // update the password on the users model
+      const result = await Users.findByIdAndUpdate(req.userInfo._id, { Password: hashedPassword })
+
+      if (result) {
+
+        let result2 = null;
+        if (req.userInfo.isClient) {
+          console.log("Here");
+          result2 = await Clients.findOneAndUpdate(result.Email, { Password: hashedPassword })
+        } else if (req.userInfo.isTherapist) {
+          result2 = await Therapists.findOneAndUpdate(result.Email, { Password: hashedPassword })
+        } else if (req.userInfo.isAdmin) {
+          result2 = await Admin.findOneAndUpdate(result.Email, { Password: hashedPassword })
+        }
+
+        if (result2) {
+          return res.status(200).send();
+        } else {
+          return res.status(500).send("Oops! something went wrong, your changes have not be saved");
+        }
+
+      } else {
+        return res.status(500).send("Oops! something isn't right, contact the help desk");
+      }
+    } catch (error) {
+      return res.status(500).send("Oops! something isn't right, contact the help desk");
+    }
+  } else {
+    return res.status(401).send("Access Denied! Unauthorized request");
+  }
+
+})
 
 module.exports = Router;

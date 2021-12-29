@@ -585,8 +585,6 @@ function checkStudent() {
       if (this.readyState === 4) {
         if (this.status === 200) {
 
-          emailSubBtn.textContent = "Submit";
-
           // add the 2 minutes delay between sending intervals and add the 10 minute expiration date
           modalBody.innerHTML = `
           <center>
@@ -649,6 +647,9 @@ function checkStudent() {
         } else {
           displayErrorMsg("Sorry something went wrong", boxId);
         }
+
+        emailSubBtn.textContent = "Submit";
+
       }
     }
     xhr.send(JSON.stringify({
@@ -972,19 +973,28 @@ function closeProfile() {
   }, 0);
 }
 
-function beginEdit(self) {
+function beginEdit(self, isDOB = false) {
   // self holds an instance of the exact element that was clicked lol
 
-  self.parentNode.children[0].contentEditable = "true";
+  if (isDOB) {
+    self.parentNode.children[0].disabled = false;
+  } else {
+    self.parentNode.children[0].contentEditable = "true";
+  }
+
   self.parentNode.children[1].classList.add("hide");
   self.parentNode.children[2].classList.remove("hide");
 }
 
-function endEdit(self, val = null) {
+function endEdit(self, val = null, isDOB = false) {
   if (typeof self === "object") {
     // self holds an instance of the exact element that was clicked lol
 
-    self.parentNode.children[0].contentEditable = "false";
+    if (isDOB) {
+      self.parentNode.children[0].disabled = true;
+    } else {
+      self.parentNode.children[0].contentEditable = "false";
+    }
     self.parentNode.children[1].classList.remove("hide");
     self.parentNode.children[3].classList.add("hide");
 
@@ -1125,18 +1135,25 @@ function showToastMsg(msg) {
   }, 5000);
 }
 
-function updateProfile(userId, affectedField, fieldInstance) {
-  var value = fieldInstance.parentNode.children[0].textContent.trim();
+function updateProfile(userId, affectedField, fieldInstance, isDOB = false) {
+
+  let value;
+  if (isDOB) {
+    value = fieldInstance.parentNode.children[0].value;
+  } else {
+    value = fieldInstance.parentNode.children[0].textContent.trim();
+  }
+
   const newValue = value != "" || value != "Not Specified" ? value : null;
 
-  var xhr = new XMLHttpRequest();
+  let xhr = new XMLHttpRequest();
   xhr.open("PUT", "/updateProfile", true);
   xhr.setRequestHeader("content-type", "application/json");
   xhr.onreadystatechange = function () {
     if (this.readyState === 4) {
       if (this.status == 200) {
         // passed in newValue so as to enter Not Specified into the field if the user leaves it empty
-        endEdit(fieldInstance, this.responseText);
+        endEdit(fieldInstance, this.responseText, isDOB);
 
         showToastMsg("Update was successful");
       } else if (this.status === 500) {
@@ -1477,6 +1494,45 @@ function addRatingComment() {
   xhr.send(JSON.stringify(data));
 }
 
+function dismissReport() {
+
+  let dismissBtn = document.getElementById('dimissReportBtn');
+  let closeBtn = document.getElementById('reportInfoCloseBtn');
+  let userId = dismissBtn.dataset.uid;
+
+  let clientRow = document.getElementById("client-" + userId);
+  let reportInfo = document.getElementById("reportInfo-" + userId);
+
+  dismissBtn.disabled = true;
+  dismissBtn.textContent = "Dismissing case...";
+
+  let xhr = new XMLHttpRequest();
+  xhr.open("put", "/a/toggleDisabledStatus", true);
+  xhr.setRequestHeader("content-type", "application/json");
+  xhr.onreadystatechange = function () {
+    if (this.readyState === 4) {
+      if (this.status === 200) {
+        clientRow.removeChild(reportInfo);
+        showToastMsg("You have successfully dismissed this case");
+
+        closeBtn.click();
+      } else {
+        showToastMsg("Oops! Something went wrong, kindly try again");
+      }
+
+      dismissBtn.disabled = false;
+      dismissBtn.textContent = "Dismiss case";
+    }
+  };
+  const data = {
+    userId: userId,
+    newValue: false,
+    user: 'client',
+  };
+  xhr.send(JSON.stringify(data));
+
+}
+
 function toggleDisabledStatus(userId, newValue, typeOfUser) {
   let clientRow = document.getElementById("client-" + userId);
   let reportInfo;
@@ -1596,7 +1652,6 @@ function getReport(userId, fieldInstance) {
       if (this.status === 200) {
         let response = JSON.parse(this.responseText);
 
-        console.log(response.clientEmail);
         // setting the info in the modal
         document.getElementById("inReportTId1").innerText =
           response.therapistEmail;
@@ -1605,6 +1660,9 @@ function getReport(userId, fieldInstance) {
         document.getElementById("inReportCId").innerText = response.clientEmail;
         document.getElementById("inReportCat").innerText = response.category;
         document.getElementById("inReportComment").innerText = response.comment;
+
+        // setting userId in the modal btn
+        document.getElementById('dimissReportBtn').dataset.uid = userId;
 
         reportModalBtn.click();
       } else {
@@ -1822,4 +1880,109 @@ function beginPageEdit(contentName, index=null) {
   // make box editable
   contentBox.setAttribute('contenteditable', true);
   placeCursorAtDivEnd(contentBox);
+}
+
+function changepwd() {
+  const boxId = 5;
+  const oldPwd = document.getElementById('oldpwd');
+  const verifyBtn = document.getElementById('verifyBtn');
+
+  const newPasswordDiv = document.getElementById('newpwd');
+  const newPassword = document.getElementById('newPasswordInput');
+  const confirmPassword = document.getElementById('confirmPasswordInput');
+  const changePwdBtn = document.getElementById('changePwdBtn');
+
+  verifyBtn.textContent = "Verifying...";
+  verifyBtn.style.opacity = .7;
+
+  const xhr = new XMLHttpRequest();
+  xhr.open('POST', '/users/checkpwd', true);
+  xhr.setRequestHeader('content-type', 'application/json');
+  xhr.onreadystatechange = function () {
+    if (this.readyState == 4) {
+      if (this.status == 200) {
+
+        // clear the input
+        oldPwd.value = '';
+
+        newPasswordDiv.classList.remove('hide');
+
+        let validationTimer;
+
+        confirmPassword.onkeyup = function () {
+
+          if (validationTimer) {
+            clearTimeout(validationTimer);
+          }
+          
+          validationTimer = setTimeout(() => {
+            if (newPassword.value.length < 8) {
+              changePwdBtn.setAttribute('disabled', true);
+  
+              return displayErrorMsg("New password must be at least 8 characters in length", boxId);
+            }
+  
+            // possibly check for strength
+
+            if (newPassword.value !== confirmPassword.value) {
+              changePwdBtn.setAttribute('disabled', true);
+  
+              return displayErrorMsg("Password mismatch error", boxId);
+            }
+  
+            // if it passes all the test enable button
+            changePwdBtn.removeAttribute('disabled');
+          }, 2000);
+          
+        }
+
+        changePwdBtn.onclick = function () {
+          // recheck everything to confirm
+          if (newPassword.value.length < 8) {
+            changePwdBtn.setAttribute('disabled', true);
+  
+            return displayErrorMsg("New password must be at least 8 characters in length", boxId);
+          }
+    
+          if (newPassword.value !== confirmPassword.value) {
+            changePwdBtn.setAttribute('disabled', true);
+  
+            return displayErrorMsg("Password mismatch error", boxId);
+          }
+
+          changePwdBtn.textContent = "Changing Password...";
+          changePwdBtn.style.opacity = .7;
+
+          const xhr = new XMLHttpRequest();
+          xhr.open('POST', '/users/changepwd', true);
+          xhr.setRequestHeader('content-type', 'application/json');
+          xhr.onreadystatechange = function () {
+            if (this.readyState === 4) {
+              if (this.status === 200) {
+                // clear the inputs
+                newPassword.value = '';
+                confirmPassword.value = '';
+
+                changePwdBtn.textContent = "Change Password";
+                changePwdBtn.style.opacity = 1;
+
+                displaySuccessMsg("Password change was successful😁", boxId)
+              } else {
+                displayErrorMsg(this.responseText, boxId);
+              }
+            }
+          }
+          xhr.send(JSON.stringify({newPwd: newPassword.value}))
+        }
+
+      } else {
+        displayErrorMsg(this.responseText, boxId);
+      }
+
+      verifyBtn.textContent = "Verify";
+      verifyBtn.style.opacity = 1;
+
+    }
+  }
+  xhr.send(JSON.stringify({oldPwd: oldPwd.value}))
 }

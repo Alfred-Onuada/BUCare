@@ -395,6 +395,7 @@ Router.get("/rooms", verify, (req, res) => {
           rooms_info: rooms,
           userStatus: req.user,
           user: req.user._id,
+          pages: req.pages
         });
       })
       .catch((err) => {
@@ -664,5 +665,8 @@ Router.get("/contact", (req, res) => {
   res.redirect("../contact");
 });
 
+Router.get("/resetpwd", (req, res) => {
+  res.redirect("../resetpwd");
+})
 
 module.exports = Router;

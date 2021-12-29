@@ -488,6 +488,12 @@
     border-bottom: 2px solid #3a0ca3;
 }
 
+.detailValueDate{
+    border: 0;
+    width: 70%;
+    margin-right: 30%;
+}
+
 .editPen{
     position: absolute;
 }
@@ -659,6 +665,13 @@
     font-size: 25px;
 }
 
+.showPasswordIcon-reset{
+    float: right;
+    margin: 2px 0px 0px -30px;
+    position: absolute;
+    font-size: 20px;
+}
+
 /* for the preloader when admin is editing */
 
 .editPreloader {
@@ -740,4 +753,77 @@
 .telAnchor:hover{
     color: white;
     opacity: .7;
+}
+
+@media screen and (max-width: 500px) {
+    .resetpwdbox{
+        border: 1px solid grey;
+        box-shadow: 0px 0px 5px lavender;
+        border-radius: 5px;
+        height: 70vh;
+        width: 100vw;
+    }
+}
+
+@media screen and (min-width: 501px) {
+    .resetpwdbox{
+        border: 1px solid grey;
+        box-shadow: 0px 0px 5px lavender;
+        border-radius: 5px;
+        height: 70vh;
+        width: 60vw;
+    }
+}
+
+.resetpwdcontainer{
+    height: 80vh;
+    display: grid;
+    place-content: center;
+}
+
+.resetpwdstage{
+    text-align: center;
+    margin-top: 15px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.resetpwdfooter{
+    float: right;
+    margin-right: 20px;
+    font-size: 20px;
+}
+
+.forgetpwd {
+    color: rgb(62, 62, 245);
+}
+
+.forgetpwd:hover{
+    opacity: .7;
+}
+
+.resetpwdcontent{
+    height: 50vh;
+    padding: 0px 20px;
+    display: flex;
+    place-items: center;
+    flex-direction: column;
+}
+
+.rpcHead{
+    text-align: center;
+}
+
+.newpwd{
+    margin-top: 20px;
+}
+
+.rpInput{
+    margin: 0px 0px 0px 20px;
+    border: 1px solid grey;
+    height: 30px;
+    width: 30vw;
+    border-radius: 5px;
+    padding: 10px 10px;
+    font-size: 15px;
 }

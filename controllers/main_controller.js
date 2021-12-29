@@ -248,62 +248,12 @@ module.exports = (app) => {
     res.render('video-chat', { details });
   })
 
+  app.get("/resetpwd", verify, (req, res) => {
 
-
-
-
-
-
-
-
-
-
-
-
-
-  // delete me
-  const contactInfo = require('./../models/pages/contact.page');
-
-  app.post('/updateContact', verify, (req, res) => {
-
-    const data = req.body;
-
-    if (req.user.isAdmin) {
-
-      console.log(req.body);
-
-      contactInfo(data).save((err, info) => {
-        if (err) {
-          return res.status(500).send(err.message);
-        }
-  
-        return res.status(200).send("Success");
-      })
-  
-    } else {
-      return res.status(401).send();
-    }
-  });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    console.log(`Request made to : ${req.url}`);
+    
+    res.render("resetpassword", { userStatus: req.user, pages: req.pages })
+  })
 
   // this is the 404 error page, it has to be the last route here
   app.get('*', checkUser, (req, res) => {

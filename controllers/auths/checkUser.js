@@ -23,7 +23,7 @@ module.exports = async function (req, res, next) {
     // if for any reason your info no longer exists on the db this makes sure your userInfo object is set to null
     await Users.findOne({ _id: req.userInfo._id })
       .then(async (docs) => {
-        if (docs.Disabled) {
+        if (docs && docs.Disabled) {
           return res
             .status(401)
             .send(
@@ -34,7 +34,7 @@ module.exports = async function (req, res, next) {
         if (docs == null) {
           req.userInfo = null;
         } else {
-          //  only these two for now as the client's nav is always basic
+          req.userInfo.isClient = docs.isClient;
           req.userInfo.isTherapist = docs.isTherapist;
           req.userInfo.isAdmin = docs.isAdmin;
 

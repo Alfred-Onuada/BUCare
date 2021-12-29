@@ -215,11 +215,10 @@ Author URL: http://w3layouts.com
                                         <div class="eachDetail">
                                             <h4 class="detailName">Date Of Birth - DD-MM-YY</h4>
                                             <div class="textEditArea">
-                                                <div role="textbox" contenteditable="false" dir="ltr" aria-multiline="false" class="detailValue">
-                                                    <%= userStatus.details.Date_of_Birth != null ? userStatus.details.Date_of_Birth : 'Not Specified' %>
-                                                </div>
-                                                <i onclick="beginEdit(this)" class="editPen bi bi-pen"></i>
-                                                <i onclick="updateProfile('<%= userStatus._id %>', 'Date_of_Birth', this)" class="saveEdit hide bi bi-check2"></i>
+                                                <input class="detailValueDate" value="<%= userStatus.details.Date_of_Birth != null ? userStatus.details.Date_of_Birth : '' %>" 
+                                                    type="date" name="dob" id="dob-input" disabled>
+                                                <i onclick="beginEdit(this, true)" class="editPen bi bi-pen"></i>
+                                                <i onclick="updateProfile('<%= userStatus._id %>', 'Date_of_Birth', this, true)" class="saveEdit hide bi bi-check2"></i>
                                                 <div class="hide preloader spinner-border" role="status"></div>
                                             </div>
                                         </div>
@@ -248,9 +247,8 @@ Author URL: http://w3layouts.com
                                             </div>
                                         </div>
 
-                                        <!-- this will open up a new page for password rest not a modal -->
                                         <div class="eachDetail">
-                                            <h4 class="resetPassword">Reset your password</h4>
+                                            <a href="resetpwd"><h4 class="resetPassword">Reset your password</h4></a>
                                         </div>
 
                                     </div>
@@ -303,9 +301,8 @@ Author URL: http://w3layouts.com
                                             </div>
                                         </div>
 
-                                        <!-- this will open up a new page for password reset not a modal -->
                                         <div class="eachDetail">
-                                            <h4 class="resetPassword">Reset your password</h4>
+                                            <a href="resetpwd"><h4 class="resetPassword">Reset your password</h4></a>
                                         </div>
 
                                     </div>
