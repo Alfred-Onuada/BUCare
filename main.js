@@ -88,7 +88,7 @@ app.use('/c', clientController); // c represents client
 app.use('/t', therapistController); // t represents therapist
 
 // adding routing middleware for email
-const emailController = require('./controllers/emails/emailController');
+const { Router:emailController } = require('./controllers/emails/emailController');
 
 // using the email route
 app.use('/email', emailController);

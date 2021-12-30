@@ -802,7 +802,7 @@
     opacity: .7;
 }
 
-.resetpwdcontent{
+.resetpwdcontent, .forgotpwdcontent{
     height: 50vh;
     padding: 0px 20px;
     display: flex;

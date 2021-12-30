@@ -571,7 +571,7 @@ function checkStudent() {
       return displayErrorMsg("Email field cannot be empty", boxId);
     }
 
-    buEmailRegex = /(\d{4}@student.babcock.edu.ng|@babcock.edu.ng)$/i;
+    let buEmailRegex = /(\d{4}@student.babcock.edu.ng|@babcock.edu.ng)$/i;
 
     if (buEmailRegex.test(value) === false) {
       emailSubBtn.textContent = "Submit";
@@ -1985,4 +1985,71 @@ function changepwd() {
     }
   }
   xhr.send(JSON.stringify({oldPwd: oldPwd.value}))
+}
+
+function switchPasswordPortal() {
+  
+  const portalBtn = document.getElementById('pwdportalswitch');
+  const current = portalBtn.dataset.current;
+
+  const resetDiv = document.getElementById('resetpwdcontent');
+  const forgotDiv = document.getElementById('forgotpwdcontent');
+  
+  if (current.toLowerCase() == "forgot your password?") {
+    portalBtn.textContent = "Reset your password";
+    portalBtn.dataset.current = "Reset your password";
+
+
+    resetDiv.classList.add('hide');
+    forgotDiv.classList.remove('hide');
+
+  } else if (current.toLowerCase() == "reset your password") {
+    portalBtn.textContent = "Forgot your password?";
+    portalBtn.dataset.current = "Forgot your password?";
+
+    forgotDiv.classList.add('hide');
+    resetDiv.classList.remove('hide');
+
+  }
+}
+
+function sendFPwd() {
+  const boxId = 6;
+
+  const verifyAndSendBtn = document.getElementById('sendFPwdBtn');
+  const resetEmail = document.getElementById('fpwdemail')
+    .value
+    .toLowerCase()
+    .trim();
+
+  let buEmailRegex = /(\d{4}@student.babcock.edu.ng|@babcock.edu.ng)$/i;
+  
+  if (resetEmail == "" || buEmailRegex.test(resetEmail) == false) {
+    return displayErrorMsg("Invalid Email Address", boxId);
+  }
+
+  verifyAndSendBtn.textContent = "Checking email...";
+  verifyAndSendBtn.style.opacity = .7;
+
+  let xhr = new XMLHttpRequest();
+  xhr.open("POST", '/users/checkemail', true);
+  xhr.setRequestHeader("content-type", "application/json");
+  xhr.onreadystatechange = function () {
+    if (this.readyState === 4) {
+      if (this.status === 200) {
+        
+      } else {
+        displayErrorMsg(this.responseText, boxId);
+      }
+
+      verifyAndSendBtn.textContent = "Verify & Send reset token";
+      verifyAndSendBtn.style.opacity = 1;
+
+    }
+  }
+  xhr.send(JSON.stringify({
+    resetEmail,
+    websiteUrl: location.origin 
+  }));
+
 }

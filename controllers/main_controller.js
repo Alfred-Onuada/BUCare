@@ -248,11 +248,11 @@ module.exports = (app) => {
     res.render('video-chat', { details });
   })
 
-  app.get("/resetpwd", verify, (req, res) => {
+  app.get("/resetpwd", checkUser, (req, res) => {
 
     console.log(`Request made to : ${req.url}`);
     
-    res.render("resetpassword", { userStatus: req.user, pages: req.pages })
+    res.render("resetpassword", { userStatus: req.userInfo, pages: req.pages })
   })
 
   // this is the 404 error page, it has to be the last route here

@@ -113,4 +113,97 @@ Router.post('/registration', async (req, res) => {
 
 })
 
-module.exports = Router;
+// send email to info user that password has changed
+const sendPasswordHasChangedEmail = function(email, websiteUrl) {
+  return new Promise(async (resolve, reject) => {
+
+    try {
+      // setting up the options for this email
+      let mailOptions = {
+        from: `Alfred at BUCare`,
+        to: email,
+        subject: 'Password Change Alert',
+        template: 'passwordHasChanged',
+        context: {
+          websiteUrl
+        }
+      };
+
+      transporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+          console.log(err);
+          reject({status: 500, message: 'Something went wrong while sending mail. try again later'});
+        } 
+
+        resolve({status: 200, message: "Success"});
+      })
+    } catch (error) {
+      console.log(error.message);
+      reject({status: 500, message: "Something went wrong"});
+    }
+  })
+}
+
+// send the password token for forgot password
+const sendResetEmail = function(email, websiteUrl) {
+  return new Promise(async (resolve, reject) => {
+    // this produces exactly six random characters
+    const token = crypto.randomBytes(3).toString('hex');
+    const expirationDate = new Date().getTime() + 600000; // this adds a ten minute expiration
+
+    const data = {
+      Email: email,
+      Unique_Code: token,
+      Expires_In: expirationDate
+    }
+
+    try {
+      
+      await tempUserSchema.validateAsync(data);
+
+      // this makes sure to delete old data from the system
+      await TempUsers.findOneAndDelete({ Email: data.Email })
+        .catch(err => {
+          console.log(err.message);
+          reject({status: 500, message: "Something went wrong"});
+        })
+
+      await TempUsers(data).save((err, data) => {
+        if (err) {
+          throw err;
+        } else {
+          // setting up the options for this email
+          let mailOptions = {
+            from: `Alfred at BUCare`,
+            to: email,
+            subject: 'Reset Password Request',
+            template: 'resetPassword',
+            context: {
+              token,
+              websiteUrl
+            }
+          };
+
+          transporter.sendMail(mailOptions, (err, info) => {
+            if (err) {
+              console.log(err);
+              reject({status: 500, message: 'Something went wrong while sending mail. try again later'});
+            } 
+
+            resolve({status: 200, message: "Success"});
+          })
+        }
+      })
+
+    } catch (error) {
+      console.log(error.message);
+      reject({status: 500, message: "Something went wrong"});
+    }
+  })
+}
+
+module.exports = { 
+  Router, 
+  sendResetEmail,
+  sendPasswordHasChangedEmail
+};

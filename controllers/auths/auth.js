@@ -10,6 +10,9 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 
+// use for sending emails
+const { sendResetEmail, sendPasswordHasChangedEmail } = require('../emails/emailController');
+
 // hapi jo helps carry out input validation
 const Joi = require("@hapi/joi");
 
@@ -227,6 +230,7 @@ Router.get("/logout", (req, res) => {
     .send(); // AJAX will recieve status code and force the browser to reload to another page
 });
 
+// confirms password during reset password
 Router.post("/checkpwd", checkUser, async (req, res) => {
 
   const { oldPwd } = req.body;
@@ -260,7 +264,9 @@ Router.post("/checkpwd", checkUser, async (req, res) => {
 
 Router.post('/changepwd', checkUser, async (req, res) => {
 
-  const { newPwd } = req.body;
+  // email maybe undefined it's not an error this route is used by users who are reseting their
+  // password and users who forgot their password
+  const { newPwd, reqEmail } = req.body;
 
   if (req.userInfo) {
     try {
@@ -276,7 +282,6 @@ Router.post('/changepwd', checkUser, async (req, res) => {
 
         let result2 = null;
         if (req.userInfo.isClient) {
-          console.log("Here");
           result2 = await Clients.findOneAndUpdate(result.Email, { Password: hashedPassword })
         } else if (req.userInfo.isTherapist) {
           result2 = await Therapists.findOneAndUpdate(result.Email, { Password: hashedPassword })
@@ -285,7 +290,16 @@ Router.post('/changepwd', checkUser, async (req, res) => {
         }
 
         if (result2) {
-          return res.status(200).send();
+
+          // this tiny conditional assignment helps it determine what email to send to
+          sendPasswordHasChangedEmail(reqEmail ? reqEmail : result.Email)
+            .then(response => {
+              return res.status(response.status).send(response.message);
+            })
+            .catch(err => {
+              return res.status(err.status).send(err.message);
+            })
+
         } else {
           return res.status(500).send("Oops! something went wrong, your changes have not be saved");
         }
@@ -301,5 +315,34 @@ Router.post('/changepwd', checkUser, async (req, res) => {
   }
 
 })
+
+// confirms email during forgot password
+Router.post('/checkemail', async (req, res) => {
+
+  const { resetEmail, websiteUrl } = req.body;
+
+  Users.findOne({ Email: resetEmail })
+    .then(async userData => {
+      if (userData) {
+        sendResetEmail(resetEmail, websiteUrl)
+          .then(response => {
+            // lol this code just relays what so ever is gotten from the email controller
+            return res.status(response.status).send(response.message);
+          })
+          .catch(err => {
+            // lol this code just relays what so ever is gotten from the email controller
+            return res.status(err.status).send(err.message);
+          })
+
+      } else {
+        return res.status(400).send("The provided email doesn't exist");
+      }
+    })
+    .catch(err => {
+      if (err) console.log(err.message);
+      return res.status(500).send("Something went wrong");
+    })
+
+});
 
 module.exports = Router;
