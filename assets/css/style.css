@@ -806,7 +806,7 @@
     height: 50vh;
     padding: 0px 20px;
     display: flex;
-    place-items: center;
+    align-items: baseline;
     flex-direction: column;
 }
 
@@ -826,4 +826,9 @@
     border-radius: 5px;
     padding: 10px 10px;
     font-size: 15px;
+}
+
+.resetPasswordAlertBoxConatiner{
+    width: 100%;
+    text-align: center;
 }

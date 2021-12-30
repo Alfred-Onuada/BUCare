@@ -46,10 +46,6 @@ const therapistSchema = mongoose.Schema({
     'Rating_Respondents' : {
         type: Number
     },
-    'Unique_Code' : {
-        type: String,
-        required: true
-    },
 }, { timestamps: true });
 
 const therapist = mongoose.model('therapist', therapistSchema); // table initializatiion, the name of the table will be therapists

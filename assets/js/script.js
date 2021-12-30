@@ -1932,7 +1932,7 @@ function changepwd() {
   
             // if it passes all the test enable button
             changePwdBtn.removeAttribute('disabled');
-          }, 2000);
+          }, 1500);
           
         }
 
@@ -1963,13 +1963,13 @@ function changepwd() {
                 newPassword.value = '';
                 confirmPassword.value = '';
 
-                changePwdBtn.textContent = "Change Password";
-                changePwdBtn.style.opacity = 1;
-
                 displaySuccessMsg("Password change was successful😁", boxId)
               } else {
                 displayErrorMsg(this.responseText, boxId);
               }
+
+              changePwdBtn.textContent = "Change Password";
+              changePwdBtn.style.opacity = 1;
             }
           }
           xhr.send(JSON.stringify({newPwd: newPassword.value}))
@@ -2021,6 +2021,14 @@ function sendFPwd() {
     .value
     .toLowerCase()
     .trim();
+  const enterTokenDiv = document.getElementById('resetPwdTokenDiv');
+
+  const tokenBtn = document.getElementById('verifyTokenFPwdBtn');
+
+  const newPwdDiv = document.getElementById('newpwd-F');
+  const newPassword = document.getElementById('newPasswordInput-F');
+  const confirmPassword = document.getElementById('confirmPasswordInput-F');
+  const changePwdBtn = document.getElementById('changePwdBtn-F');
 
   let buEmailRegex = /(\d{4}@student.babcock.edu.ng|@babcock.edu.ng)$/i;
   
@@ -2038,6 +2046,108 @@ function sendFPwd() {
     if (this.readyState === 4) {
       if (this.status === 200) {
         
+        enterTokenDiv.classList.remove('hide');
+        tokenBtn.onclick = function () {
+          let token = document.getElementById('fpwdtoken').value;
+
+          if (token == '') {
+            return displayErrorMsg("Invalid token");
+          }
+
+          let xhr = new XMLHttpRequest();
+          xhr.open("POST", '/checkVerificationToken', true);
+          xhr.setRequestHeader("content-type", "application/json");
+          xhr.onreadystatechange = function () {
+            if (this.readyState === 4) {
+              if (this.status === 200) {
+
+                newPwdDiv.classList.remove('hide');
+                
+                let validationTimer;
+
+                confirmPassword.onkeyup = function () {
+
+                  if (validationTimer) {
+                    clearTimeout(validationTimer);
+                  }
+                  
+                  validationTimer = setTimeout(() => {
+                    if (newPassword.value.length < 8) {
+                      changePwdBtn.setAttribute('disabled', true);
+          
+                      return displayErrorMsg("New password must be at least 8 characters in length", boxId);
+                    }
+          
+                    // possibly check for strength
+
+                    if (newPassword.value !== confirmPassword.value) {
+                      changePwdBtn.setAttribute('disabled', true);
+          
+                      return displayErrorMsg("Password mismatch error", boxId);
+                    }
+          
+                    // if it passes all the test enable button
+                    changePwdBtn.removeAttribute('disabled');
+                  }, 1500);
+                  
+                }
+
+                changePwdBtn.onclick = function () {
+                  // recheck everything to confirm
+                  if (newPassword.value.length < 8) {
+                    changePwdBtn.setAttribute('disabled', true);
+          
+                    return displayErrorMsg("New password must be at least 8 characters in length", boxId);
+                  }
+            
+                  if (newPassword.value !== confirmPassword.value) {
+                    changePwdBtn.setAttribute('disabled', true);
+          
+                    return displayErrorMsg("Password mismatch error", boxId);
+                  }
+
+                  changePwdBtn.textContent = "Changing Password...";
+                  changePwdBtn.style.opacity = .7;
+
+                  const xhr = new XMLHttpRequest();
+                  xhr.open('POST', '/users/changepwd', true);
+                  xhr.setRequestHeader('content-type', 'application/json');
+                  xhr.onreadystatechange = function () {
+                    if (this.readyState === 4) {
+                      if (this.status === 200) {
+                        // clear the inputs
+                        newPassword.value = '';
+                        confirmPassword.value = '';
+
+                        displaySuccessMsg("Password change was successful😁", boxId)
+                      } else {
+                        displayErrorMsg(this.responseText, boxId);
+                      }
+
+                      changePwdBtn.textContent = "Change Password";
+                      changePwdBtn.style.opacity = 1;
+                    }
+                  }
+                  // this authToken is sent along automatically as a kind of validator so you dont just forge request and reset 
+                  // someone's account lol
+                  xhr.send(JSON.stringify({
+                    newPwd: newPassword.value,
+                    authToken: token,
+                    reqEmail: resetEmail
+                  }))
+                }
+
+              } else {
+                return displayErrorMsg(this.responseText, boxId);
+              }
+            }
+          }
+          xhr.send(JSON.stringify({
+            token,
+            email: resetEmail
+          }));
+        }
+
       } else {
         displayErrorMsg(this.responseText, boxId);
       }

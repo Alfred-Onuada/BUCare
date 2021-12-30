@@ -39,10 +39,6 @@ const userSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
-    'Unique_Code' : {
-        type: String,
-        required: true
-    },
 }, { timestamps: true });
 
 const user = mongoose.model('user', userSchema); // table initializatiion, the name of the table will be users

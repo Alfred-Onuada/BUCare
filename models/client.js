@@ -51,10 +51,6 @@ const clientSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
-    'Unique_Code' : {
-        type: String,
-        required: true
-    },
 }, { timestamps: true });
 
 const client = mongoose.model('client', clientSchema); // table initializatiion, the name of the table will be clients

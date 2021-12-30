@@ -163,7 +163,7 @@ module.exports = (app) => {
           return res.status(500).send("Something went wrong");
         } else {
           // the reason this is a 500 error is because the user is not the one providing the data
-          return res.status(500).send();
+          return res.status(500).send("Something went wrong, try again later");
         }
       })
       .catch(err => {

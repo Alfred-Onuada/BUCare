@@ -3,6 +3,7 @@ const Therapists = require("./../../models/therapist");
 const Rooms = require("./../../models/room");
 const Users = require("./../../models/user");
 const Admin = require("./../../models/admin");
+const TempUsers = require('./../../models/tempUser');
 
 // Initialize Packages
 const Router = require("express").Router();
@@ -42,7 +43,6 @@ const usersRegisterSchema = Joi.object({
   Sex: Joi.string().required(),
   Case: Joi.string().required(),
   Assigned_Therapist: Joi.string().required(),
-  Unique_Code: Joi.string(),
 });
 
 // creating a room schema with Hapi Joi
@@ -70,9 +70,6 @@ Router.post("/register", async (req, res) => {
 
         // change the password that is stored in db
         req.body.Password = hashedPassword;
-
-        // generate random code for user
-        req.body.Unique_Code = crypto.randomBytes(6).toString("hex");
 
         // take and store the therapist name for use when creating room
         var therapistName = req.body.Assigned_Therapist;
@@ -264,9 +261,9 @@ Router.post("/checkpwd", checkUser, async (req, res) => {
 
 Router.post('/changepwd', checkUser, async (req, res) => {
 
-  // email maybe undefined it's not an error this route is used by users who are reseting their
+  // reqEmail and authToken maybe undefined it's not an error this route is used by users who are reseting their
   // password and users who forgot their password
-  const { newPwd, reqEmail } = req.body;
+  const { newPwd, reqEmail, authToken } = req.body;
 
   if (req.userInfo) {
     try {
@@ -291,8 +288,7 @@ Router.post('/changepwd', checkUser, async (req, res) => {
 
         if (result2) {
 
-          // this tiny conditional assignment helps it determine what email to send to
-          sendPasswordHasChangedEmail(reqEmail ? reqEmail : result.Email)
+          sendPasswordHasChangedEmail(result.Email)
             .then(response => {
               return res.status(response.status).send(response.message);
             })
@@ -310,6 +306,76 @@ Router.post('/changepwd', checkUser, async (req, res) => {
     } catch (error) {
       return res.status(500).send("Oops! something isn't right, contact the help desk");
     }
+  } else if (reqEmail && authToken) {
+    // checks to validate the token before granting password change request
+    await TempUsers.findOne({ Email: reqEmail })
+      .then(async user_info => {
+        if (user_info) {
+
+          let currentTime = new Date().getTime();
+
+          // all the error seems are the same so the user doesn't know what went wrong
+          // a regular user doesn't have to be bother because this check is for criminals🤣🤣
+          // check for expired token
+          if (currentTime > user_info.Expires_In) {
+            return res.status(400).send("Access Denied! Unauthorized request");
+          }
+
+          // validate token
+          if (authToken !== user_info.Unique_Code) {
+            return res.status(400).send("Access Denied! Unauthorized request");
+          }
+
+          // if everything goes well
+          if (authToken === user_info.Unique_Code) {
+
+            const userData = await Users.findOne({ Email: reqEmail });
+
+            // hashing the password
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(newPwd, salt);
+        
+            // update the password on the users model
+            const result = await Users.findByIdAndUpdate(userData._id, { Password: hashedPassword })
+
+            if (result) {
+
+              let result2 = null;
+              if (userData.isClient) {
+                result2 = await Clients.findOneAndUpdate(result.Email, { Password: hashedPassword })
+              } else if (userData.isTherapist) {
+                result2 = await Therapists.findOneAndUpdate(result.Email, { Password: hashedPassword })
+              } else if (userData.isAdmin) {
+                result2 = await Admin.findOneAndUpdate(result.Email, { Password: hashedPassword })
+              }
+
+              if (result2) 
+
+                sendPasswordHasChangedEmail(result.Email)
+                  .then(response => {
+                    return res.status(response.status).send(response.message);
+                  })
+                  .catch(err => {
+                    return res.status(err.status).send(err.message);
+                  })
+
+              } else {
+                return res.status(500).send("Oops! something went wrong, your changes have not be saved");
+              }
+
+          } else {
+            return res.status(500).send("Oops! something isn't right, contact the help desk");
+          }
+
+        } else {
+          // the reason this is a 500 error is because the user is not the one providing the data
+          return res.status(500).send("Something went wrong, try again later");
+        }
+      })
+      .catch(err => {
+        console.log(err.message);
+        return res.status(500).send("Something went wrong");
+      })
   } else {
     return res.status(401).send("Access Denied! Unauthorized request");
   }
