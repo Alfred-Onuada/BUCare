@@ -1929,6 +1929,9 @@ function changepwd() {
               return displayErrorMsg("An answer has to be provided", boxId);
             }
 
+            sQuestionBtn.textContent = "Checking...";
+            sQuestionBtn.style.opacity = .7;
+
             let xhr = new XMLHttpRequest();
             xhr.open("POST", "/users/checksquestion", true);
             xhr.setRequestHeader("content-type", "application/json");
@@ -1942,6 +1945,9 @@ function changepwd() {
               } else {
                 displayErrorMsg(this.responseText, boxId);
               }
+
+              sQuestionBtn.textContent = "Check Answer";
+              sQuestionBtn.style.opacity = 1;
             }
             xhr.send(JSON.stringify({answer}));
           }

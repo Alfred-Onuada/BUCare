@@ -755,94 +755,194 @@
     opacity: .7;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 480px) {
     .resetpwdbox{
-        border: 1px solid grey;
-        box-shadow: 0px 0px 5px lavender;
-        border-radius: 5px;
-        height: 70vh;
+        height: fit-content;
+        min-height: calc(100vh - 100px);
         width: 100vw;
     }
+
+    .resetpwdcontainer{
+        height: fit-content;
+        min-height: calc(100vh - 100px);
+        display: grid;
+        place-content: center;
+    }
+    
+    .resetpwdstage{
+        text-align: center;
+        margin-top: 15px;
+        font-size: 20px;
+        font-weight: 600;
+    }
+    
+    .resetpwdfooter{
+        float: right;
+        margin-right: 20px;
+        font-size: 20px;
+        height: 35px;
+    }
+    
+    .forgetpwd {
+        color: rgb(62, 62, 245);
+    }
+    
+    .forgetpwd:hover{
+        opacity: .7;
+    }
+    
+    .resetpwdcontent, .forgotpwdcontent{
+        min-height: 70vh;
+        height: fit-content;
+        padding: 0px 20px;
+        display: flex;
+        align-items: baseline;
+        flex-direction: column;
+    }
+    
+    .forgotpwdcontent-admin{
+        display: grid;
+        height: 70vh;
+        padding: 0px 20px;
+        place-content: center;
+    }
+    
+    .contactsupporttext{
+        font-size: 16px;
+        font-weight: 600;
+        text-align: center;
+        line-height: 2;
+    }
+    
+    .rpcHead{
+        text-align: center;
+    }
+    
+    .newpwd{
+        margin-top: 20px;
+    }
+
+    .forceEyeDown{
+        margin-top: 10px !important;
+    }
+
+    .forceErrorToFill{
+        width: 100% !important;
+        text-align: center;
+    }
+    
+    .rpInput{
+        border: 1px solid grey;
+        height: 45px;
+        width: 85vw;
+        border-radius: 5px;
+        padding: 5px 10px;
+        font-size: 15px;
+        margin-bottom: 10px;
+    }
+    
+    .resetPasswordAlertBoxConatiner{
+        width: 100%;
+        text-align: center;
+    }
 }
 
-@media screen and (min-width: 501px) {
+@media screen and (min-width: 481px) {
     .resetpwdbox{
         border: 1px solid grey;
         box-shadow: 0px 0px 5px lavender;
         border-radius: 5px;
-        height: 70vh;
+        min-height: 70vh;
+        height: fit-content;
         width: 60vw;
+    }
+
+    .resetpwdcontainer{
+        min-height: 80vh;
+        height: fit-content;
+        display: grid;
+        place-content: center;
+    }
+    
+    .resetpwdstage{
+        text-align: center;
+        margin-top: 15px;
+        font-size: 20px;
+        font-weight: 600;
+    }
+    
+    .resetpwdfooter{
+        float: right;
+        margin-right: 20px;
+        font-size: 20px;
+        height: 35px;
+    }
+    
+    .forgetpwd {
+        color: rgb(62, 62, 245);
+    }
+    
+    .forgetpwd:hover{
+        opacity: .7;
+    }
+    
+    .resetpwdcontent, .forgotpwdcontent{
+        min-height: 50vh;
+        height: fit-content;
+        padding: 0px 20px;
+        display: flex;
+        align-items: baseline;
+        flex-direction: column;
+    }
+    
+    .forgotpwdcontent-admin{
+        display: grid;
+        height: 50vh;
+        padding: 0px 20px;
+        place-content: center;
+    }
+    
+    .contactsupporttext{
+        font-size: 16px;
+        font-weight: normal;
+        text-align: center;
+        line-height: 2;
+    }
+    
+    .rpcHead{
+        text-align: center;
+    }
+    
+    .newpwd{
+        margin-top: 20px;
+    }
+    
+    .rpInput{
+        margin: 0px 0px 0px 20px;
+        border: 1px solid grey;
+        height: 30px;
+        width: 30vw;
+        border-radius: 5px;
+        padding: 10px 10px;
+        font-size: 15px;
+    }
+    
+    .resetPasswordAlertBoxConatiner{
+        width: 100%;
+        text-align: center;
     }
 }
 
-.resetpwdcontainer{
-    height: 80vh;
-    display: grid;
-    place-content: center;
+.accordion-button:focus{
+    border: none;
+    box-shadow: none;
+    color: black;
 }
 
-.resetpwdstage{
-    text-align: center;
-    margin-top: 15px;
-    font-size: 20px;
-    font-weight: 600;
+.accordion-button::after{
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='currentColor' class='bi bi-plus' viewBox='0 0 12 12'%3E%3Cpath d='M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z'/%3E%3C/svg%3E") !important;
 }
 
-.resetpwdfooter{
-    float: right;
-    margin-right: 20px;
-    font-size: 20px;
-}
-
-.forgetpwd {
-    color: rgb(62, 62, 245);
-}
-
-.forgetpwd:hover{
-    opacity: .7;
-}
-
-.resetpwdcontent, .forgotpwdcontent{
-    height: 50vh;
-    padding: 0px 20px;
-    display: flex;
-    align-items: baseline;
-    flex-direction: column;
-}
-
-.forgotpwdcontent-admin{
-    display: grid;
-    height: 50vh;
-    padding: 0px 20px;
-    place-content: center;
-}
-
-.contactsupporttext{
-    font-size: 16px;
-    font-weight: normal;
-    text-align: center;
-    line-height: 2;
-}
-
-.rpcHead{
-    text-align: center;
-}
-
-.newpwd{
-    margin-top: 20px;
-}
-
-.rpInput{
-    margin: 0px 0px 0px 20px;
-    border: 1px solid grey;
-    height: 30px;
-    width: 30vw;
-    border-radius: 5px;
-    padding: 10px 10px;
-    font-size: 15px;
-}
-
-.resetPasswordAlertBoxConatiner{
-    width: 100%;
-    text-align: center;
+.accordion-button:not(.collapsed)::after{
+    transform: rotate(-45deg);
 }
