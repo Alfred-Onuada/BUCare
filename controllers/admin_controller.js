@@ -339,6 +339,16 @@ Router.get("/getreport/:userId", verify, (req, res) => {
     });
 });
 
+Router.get("/resetpwd", verify, (req, res) => {
+  console.log(`Request made to : ${req.url}`);
+  
+  if (req.user.isAdmin) {
+    return res.render("resetAdminPassword", { userStatus: req.user, pages: req.pages });
+  } else {
+    return res.status(401).send("Unauthorized request");
+  }
+})
+
 // This makes sure all normal routes called from the client route c/ will redirect backwards
 Router.get("/", (req, res) => {
   res.redirect("../");

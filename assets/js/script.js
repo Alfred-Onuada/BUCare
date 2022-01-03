@@ -1887,9 +1887,18 @@ function changepwd() {
   const oldPwd = document.getElementById('oldpwd');
   const verifyBtn = document.getElementById('verifyBtn');
 
+  // for password changeDiv
   const newPasswordDiv = document.getElementById('newpwd');
   const newPassword = document.getElementById('newPasswordInput');
   const confirmPassword = document.getElementById('confirmPasswordInput');
+
+  // for admin security question
+  const sQuestionDiv = document.getElementById("securityQuestion") || null;
+  const sQuestionLabel = document.getElementById("sQuestion") || null;
+  const sQuestionBtn = document.getElementById("sQuestionBtn") || null;
+  const sQuestionInput = document.getElementById("sQuestionInput") || null;
+  let hasAnsweredSecurityQuestion = false;
+
   const changePwdBtn = document.getElementById('changePwdBtn');
 
   verifyBtn.textContent = "Verifying...";
@@ -1905,8 +1914,45 @@ function changepwd() {
         // clear the input
         oldPwd.value = '';
 
-        newPasswordDiv.classList.remove('hide');
+        // checks if this is the admin's page
+        if (sQuestionDiv != null) {
+          
+          sQuestionLabel.textContent = this.responseText + "?";
+          sQuestionDiv.classList.remove('hide');
 
+          sQuestionBtn.onclick = function () {
+            let answer = sQuestionInput.value
+              .trim()
+              .toLowerCase();
+
+            if (answer == "") {
+              return displayErrorMsg("An answer has to be provided", boxId);
+            }
+
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", "/users/checksquestion", true);
+            xhr.setRequestHeader("content-type", "application/json");
+            xhr.onreadystatechange = function () {
+              if (this.status == 200) {
+                // for the admin this option becomes enabled after he has passed the security question
+                // as a form os security so you can't by pass this a global variable in this function prevents the next set of AJAX requests
+                newPasswordDiv.classList.remove('hide');
+
+                hasAnsweredSecurityQuestion = true;
+              } else {
+                displayErrorMsg(this.responseText, boxId);
+              }
+            }
+            xhr.send(JSON.stringify({answer}));
+          }
+
+
+        } else {
+
+          // this part remains hidden so the event listeners below are added but it doesn't matter
+          newPasswordDiv.classList.remove('hide');
+        }
+        
         let validationTimer;
 
         confirmPassword.onkeyup = function () {
@@ -1953,26 +1999,32 @@ function changepwd() {
           changePwdBtn.textContent = "Changing Password...";
           changePwdBtn.style.opacity = .7;
 
-          const xhr = new XMLHttpRequest();
-          xhr.open('POST', '/users/changepwd', true);
-          xhr.setRequestHeader('content-type', 'application/json');
-          xhr.onreadystatechange = function () {
-            if (this.readyState === 4) {
-              if (this.status === 200) {
-                // clear the inputs
-                newPassword.value = '';
-                confirmPassword.value = '';
+          // if your not an admin it passes else it prevents the request
+          if (sQuestionDiv == null || (sQuestionDiv && hasAnsweredSecurityQuestion)) {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/users/changepwd', true);
+            xhr.setRequestHeader('content-type', 'application/json');
+            xhr.onreadystatechange = function () {
+              if (this.readyState === 4) {
+                if (this.status === 200) {
+                  // clear the inputs
+                  newPassword.value = '';
+                  confirmPassword.value = '';
 
-                displaySuccessMsg("Password change was successful😁", boxId)
-              } else {
-                displayErrorMsg(this.responseText, boxId);
+                  displaySuccessMsg("Password change was successful😁", boxId)
+                } else {
+                  displayErrorMsg(this.responseText, boxId);
+                }
+
+                changePwdBtn.textContent = "Change Password";
+                changePwdBtn.style.opacity = 1;
               }
-
-              changePwdBtn.textContent = "Change Password";
-              changePwdBtn.style.opacity = 1;
             }
+            xhr.send(JSON.stringify({newPwd: newPassword.value}))
+          } else {
+
           }
-          xhr.send(JSON.stringify({newPwd: newPassword.value}))
+          
         }
 
       } else {

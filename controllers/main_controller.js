@@ -251,6 +251,11 @@ module.exports = (app) => {
   app.get("/resetpwd", checkUser, (req, res) => {
 
     console.log(`Request made to : ${req.url}`);
+
+    // block the admin from visiting the regular reset password route
+    if (req.userInfo.isAdmin) {
+      return res.redirect('/a/resetpwd');
+    }
     
     res.render("resetpassword", { userStatus: req.userInfo, pages: req.pages })
   })

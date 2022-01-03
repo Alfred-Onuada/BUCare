@@ -234,24 +234,87 @@ Router.post("/checkpwd", checkUser, async (req, res) => {
 
   if (req.userInfo) {
 
-    const userData = await Users.findById(req.userInfo._id);
+    try {
 
-    // if for any reason your record gets deleted from the database
-    if (userData == null) {
-      return res.status(401).send("Access Denied! Unauthorized request");
-    }    
-    
-    const validPassword = await bcrypt.compare(
-      oldPwd,
-      userData.Password
-    );
+      const userData = await Users.findById(req.userInfo._id);
 
-    if (!validPassword) {
-      return res.status(401).send("Invalid Password");
+      // if for any reason your record gets deleted from the database
+      if (userData == null) {
+        return res.status(401).send("Access Denied! Unauthorized request");
+      }    
+      
+      const validPassword = await bcrypt.compare(
+        oldPwd,
+        userData.Password
+      );
+
+      if (!validPassword) {
+        return res.status(401).send("Invalid Password");
+      }
+
+      let securityQuestion = "";
+      if (req.userInfo.isAdmin) {
+        const data = await Admin.findOne({ Email: userData.Email });
+        
+        if (data != null) {
+          securityQuestion = data.Security_Question;
+        } else {
+          // this doesn't have to return because the code has to run the last line below this
+          res.status(401).send("Access Denied! Unauthorized request")
+        }
+      }
+
+      // if the same
+      return res.status(200).send(securityQuestion);
+
+    } catch (error) {
+      console.log(error.message);
+      return res.status(500).send("Something went wrong");
     }
 
-    // if the same
-    return res.status(200).send();
+  } else {
+    return res.status(401).send("Access Denied! Unauthorized request");
+  }
+
+})
+
+// confirms security question during admin reset password
+Router.post("/checksquestion", checkUser, async (req, res) => {
+
+  const { answer } = req.body;
+
+  if (req.userInfo.isAdmin) {
+
+    try {
+
+      const userData = await Users.findById(req.userInfo._id);
+
+      if (userData != null) {
+
+        const adminData = await Admin.findOne({ Email: userData.Email });
+
+        // if for any reason your record gets deleted from the database
+        if (adminData == null) {
+          return res.status(401).send("Access Denied! Unauthorized request");
+        }    
+        
+        const validAnswer = answer == adminData.Answer.toLowerCase();
+  
+        if (!validAnswer) {
+          return res.status(401).send("Invalid Answer");
+        }
+  
+        // if the same
+        return res.status(200).send();
+
+      } else {
+        return res.status(401).send("Access Denied! Unauthorized request");
+      }
+
+    } catch (error) {
+      console.log(error.message);
+      return res.status(500).send("Something went wrong");
+    }
 
   } else {
     return res.status(401).send("Access Denied! Unauthorized request");
@@ -390,6 +453,7 @@ Router.post('/checkemail', async (req, res) => {
   Users.findOne({ Email: resetEmail })
     .then(async userData => {
       if (userData) {
+        // although the name is reset email it is for the forgot password
         sendResetEmail(resetEmail, websiteUrl)
           .then(response => {
             // lol this code just relays what so ever is gotten from the email controller

@@ -810,6 +810,20 @@
     flex-direction: column;
 }
 
+.forgotpwdcontent-admin{
+    display: grid;
+    height: 50vh;
+    padding: 0px 20px;
+    place-content: center;
+}
+
+.contactsupporttext{
+    font-size: 16px;
+    font-weight: normal;
+    text-align: center;
+    line-height: 2;
+}
+
 .rpcHead{
     text-align: center;
 }
