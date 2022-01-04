@@ -14124,9 +14124,14 @@ button,
   cursor: pointer !important;
 }
 
-a,
+a {
+  text-decoration:none;
+ 
+}
+
 a:hover {
-  text-decoration: none;
+  text-decoration:underline;
+  color: var(--gold) !important;
 }
 
 iframe {
