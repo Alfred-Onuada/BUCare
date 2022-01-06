@@ -29,10 +29,6 @@ const adminSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    'Unique_Code' : {
-        type: String,
-        required: true
-    },
 }, { timestamps: true });
 
 const admin = mongoose.model('admin', adminSchema); // table initializatiion, the name of the table will be admins

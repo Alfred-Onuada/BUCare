@@ -30,7 +30,7 @@ const therapistSchema = mongoose.Schema({
         required: true
     },
     'Education_Level' : {
-        type: String,
+        type: Array,
         required: true
     },
     'Display_Picture' : {

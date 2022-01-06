@@ -26,14 +26,13 @@ const therapistRegisterSchema = Joi.object({
   Password: Joi.string().min(8).required(),
   Sex: Joi.string().required(),
   Specialization: Joi.array().required(),
-  Education_Level: Joi.string().required(),
+  Education_Level: Joi.array().required(),
   Unique_Code: Joi.string(),
 });
 
-Router.post("/register", async (req, res) => {
-  if (!req.user.isAdmin) {
-    return res.status(401).send();
-  }
+Router.post("/register", verify, async (req, res) => {
+
+  console.log(`Request made to : a${req.url}`);
 
   // it uses an async function because of the encrytion processes it has
   Users.findOne({ Email: req.body.Email })
@@ -41,9 +40,6 @@ Router.post("/register", async (req, res) => {
       if (docs != null) {
         return res.status(400).send("Email already exists"); // register users using AJAX request so you can get the error message in JS without overwriting the page
       }
-
-      // transform the specialization sentence into array
-      req.body.Specialization = req.body.Specialization.split(", ");
 
       // this is a try catch because this process might fail
       try {
@@ -58,9 +54,6 @@ Router.post("/register", async (req, res) => {
         // change the password that is stored in db
         req.body.Password = hashedPassword;
 
-        // generate random code for user
-        req.body.Unique_Code = crypto.randomBytes(6).toString("hex");
-
         // this variable holds only the fields that are available on the users model
         var unwanted = ["Date_of_Birth", "Specialization", "Education_Level"];
         var userData = Object.keys(req.body)
@@ -73,13 +66,13 @@ Router.post("/register", async (req, res) => {
         // make user a client
         userData["isTherapist"] = true;
 
-        var newUser = Users(userData).save((err, data) => {
+        Users(userData).save((err, data) => {
           if (err) throw err;
 
           // remove the confirmPassword field
           delete req.body.ConfirmPassword;
 
-          var newTherapist = Therapists(req.body).save((err, data) => {
+          Therapists(req.body).save((err, data) => {
             if (err) throw err;
 
             return res
@@ -377,73 +370,69 @@ Router.get("/users/logout", (req, res) => {
 // registering an admin
 
 // creating a register schema with Hapi Joi
-// const adminRegisterSchema = Joi.object({
-//     First_Name: Joi.string().min(2).required(),
-//     Last_Name: Joi.string().min(2).required(),
-//     Email: Joi.string().min(6).required().email(),
-//     Telephone: Joi.number().min(6).required(),
-//     Sex: Joi.string().required(),
-//     Password: Joi.string().min(8).required(),
-//     ConfirmPassword: Joi.string().min(8),
-//     Security_Question: Joi.string().required(),
-//     Answer: Joi.string().required(),
-//     Unique_Code: Joi.string()
-// });
+const adminRegisterSchema = Joi.object({
+    First_Name: Joi.string().min(2).required(),
+    Last_Name: Joi.string().min(2).required(),
+    Email: Joi.string().min(6).required().email(),
+    Telephone: Joi.number().min(6).required(),
+    Sex: Joi.string().required(),
+    Password: Joi.string().min(8).required(),
+    ConfirmPassword: Joi.string().min(8),
+    Security_Question: Joi.string().required(),
+    Answer: Joi.string().required(),
+});
 
-// Router.post("/register-admin", async (req, res) => {
-//   // it uses an async function because of the encrytion processes it has
-//   Users.findOne({ Email: req.body.Email })
-//     .then(async (docs) => {
-//       if (docs != null) {
-//         return res.status(400).send("Email already exists"); // register users using AJAX request so you can get the error message in JS without overwriting the page
-//       }
+Router.post("/register-admin", async (req, res) => {
+  // it uses an async function because of the encrytion processes it has
+  Users.findOne({ Email: req.body.Email })
+    .then(async (docs) => {
+      if (docs != null) {
+        return res.status(400).send("Email already exists"); // register users using AJAX request so you can get the error message in JS without overwriting the page
+      }
 
-//       // this is a try catch because this process might fail
-//       try {
-//         // Now verify user input using hapi/joi
-//         await adminRegisterSchema.validateAsync(req.body);
+      // this is a try catch because this process might fail
+      try {
+        // Now verify user input using hapi/joi
+        await adminRegisterSchema.validateAsync(req.body);
 
-//         // hashing the password
-//         const salt = await bcrypt.genSalt(10);
-//         const hashedPassword = await bcrypt.hash(req.body.Password, salt);
+        // hashing the password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(req.body.Password, salt);
 
-//         // change the password that is stored in db
-//         req.body.Password = hashedPassword;
+        // change the password that is stored in db
+        req.body.Password = hashedPassword;
 
-//         // generate random code for user
-//         req.body.Unique_Code = crypto.randomBytes(6).toString("hex");
+        // this variable holds only the fields that are available on the users model
+        var unwanted = ["Security_Question", "Answer", "ConfirmPassword"];
+        var userData = Object.keys(req.body)
+          .filter((key) => unwanted.includes(key) == false)
+          .reduce((obj, key) => {
+            obj[key] = req.body[key];
+            return obj;
+          }, {});
 
-//         // this variable holds only the fields that are available on the users model
-//         var unwanted = ["Security_Question", "Answer", "ConfirmPassword"];
-//         var userData = Object.keys(req.body)
-//           .filter((key) => unwanted.includes(key) == false)
-//           .reduce((obj, key) => {
-//             obj[key] = req.body[key];
-//             return obj;
-//           }, {});
+        // make user a client
+        userData["isAdmin"] = true;
 
-//         // make user a client
-//         userData["isAdmin"] = true;
+        var newUser = Users(userData).save((err, data) => {
+          if (err) throw err;
 
-//         var newUser = Users(userData).save((err, data) => {
-//           if (err) throw err;
+          // remove the confirmPassword field
+          delete req.body.ConfirmPassword;
 
-//           // remove the confirmPassword field
-//           delete req.body.ConfirmPassword;
+          var newTherapist = Admin(req.body).save((err, data) => {
+            if (err) throw err;
 
-//           var newTherapist = Admin(req.body).save((err, data) => {
-//             if (err) throw err;
-
-//             return res.status(200).send("Admin has been added successfully");
-//           });
-//         });
-//       } catch (error) {
-//         return res.status(400).send(error.details[0].message); // AJAX intepretes this and display appropiate error messages
-//       }
-//     })
-//     .catch((err) => {
-//       if (err) throw err;
-//     });
-// });
+            return res.status(200).send("Admin has been added successfully");
+          });
+        });
+      } catch (error) {
+        return res.status(400).send(error.details[0].message); // AJAX intepretes this and display appropiate error messages
+      }
+    })
+    .catch((err) => {
+      if (err) throw err;
+    });
+});
 
 module.exports = Router;

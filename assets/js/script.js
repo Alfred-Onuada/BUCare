@@ -864,15 +864,15 @@ function reportFunc(TherapistId) {
 function regTherapistFunc() {
   const boxId = 4;
 
-  var registerForm = document.querySelector("#regTherapistForm");
-  var submitBtn = document.querySelector("#regTherapistSubmitBtn");
-
-  var modalClose = document.querySelector("#regTherapistModal");
+  const registerForm = document.querySelector("#regTherapistForm");
+  const submitBtn = document.querySelector("#regTherapistSubmitBtn");
+  const educationChips = document.getElementById("selectedEducationLevels").children;
+  const specializationChips = document.getElementById("selectedSpecializations").children;
 
   submitBtn.innerHTML = "Adding Therapist...";
   submitBtn.style.opacity = ".7";
 
-  var xhr = new XMLHttpRequest();
+  let xhr = new XMLHttpRequest();
   xhr.open("POST", "/a/register", true);
   xhr.setRequestHeader("Content-type", "application/JSON");
   xhr.onreadystatechange = function () {
@@ -918,19 +918,109 @@ function regTherapistFunc() {
     return false;
   }
 
-  var data = {
+  let Specialization = [];
+  let Education_Level = [];
+
+  [].forEach.call(specializationChips, elem => {
+    Specialization.push(elem.textContent);
+  });
+
+  [].forEach.call(educationChips, elem => {
+    Education_Level.push(elem.textContent);
+  });
+
+  let data = {
     First_Name: registerForm.elements["First_Name"].value,
     Last_Name: registerForm.elements["Last_Name"].value,
     Email: registerForm.elements["Email"].value,
     Telephone: registerForm.elements["Telephone"].value,
     Password: registerForm.elements["Password"].value,
     Sex: registerForm.elements["Sex"].value,
-    Specialization: registerForm.elements["Specialization"].value,
-    Education_Level: registerForm.elements["Education_Level"].value,
+    Specialization,
+    Education_Level
   };
   xhr.send(JSON.stringify(data));
 
   return false;
+}
+
+function setupChipsAndAutoComplete(inputId, containerId) {
+  const Specializations = [
+    "Emotional instability",
+    "Bereavement",
+    "Ill health",
+    "Family disruptions",
+    "Lack of motivation",
+    "Drugs and misbehaviour"
+  ]
+
+  const EducationLevels = [
+    "HND",
+    "BSc",
+    "BA",
+    "MSc",
+    "MA",
+    "PhD"
+  ]
+
+  const inputBox = document.getElementById(inputId);
+  const chipBox = document.getElementById(containerId);
+  const itemsDiv = document.getElementById(containerId + 'Autocomplete-items');
+
+  inputBox.onkeyup = function () {
+    let currentVal = inputBox.value.trim().toLowerCase();
+
+    // makes sure to clear any pre exisiting element
+    itemsDiv.innerHTML = "";
+    if (currentVal == "") {
+      return itemsDiv.classList.add('hide');
+    }
+
+    let match = [];
+    if (/Education/.test(inputId)) {
+      match = EducationLevels.filter(elem => elem.toLowerCase().includes(currentVal));
+    } else if (/Specialization/.test(inputId)) {
+      match = Specializations.filter(elem => elem.toLowerCase().includes(currentVal));
+    }
+    
+    for (let index = 0; index < match.length; index++) {
+      const element = match[index];
+
+      const item = document.createElement('div');
+      item.textContent = element;    
+      
+      // function for adding chips
+      item.onclick = function () {
+        let chip = document.createElement('div');
+        chip.classList.add("chip");
+        chip.textContent = item.textContent;
+
+        // function for deleting chips
+        chip.onclick = function () {
+          this.parentNode.removeChild(this);
+        }
+
+        // make sure it cannot be added multiple times
+        let isAlreadyInserted = false;
+
+        [].forEach.call(chipBox.children, elem => {
+          if (elem.textContent == chip.textContent) {
+            isAlreadyInserted = true;
+          }
+        })
+
+        isAlreadyInserted ? false : chipBox.appendChild(chip);
+        
+        inputBox.value = "";
+        itemsDiv.classList.add("hide");
+      }
+      itemsDiv.appendChild(item);
+    }
+
+    itemsDiv.classList.remove('hide');
+
+  }
+
 }
 
 function modHeight(id) {

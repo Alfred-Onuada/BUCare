@@ -20,15 +20,6 @@ const Joi = require("@hapi/joi");
 // middlewares
 const checkUser = require("./checkUser");
 
-/*
-
-    use abstract api to validate if an email and phone is legit before sending unique code
-    and check if some fields are optional
-    phone number must be specified using the international number format '+'
-    also can add expiration date for unique code and code should be delete after registration
-
-*/
-
 // Note: only client registrations hit this schema
 
 // creating a register schema with Hapi Joi

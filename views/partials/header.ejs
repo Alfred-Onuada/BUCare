@@ -520,31 +520,31 @@
                                           </div>
 
                                           <div class="styled-input">
-                                            <label for="Sex">Specify Your Gender</label>
+                                            <label for="Sex">Specify Gender</label>
                                             <select name="Sex" required>
                                               <option value="">Gender*</option>
                                               <option value="Male">Male</option>
                                               <option value="Female">Female</option>
                                             </select>
                                           </div>
-
-                                          <div class="styled-input">
-                                            <label for="Education_Level">Specify Highest level of education</label>
-                                            <select name="Education_Level" required>
-                                              <option value="">Education Level*</option>
-                                              <option value="Bs.C">Bs.C</option>
-                                              <option value="Ms.C">Ms.C</option>
-                                              <option value="Ph.D">Ph.D</option>
-                                              <option value="Doctor">Doctor</option>
-                                            </select>
-                                          </div>
                                         </div>
 
                                         <div class="appointment-form-field">
-                                          Specialization
-                                          <textarea name="Specialization" cols="30" rows="10"
-                                            placeholder="Enter therapist's specialization seperated by commas e.g (Bereavement services, Academic services etc.)"
-                                            style="padding-top: 10px" required></textarea>
+                                          <label for="Education_Level">Education</label>
+                                          <div class="chips-box" id="selectedEducationLevels"></div>
+                                          <div class="autocomplete">
+                                            <input onclick="setupChipsAndAutoComplete('Education_Level', 'selectedEducationLevels')" class="autocomplete-input" type="text" name="Education" id="Education_Level" placeholder="Start typing an education level" autocomplete="off">
+                                            <div id="selectedEducationLevelsAutocomplete-items" class="autocomplete-items hide"></div>
+                                         </div>
+                                        </div>
+
+                                        <div class="appointment-form-field">
+                                          <label for="Sepcializations">Specialization</label>
+                                          <div class="chips-box" id="selectedSpecializations"></div>
+                                          <div class="autocomplete">
+                                            <input onclick="setupChipsAndAutoComplete('Specialization', 'selectedSpecializations')" class="autocomplete-input" type="text" name="Specialization" id="Specialization" placeholder="Start typing an area of specialization" autocomplete="off">
+                                            <div id="selectedSpecializationsAutocomplete-items" class="autocomplete-items hide"></div>
+                                         </div>
                                         </div>
 
                                         <div class="appointment-btn text-lg-right">
