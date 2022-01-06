@@ -961,6 +961,7 @@
     color: var(--para-color);
     display: flex;
     padding: 10px;
+    flex-wrap: wrap;
 }
 
 .chip:hover::after {
@@ -980,7 +981,7 @@
     font-size: 12px;
     width: fit-content;
     padding: 5px 10px;
-    margin: 0px 5px 0px 0px;
+    margin: 0px 5px 5px 0px;
     background-color: #f8f8f8;
     border: 1px solid var(--bg-border);
 }
