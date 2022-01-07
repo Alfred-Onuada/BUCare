@@ -2,8 +2,10 @@ const HeaderInfo = require('../pages/header.page');
 const FooterInfo = require('../pages/footer.page');
 const IndexInfo = require('../pages/index.page');
 const ContactInfo = require('../pages/contact.page');
+const Therapists = require("./../therapist");
+const res = require('express/lib/response');
 
-module.exports = async function (req) {
+module.exports = async function (url) {
   
   // you can't change what page info points to but you can change it's data
   const pageInfo = {};
@@ -35,22 +37,35 @@ module.exports = async function (req) {
       throw err;
     });
 
-  // for the rest of the pages I'll create an if statement which checks the req.url property
+  // for the rest of the pages I'll create an if statement which checks the url property
   
-  await IndexInfo.find({})
-    .then(docs => {
-      if (docs) {
-        pageInfo.index = docs;
-      } else {
-        res.status(500).send("The page could not load properly");
-      }
-    })
-    .catch((err) => {
-      console.log(err.message);
-      throw err;
-    });
+  if (url == "/index" || url == "/" || url == "/team") {
+    await IndexInfo.find({})
+      .then(docs => {
+        if (docs) {
+          pageInfo.index = docs;
+        } else {
+          res.status(500).send("The page could not load properly");
+        }
+      })
+      .catch((err) => {
+        console.log(err.message);
+        throw err;
+      });
 
-  await ContactInfo.find({})
+    await Therapists.find({})
+      .then(docs => {
+        if (docs) {
+          pageInfo.therapists = docs;
+        } else {
+          // there may be no therapist
+          pageInfo.therapists = null;
+        }
+      })
+  }
+
+  if (url == "/contact") {
+    await ContactInfo.find({})
     .then(docs => {
       if (docs) {
         pageInfo.contact = docs;
@@ -62,7 +77,8 @@ module.exports = async function (req) {
       console.log(err.message);
       throw err;
     });
-
+  }
+  
   return pageInfo;
 
 }
