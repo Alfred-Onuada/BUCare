@@ -33,6 +33,25 @@ const therapistSchema = mongoose.Schema({
         type: Array,
         required: true
     },
+    'Brief_Bio': {
+        type: Array, 
+    },
+    'isSubAdmin': {
+        type: Boolean,
+        default: false
+    },
+    'Role': {
+        type: String
+    },
+    'Qualifications' : {
+        type: Array
+    }, 
+    'Associations' : {
+        type: Array
+    },
+    'Approach_To_Therapy': {
+        type: String
+    },
     'Display_Picture' : {
         type: Buffer
     },

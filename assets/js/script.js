@@ -866,8 +866,8 @@ function regTherapistFunc() {
 
   const registerForm = document.querySelector("#regTherapistForm");
   const submitBtn = document.querySelector("#regTherapistSubmitBtn");
-  const educationChips = document.getElementById("selectedEducationLevels").children;
-  const specializationChips = document.getElementById("selectedSpecializations").children;
+  const educationChips = document.getElementById("selectedEducationLevels");
+  const specializationChips = document.getElementById("selectedSpecializations");
 
   submitBtn.innerHTML = "Adding Therapist...";
   submitBtn.style.opacity = ".7";
@@ -882,6 +882,9 @@ function regTherapistFunc() {
           displaySuccessMsg("New therapist added succesfully", boxId);
 
           registerForm.reset();
+          // clears out the specialization and education
+          specializationChips.innerHTML = "";
+          educationChips.innerHTML = "";
 
           break;
 
@@ -921,11 +924,11 @@ function regTherapistFunc() {
   let Specialization = [];
   let Education_Level = [];
 
-  [].forEach.call(specializationChips, elem => {
+  [].forEach.call(specializationChips.children, elem => {
     Specialization.push(elem.textContent);
   });
 
-  [].forEach.call(educationChips, elem => {
+  [].forEach.call(educationChips.children, elem => {
     Education_Level.push(elem.textContent);
   });
 
@@ -946,21 +949,24 @@ function regTherapistFunc() {
 
 function setupChipsAndAutoComplete(inputId, containerId) {
   const Specializations = [
+    "Academic challenges",
     "Emotional instability",
     "Bereavement",
-    "Ill health",
+    "Health challenges",
     "Family disruptions",
     "Lack of motivation",
-    "Drugs and misbehaviour"
+    "Drugs and misbehaviour",
+    "Physical/Sexual Abuse"
   ]
 
   const EducationLevels = [
     "HND",
-    "BSc",
-    "BA",
-    "MSc",
-    "MA",
-    "PhD"
+    "B.Sc",
+    "B.A",
+    "M.Sc",
+    "M.A",
+    "Ph.D",
+    "M.Ed"
   ]
 
   const inputBox = document.getElementById(inputId);

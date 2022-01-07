@@ -260,6 +260,12 @@ module.exports = (app) => {
     res.render("resetpassword", { userStatus: req.userInfo, pages: req.pages })
   })
 
+  app.get("/team", checkUser, (req, res) => {
+    console.log(`Request made to : ${req.url}`);
+
+    res.render("team", { userStatus: req.userInfo, pages: req.pages })
+  })
+
   // this is the 404 error page, it has to be the last route here
   app.get('*', checkUser, (req, res) => {
     res.render("404", { userStatus: req.userInfo, pages: req.pages });

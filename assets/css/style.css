@@ -961,6 +961,7 @@
     color: var(--para-color);
     display: flex;
     padding: 10px;
+    flex-wrap: wrap;
 }
 
 .chip:hover::after {
@@ -980,7 +981,7 @@
     font-size: 12px;
     width: fit-content;
     padding: 5px 10px;
-    margin: 0px 5px 0px 0px;
+    margin: 0px 5px 5px 0px;
     background-color: #f8f8f8;
     border: 1px solid var(--bg-border);
 }
@@ -1018,4 +1019,76 @@
     /*when navigating through the items using the arrow keys:*/
     background-color: DodgerBlue !important;
     color: #ffffff;
+}
+
+.dropdown-item{
+    text-transform: capitalize;
+}
+
+.team-section{
+    padding: 0px !important;
+}
+
+.sub-titlehny-edited{
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--gold);
+    text-transform: capitalize;
+}
+
+.hny-title-edited{
+    font-size: 25px;
+    font-weight: 700;
+    line-height: 20px;
+    margin-bottom: 10px;
+    text-transform: capitalize;
+}
+
+.customsvg-container{
+    background-color: #3b5998 !important;
+}
+
+.customsvg{
+    height: 18px;
+    width: 16px;
+}
+
+.therapist-container{
+    height: fit-content;
+    margin: 0px 0px 15px 0px;
+}
+
+.therapist-name{
+    font-size: 20px !important;
+    line-height: initial !important;
+    font-weight: bold !important;
+    margin-top: 10px !important;
+}
+
+.therapist-name:hover{
+    color: gold;
+}
+
+.move-right{
+    display: flex;
+    justify-content: right;
+}
+
+.cancelMargin{
+    margin: 0px !important;
+}
+
+.therapistBioName{
+    text-transform: capitalize;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.therapistBio{
+    font-size: 16.5px;
+}
+
+.eachTheraist{
+    margin-bottom: 20px;
 }
