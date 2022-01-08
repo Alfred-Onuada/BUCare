@@ -436,7 +436,7 @@
 					<% let therapist = pages.therapists[i]; %>
 					<div class="col-md-3 col-6 therapist-container">
 						<div class="team-grids text-center">
-							<img src="defaults/<%= therapist.First_Name %>.jpg" class="img-fluid" alt="A picture of <%= therapist.First_Name + " " + therapist.Last_Name %>">
+							<img src="defaults/<%= therapist.First_Name.toLowerCase() %>.jpg" class="img-fluid" alt="A picture of <%= therapist.First_Name + " " + therapist.Last_Name %>">
 							<div class="team-info">
 							<div class="caption">
 								<div class="social-icons-section text-center">
