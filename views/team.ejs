@@ -163,7 +163,7 @@ Author URL: http://w3layouts.com
             <div class="col-md-12">
               <div class="row">
                 <div class=" col-md-3 ">
-                  <img src="defaults/<%= therapist.First_Name %>.jpg" class="img-fluid" alt="A picture of <%= therapist.First_Name + " " + therapist.Last_Name %>">
+                  <img src="defaults/<%= therapist.First_Name.toLowerCase() %>.jpg" class="img-fluid" alt="A picture of <%= therapist.First_Name + " " + therapist.Last_Name %>">
                 </div>
                 <div class="col-md-9">
                   <h4 class="therapistBioName"><%= therapist.First_Name + " " + therapist.Last_Name %></h4>
