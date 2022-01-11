@@ -26,6 +26,9 @@ Author URL: http://w3layouts.com
 </head>
 
 <body>
+
+  <div id="toastContainer" class="toast4UpdateInfo"></div>
+
   <%- include('./partials/header') %>
 
     <!--/w3l-breadcrumb-->
@@ -154,7 +157,7 @@ Author URL: http://w3layouts.com
 
 
     <!-- TODO: skip the therapist profile for now work on the registration then finish off with the therapist profile -->
-
+    <!-- TODO: make sure to add Mrs. elizabeth as a therapist  -->
     <% if (pages.therapists) { %>
       <section class="container py-xl-2 py-3 my-5">
         <% for (let i = 0; i < pages.therapists.length; i++) { %>
@@ -173,9 +176,15 @@ Author URL: http://w3layouts.com
                     </p>
                   <% } %>
                   <div class="buttons mt-3 move-right">
-                    <% if (userStatus) { %>
+                    <% if (userStatus && userStatus.isClient) { %>
                       <!-- only logged in users are allowed to book therapists -->
-                      <a href="#download" class="btn btn-style btn-primary" style="margin-right: 15px;">Book now</a>
+
+
+
+                      <!-- figure out a way to show awaiting response here even after refresh if the person has booked before -->
+
+
+                      <button id="joinRoomBtn-<%= therapist._id %>" onclick="sendJoinRoomRequest('<%= therapist._id %>')" class="btn btn-style btn-primary" style="margin-right: 15px;">Book now</button>
                     <% } %>
                     <a href="therapistProfile/null" class="btn btn-white btn-primary">View Profile</a>
                   </div>

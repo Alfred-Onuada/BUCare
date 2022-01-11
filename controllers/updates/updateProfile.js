@@ -27,7 +27,7 @@ function updateProfile(req, res) {
     .then((users_docs) => {
       const userEmail = users_docs.Email;
 
-      // even is the specified filed is not on the users model it still gets to the then block because it didnt fail
+      // even is the specified field is not on the users model it still gets to the then block because it didnt fail
       // it just didnt edit any field
 
       // the $set operator allows a variable field to be update (you don't have to hardcode the field value)

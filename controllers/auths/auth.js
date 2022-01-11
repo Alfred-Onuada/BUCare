@@ -1,6 +1,5 @@
 const Clients = require("./../../models/client");
 const Therapists = require("./../../models/therapist");
-const Rooms = require("./../../models/room");
 const Users = require("./../../models/user");
 const Admin = require("./../../models/admin");
 const TempUsers = require('./../../models/tempUser');
@@ -27,19 +26,11 @@ const usersRegisterSchema = Joi.object({
   First_Name: Joi.string().min(2),
   Last_Name: Joi.string().min(2),
   Username: Joi.string().min(2).required(),
-  Email: Joi.string().min(6).required().email(),
+  Email: Joi.string().min(6).pattern(/(\d{4}@student.babcock.edu.ng|@babcock.edu.ng)$/i).required().email(),
   Telephone: Joi.number().min(6),
   Password: Joi.string().min(8).required(),
   Date_of_Birth: Joi.string().min(10).max(10), // 12-12-2021 makes 10 characters
   Sex: Joi.string().required(),
-  Case: Joi.string().required(),
-  Assigned_Therapist: Joi.string().required(),
-});
-
-// creating a room schema with Hapi Joi
-const roomSchema = Joi.object({
-  ClientId: Joi.string().required(),
-  TherapistId: Joi.string().required(),
 });
 
 Router.post("/register", async (req, res) => {
@@ -55,6 +46,10 @@ Router.post("/register", async (req, res) => {
         // Now verify user input using hapi/joi
         const { error } = await usersRegisterSchema.validateAsync(req.body);
 
+        if (error) {
+          return res.status(400).send("Something went wrong validating the credentials")
+        }
+
         // hashing the password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(req.body.Password, salt);
@@ -62,14 +57,9 @@ Router.post("/register", async (req, res) => {
         // change the password that is stored in db
         req.body.Password = hashedPassword;
 
-        // take and store the therapist name for use when creating room
-        var therapistName = req.body.Assigned_Therapist;
-
         // this variable holds only the fields that are available on the users model
         var unwanted = [
           "Date_of_Birth",
-          "Case",
-          "Assigned_Therapist",
           "ConfirmPassword",
         ];
         var userData = Object.keys(req.body)
@@ -89,41 +79,10 @@ Router.post("/register", async (req, res) => {
           delete req.body.ConfirmPassword;
 
           var newClient = Clients(req.body).save((err, data) => {
-            if (err) throw err;
-
-            var tFName = therapistName.split(" ");
-
-            Users.findOne({
-              First_Name: tFName[0],
-              Last_Name: tFName[1],
-              isTherapist: true,
-            })
-              .then(async (docs) => {
-                // both client and therapist ids are from the users table not their individual table
-                // this code will throw an error if the therapist doesnt exits so dont worry
-                roomObj = {
-                  ClientId: uData._id.toString(),
-                  TherapistId: docs._id.toString(),
-                };
-
-                try {
-                  // once a user a registered he gets attach to the same room as his therapist
-                  await roomSchema.validateAsync(roomObj);
-
-                  Rooms(roomObj).save((err, docs) => {
-                    if (err) console.log(err);
-
-                    // res.status(200).send("Room created");
-                  }); 
-                } catch (error) {
-                  return res.status(400).send(error.details[0].message);
-                }
-
-              })
-              .catch((err) => {
-                if (err) throw err;
-              });
-
+            if (err) {
+              return res.status(500).send();
+            };
+            
             // automatic login after registration
             return res.redirect(307, "/users/login");
           });

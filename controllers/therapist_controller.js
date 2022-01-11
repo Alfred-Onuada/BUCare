@@ -417,8 +417,9 @@ Router.get("/clientsList", verify, async (req, res) => {
         var therapistName = docs.First_Name + " " + docs.Last_Name;
 
         // retrieve all the clients associated with the logged in therapist
-        Clients.find({ Assigned_Therapist: therapistName })
+        Clients.find({ Assigned_Therapists: therapistName })
           .then((docs) => {
+            console.log(docs);
             if (docs) {
               res.render("clientsList", { userStatus: req.user, data: docs, pages: req.pages });
             } else {
@@ -562,7 +563,7 @@ Router.get('/search/:query', verify, async (req, res) => {
       return res.status(400).send("Something isn't right");
     })
   
-  await Clients.find({ Assigned_Therapist: therapistName, Username: { $regex: query, $options: 'i' }})
+  await Clients.find({ Assigned_Therapists: therapistName, Username: { $regex: query, $options: 'i' }})
     .then(docs => {
       if (docs.length > 0) {
         docs.forEach(doc => {
@@ -645,6 +646,99 @@ Router.get('/search/:query', verify, async (req, res) => {
   await loop2();
 
   res.status(200).send(results);
+
+});
+
+Router.post("/rejectjoinroomrequest", verify, async (req, res) => {
+  console.log(`Request made to : t${req.url}`);
+
+  const { roomId, optionalComment } = req.body;
+
+  try {
+    const rData = await Rooms.findByIdAndUpdate(roomId, { Status: "declined request" });
+
+    if (optionalComment != null) {
+      const data = {
+        RoomId: roomId,
+        Message: "The following comment was left for you: " + optionalComment,
+        SpokesPerson: rData.TherapistId
+      }
+
+      Chats(data).save((err, data) => {
+        if (err) throw err;
+
+        return res.status(200).send();
+      })
+    } else {
+      return res.status(200).send("Your operation was successful");
+    }
+  } catch (error) {
+    console.log(err.message);
+    return res.status(500).send("Something went wrong while processing your request.")
+  }
+
+})
+
+Router.post("/acceptjoinroomrequest", verify, async (req, res) => {
+  console.log(`Request made to : t${req.url}`);
+
+  const { roomId } = req.body;
+
+  try {
+    const { ClientId } = await Rooms.findById(roomId);
+
+    // Update the the room to active
+    await Rooms.findByIdAndUpdate(roomId, { Status: "active" });
+
+    // update the client's model - first get his ID for the client's model
+    const { Email:clientEmail } = await Users.findById(ClientId);
+    const { _id:ClientIdInClientModel, Assigned_Therapists } = await Clients.findOne({ Email: clientEmail})
+
+    // may be empty but should not be undefined
+    if (Assigned_Therapists != undefined) {
+
+      const { Email:therapistEmail } = await Users.findById(req.user._id);
+
+      const tDocs = await Therapists.findOne({ Email: therapistEmail });
+
+      const therapistName = tDocs.First_Name + " " + tDocs.Last_Name;
+
+      Assigned_Therapists.push(therapistName);
+
+      // this is not an error the first assigned_therapist is the field the second is the value
+      await Clients.findByIdAndUpdate(ClientIdInClientModel, { Assigned_Therapists: Assigned_Therapists });
+
+      // lol I'm not doing any error check in this code hopefully i can replicate this everywhere but this code is very correct
+      // because all errors are thrown to the catch block
+
+      // at this point ther will be exactly one chat
+      const lastChat = await Chats.findOne({ RoomId: roomId, SpokesPerson: "System" });
+
+      let hour = new Date(lastChat.createdAt).getHours(); 
+      let min = new Date(lastChat.createdAt).getMinutes();
+      let timeOfDay = hour <= 11 ? 'am' : 'pm';
+      hour = hour % 12;
+      // append additional zero when needed
+      hour = hour < 10 ? '0' + hour : hour;
+      min = min < 10 ? '0' + min : min;
+
+      let date = hour + ':' + min + ' ' + timeOfDay;
+
+      const response = {
+        message: "Congratulations! you have a new client",
+        chat: lastChat.Message,
+        chatDate: date
+      }
+      return res.status(200).send(JSON.stringify(response));
+    } else {
+      return res.status(500).send("Something went wrong on the server, not your fault");
+    }
+
+  } catch (error) {
+    console.log(error.message);
+    return res.status(400).send("Something went wrong on the server, please verify that you are making a correct request");
+
+  }
 
 });
 

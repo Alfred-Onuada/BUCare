@@ -59,7 +59,8 @@ Router.post('/registration', async (req, res) => {
   console.log(`Request made to : ${req.url}`);
 
   // this produces exactly six random characters
-  const token = crypto.randomBytes(3).toString('hex');
+  // const token = crypto.randomBytes(3).toString('hex');
+  const token = "123456";
   const expirationDate = new Date().getTime() + 600000; // this adds a ten minute expiration
 
   const data = {

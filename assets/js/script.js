@@ -626,6 +626,9 @@ function checkStudent() {
                   displaySuccessMsg("Email validation successful", boxId);
 
                   setTimeout(() => {
+                    // sets the value of the email field
+                    document.getElementById('regEmail').value = value;
+
                     modalCloseBtn.click();
                     // activate the actual modal
                     $("#myModal4reg").modal("show");
@@ -677,9 +680,10 @@ function registerFunc() {
     if (this.readyState === 4) {
       switch (this.status) {
         case 200:
-          displaySuccessMsg("Registration Successful", boxId);
+          displaySuccessMsg("Registration Successful, proceed to select a therapist", boxId);
+          
           setTimeout(() => {
-            window.open("rooms", "_self");
+            window.open("team", "_self");
           }, 3600);
 
           registerForm.reset();
@@ -725,12 +729,38 @@ function registerFunc() {
     Telephone: registerForm.elements["Telephone"].value,
     Password: registerForm.elements["Password"].value,
     Sex: registerForm.elements["Sex"].value,
-    Case: registerForm.elements["Case"].value,
-    Assigned_Therapist: registerForm.elements["Assigned_Therapist"].value,
   };
   xhr.send(JSON.stringify(data));
 
   return false;
+}
+
+function sendJoinRoomRequest(therapistId) {
+
+  const btn = document.getElementById('joinRoomBtn-'+therapistId);
+
+  btn.textContent = "Sending Request...";
+  btn.style.opacity = .7;
+
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", "/c/sendroomrequest", true);
+  xhr.setRequestHeader('content-type', "application/json");
+  xhr.onreadystatechange = function () {
+    if (this.readyState === 4) {
+      if (this.status === 200) {
+        showToastMsg("Your request was successfully sent, we will notify you once it is accepted. Thank you");
+        btn.textContent = "Awaiting response";
+      } else {
+        showToastMsg(this.responseText);
+        btn.textContent = "Book Now";
+      }
+
+      btn.style.opacity = 1;
+    }
+  }
+  xhr.send(JSON.stringify({
+    therapistId
+  }))
 }
 
 function loginFunc() {
@@ -2316,4 +2346,100 @@ function sendFPwd() {
     websiteUrl: location.origin 
   }));
 
+}
+
+function RejectModalInfo(roomId) {
+  const modalConfirmBtn = document.getElementById('rejectRequestBtn');
+  modalConfirmBtn.dataset.roomId = roomId;
+}
+
+function rejectRequest() {
+  const modalConfirmBtn = document.getElementById('rejectRequestBtn');
+  const modalCloseBtn = document.getElementById('rejectRequestCloseBtn');
+  const contactsList = document.getElementById('contacts-list');
+  const chatBoxList = document.getElementById('chatBox');
+
+  const roomId = modalConfirmBtn.dataset.roomId;
+
+  const targetContact = document.getElementById('eachContact-'+roomId);
+  const targetContactChatBox = document.getElementById('room-'+roomId);
+
+  const optionalComment = document.getElementById("rejectRequestText").value.trim() || null;
+  // clear it
+  modalConfirmBtn.dataset.roomId = "";
+
+  modalConfirmBtn.textContent = "Processing...";
+  modalConfirmBtn.style.opacity = .7;
+
+  let xhr = new XMLHttpRequest();
+  xhr.open("POST", getRelativeURLSection() + "/rejectjoinroomrequest", true);
+  xhr.setRequestHeader('content-type', 'application/json');
+  xhr.onreadystatechange = function () {
+    if (this.readyState === 4) {
+      if (this.status === 200) {
+        showToastMsg("The operation was successful");
+
+        contactsList.removeChild(targetContact);
+        chatBoxList.removeChild(targetContactChatBox);
+        // click the first contact
+        contactsList.children.length > 0 ? contactsList.children[0].click() : null;
+      } else {
+        showToastMsg(this.responseText);
+      }
+
+      modalCloseBtn.click();
+    }
+  }
+  xhr.send(JSON.stringify({ roomId, optionalComment }))
+}
+
+function acceptRequest(roomId) {
+  const acceptBtn = document.getElementById("acceptbtn-"+roomId);
+  const recentChat = document.getElementById("recentChats-"+roomId);
+  const chatBox = document.getElementById("chatsIn-"+roomId);
+
+  acceptBtn.textContent = "Processing...";
+  acceptBtn.opacity = .7;
+
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", getRelativeURLSection() + "/acceptjoinroomrequest");
+  xhr.setRequestHeader('content-type', 'application/JSON');
+  xhr.onreadystatechange = function () {
+    if (this.readyState === 4) {
+      if (this.status === 200) {
+
+        const response = JSON.parse(this.responseText);
+
+        showToastMsg(response.message);
+
+        // update view temporarily pending the next page reload
+        // TODO: try and integrate sockets into the entire app so new views can be loaded cleanly
+        // or better still move to angular 😂😂
+        recentChat.textContent = "New request made to join room";
+        chatBox.innerHTML = `
+          <div class="systemMessage">
+            <div style='width: 100%; font-style: italic; background-color: #3697ff !important;' class="messageSection">
+              <h4 style="color: white !important;" class="actualMsg">
+                ${response.chat}
+              </h4>
+              <div class="dateandseen">
+                <h4 style="color: white !important;" class="msgDate">
+                  ${response.chatDate}
+                </h4>
+              </div>
+            </div>
+          </div>
+        `;
+
+      } else {
+        showToastMsg(this.responseText);
+
+        acceptBtn.textContent = "Accept";
+        acceptBtn.opacity = 1;
+      }
+    }
+  }
+  xhr.send(JSON.stringify({
+    roomId
+  }))
 }

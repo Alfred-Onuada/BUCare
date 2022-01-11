@@ -124,7 +124,7 @@ module.exports = (app) => {
     console.log(`Request made to : ${req.url}`);
 
     // this simply changes the room status to false
-    Rooms.findByIdAndUpdate(req.body.RoomId, { Status: false })
+    Rooms.findByIdAndUpdate(req.body.RoomId, { Status: "left" })
       .then((docs) => {
         res.status(200).send("Success");
       })
@@ -253,7 +253,7 @@ module.exports = (app) => {
     console.log(`Request made to : ${req.url}`);
 
     // block the admin from visiting the regular reset password route
-    if (req.userInfo.isAdmin) {
+    if (req.userInfo?.isAdmin) {
       return res.redirect('/a/resetpwd');
     }
     

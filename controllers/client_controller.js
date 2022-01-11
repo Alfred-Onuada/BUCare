@@ -278,7 +278,8 @@ Router.get("/rooms", verify, (req, res) => {
                     rooms[index].Username =
                       therapist.First_Name + " " + therapist.Last_Name;
                     rooms[index].Sex = therapist.Sex;
-                    rooms[index].Display_Picture = therapist.Display_Picture;
+                    rooms[index].Display_Picture = 
+                      therapist.Display_Picture != undefined ? therapist.Display_Picture : "defaults/" + therapist.First_Name.toLowerCase() + ".jpg";
                   })
                   .catch((err) => {
                     if (err) console.log(err);
@@ -604,6 +605,74 @@ Router.get('/search/:query', verify, async (req, res) => {
   res.status(200).send(results);
 
 });
+
+
+// creating a room schema with Hapi Joi
+const roomSchema = Joi.object({
+  ClientId: Joi.string().required(),
+  TherapistId: Joi.string().required(),
+  Status: Joi.string().required(),
+});
+
+Router.post("/sendroomrequest", verify, async (req, res) => {
+  console.log(`Request made to : c${req.url}`);
+
+  const { therapistId } = req.body;
+
+  try {
+    
+    const { _id:cId } = await Users.findById(req.user._id);
+
+    const therapistDocs = await Therapists.findById(therapistId);
+
+    const { _id:tId } = await Users.findOne({ Email: therapistDocs.Email });
+
+    if (cId && tId) {
+      const newRoom = {
+        TherapistId: tId.toString(),
+        ClientId: cId.toString(),
+        Status: "awaiting approval"
+      }
+
+      await roomSchema.validateAsync(newRoom);
+
+      const alreadyExists = await Rooms.findOne({  TherapistId: tId.toString(), ClientId: cId.toString() })
+ 
+      // figure out how to accept multiple requests
+      if (alreadyExists) {
+        return res.status(400).send("Sorry, your previous request was declined you cannot send another one")
+      }
+      
+      Rooms(newRoom).save((err, data) => {
+        if (err) {
+          throw err;
+        }  
+
+        // no need to validate since it is statically generated
+        const requestChat = {
+          RoomId: data._id,
+          SpokesPerson: "System",
+          Message: "New request to join room was made"
+        }
+
+        Chats(requestChat).save((err, data) => {
+          if (err) {
+            throw err;
+          }
+
+          return res.status(200).send();
+        })
+      })
+
+    } else {
+      return res.status(400).send("We encouter problems trying to process your request")
+    }
+
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("Something went wrong processing your request try again later.");
+  }
+})
 
 // This makes sure all normal routes called from the client route c/ will redirect backwards
 Router.get("/", (req, res) => {

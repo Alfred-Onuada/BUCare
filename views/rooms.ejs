@@ -48,6 +48,30 @@ Author URL: http://w3layouts.com
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="rejectRequestModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="rejectRequestModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="rejectRequestModalLabel">Confirmation Dialog</h5>
+                </div>
+                <div class="modal-body">
+                    <center>
+                        <h5>Are you sure?</h5>
+                        <div class="appointment-form-field">
+                            Leave an optional comment for this client
+                            <textarea id="rejectRequestText" name="comment" cols="30" rows="10" placeholder="Go ahead and explain why you rejected this request" style="padding-top: 10px; margin-bottom: 0px;"></textarea>
+                        </div>
+                    </center>
+                </div>
+                <div class="modal-footer">
+                    <button id="rejectRequestCloseBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button onclick="rejectRequest()" id="rejectRequestBtn" type="button" class="btn btn-primary">Yes, I'm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal 4 Rating Therapist -->
     <div class="modal fade" id="ratingModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="ratingModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -139,7 +163,11 @@ Author URL: http://w3layouts.com
                                     <% if (userStatus.Display_Picture != undefined) { %>
                                         <img src="<%= userStatus.Display_Picture %>" alt="your profile picture" id="displayPicture">
                                     <% } else { %>
-                                        <img src="defaults/<%= userStatus.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture" id="displayPicture">
+                                        <% if (userStatus.isTherapist) { %>
+                                            <img src="defaults/<%= userStatus.details.First_Name.toLowerCase() %>.jpg" alt="your profile picture" id="displayPicture">
+                                        <% } else { %>
+                                            <img src="defaults/<%= userStatus.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture" id="displayPicture">
+                                        <% } %>
                                     <% } %>
                                     <div class="changePhoto">
                                         <label for="changePhoto">
@@ -318,7 +346,11 @@ Author URL: http://w3layouts.com
                             <% if (userStatus.Display_Picture != undefined) { %>
                                 <img class="profileIconImg" src="<%= userStatus.Display_Picture %>" alt="your profile picture" id="tinyDisplayPicture">
                             <% } else { %>
-                                <img class="profileIconImg" src="defaults/<%= userStatus.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture" id="tinyDisplayPicture">
+                                <% if (userStatus.isTherapist) { %>
+                                    <img class="profileIconImg" src="defaults/<%= userStatus.details.First_Name.toLowerCase() %>.jpg" alt="your profile picture" id="tinyDisplayPicture">
+                                <% } else { %>
+                                    <img class="profileIconImg" src="defaults/<%= userStatus.Sex == 'Male' ? 'male' : 'female' %>.png" alt="your profile picture" id="tinyDisplayPicture">
+                                <% } %>
                             <% } %>
                         </div>
                         <div class="search-div">
@@ -333,7 +365,7 @@ Author URL: http://w3layouts.com
                         <% for( let index = 0; index < rooms_info.length; index++ ) { %>
                             <% room = rooms_info[index] %>
                             <% chat = room.Chats %>
-                            <div class="eachContact" onclick="displayRoom('<%= room._id %>')">
+                            <div class="eachContact" id="eachContact-<%= room._id %>" onclick="displayRoom('<%= room._id %>')">
                                 <div class="contactPicture">
                                     <% if (room.Display_Picture != undefined) { %>
                                         <img id="pic4<%= index %>" src="<%= room.Display_Picture %>" alt="your profile picture">
@@ -348,7 +380,17 @@ Author URL: http://w3layouts.com
                                     <div class="recent">
                                         <h4 id="recentChats-<%= room._id %>" class="recentChat">
                                             <% if (chat.length > 0) { %>
-                                                <%= chat[chat.length-1].Message %>
+                                                <!-- this checks to confirm that you the last message is not a request to join message -->
+                                                <% let lastMessage = chat[chat.length-1].Message %>
+                                                <% if (room.Status == "awaiting approval") { %>
+                                                    <% if (userStatus.isTherapist) { %>
+                                                        <i>Hurray! A new client wishes to join you for therapy</i>
+                                                    <% } else if (userStatus.isClient) { %>
+                                                        <i>Request to Join: Hello can i have you as my therapist</i>
+                                                    <% } %>
+                                                <% } else { %>
+                                                    <%= lastMessage %>
+                                                <% } %>
                                             <% } else { %>
                                                 <i>tap to begin a conversation</i>
                                             <% } %>
@@ -387,7 +429,7 @@ Author URL: http://w3layouts.com
                                             <i class="bi bi-three-dots-vertical" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"></i>
                                             
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                                <li><a class="dropdown-item" onclick="showExtraInfo('<%= userStatus.isClient ? room.TherapistId : room.ClientId %>', '<%= index %>')">About <%= userStatus.isTherapist ? 'client' : 'therapist' %></a></li>
+                                                <li><a id="about4<%= room._id %>" class="dropdown-item" onclick="showExtraInfo('<%= userStatus.isClient ? room.TherapistId : room.ClientId %>', '<%= index %>')">About <%= userStatus.isTherapist ? 'client' : 'therapist' %></a></li>
                                                 <% if (userStatus.isTherapist) { %>
                                                     <li id="sessionToggle<%= room._id %>" data-toggle-to="stop" onclick="toggleSession('<%= room._id %>')"><a id="sessionToggleText<%= room._id %>" class="dropdown-item">Start a session</a></li>
                                                 <% } %>
@@ -410,15 +452,15 @@ Author URL: http://w3layouts.com
                                     <% for( let index = 0; index < room.Chats.length; index++ ) { %>
                                     <% 
                                         chat = room.Chats[index];
-                                        var hour = new Date(chat.createdAt).getHours(); 
-                                        var min = new Date(chat.createdAt).getMinutes();
-                                        var timeOfDay = hour <= 11 ? 'am' : 'pm';
+                                        let hour = new Date(chat.createdAt).getHours(); 
+                                        let min = new Date(chat.createdAt).getMinutes();
+                                        let timeOfDay = hour <= 11 ? 'am' : 'pm';
                                         hour = hour % 12;
                                         // append additional zero when needed
                                         hour = hour < 10 ? '0' + hour : hour;
                                         min = min < 10 ? '0' + min : min;
 
-                                        var date = hour + ':' + min + ' ' + timeOfDay;
+                                        let date = hour + ':' + min + ' ' + timeOfDay;
                                     %>
                                     <% if (chat.SpokesPerson === user) { %>
                                         <!-- user is passed from the server -->
@@ -445,18 +487,79 @@ Author URL: http://w3layouts.com
 
                                     <% } else if (chat.SpokesPerson === 'System') { %>
                                         
-                                        <div class="systemMessage">
-                                            <div style='width: 100%; font-style: italic; background-color: #3697ff !important;' class="messageSection">
-                                                <h4 style="color: white !important;" class="actualMsg">
-                                                    <%= chat.Message %>
-                                                </h4>
-                                                <div class="dateandseen">
-                                                    <h4 style="color: white !important;" class="msgDate">
-                                                        <%= date %>
-                                                    </h4>
+                                        <!-- checks for request to join message -->
+
+                                        <!-- delete the message from the db when the person accepts or just leave it -->
+                                        <% if (room.Status == "awaiting approval" && userStatus.isTherapist) { %>
+                                            <div class="systemMessage">
+                                                <div class="card" style="width: 100%;">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">New Request For Therapy Service</h5>
+                                                        <p class="card-text">
+                                                            Hello, Trust you are having a good day. <br>
+                                                            Your expert service has once again drawn attention, <span class="requestingClientName" onclick="document.getElementById('about4<%= room._id %>').click()"><%= room.Username %></span>
+                                                            has sent a request to begin therapy with you, kindly click on the either of the buttons below to responsed to him.
+                                                        </p>
+                                                        <div class="move-right">
+                                                            <button onclick="acceptRequest('<%= room._id %>')" id="acceptbtn-<%= room._id %>" class="btn btn-primary requestActionBtn">Accept</button>
+                                                            <button onclick="RejectModalInfo('<%= room._id %>')" data-bs-toggle="modal" data-bs-target="#rejectRequestModal" class="btn btn-primary requestActionBtn">Reject</button>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        <% } else if (room.Status == "awaiting approval" && userStatus.isClient) { %> 
+                                            <div class="systemMessage">
+                                                <div style='width: 100%; font-style: italic; background-color: #3697ff !important;' class="messageSection">
+                                                    <h4 style="color: white !important;" class="actualMsg">
+                                                        You have sent a request to join this therapist, kindly wait for him/her to accept your request
+                                                    </h4>
+                                                    <div class="dateandseen">
+                                                        <h4 style="color: white !important;" class="msgDate">
+                                                            <%= date %>
+                                                        </h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <% } else if (room.Status == "declined request" && userStatus.isClient) { %>
+                                            <div class="systemMessage">
+                                                <div style='width: 100%; font-style: italic; background-color: #3697ff !important;' class="messageSection">
+                                                    <h4 style="color: white !important;" class="actualMsg">
+                                                        Your request to join this room was rejected.
+                                                    </h4>
+                                                    <div class="dateandseen">
+                                                        <h4 style="color: white !important;" class="msgDate">
+                                                            <%= date %>
+                                                        </h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <% } else if (room.Status == "declined request" && userStatus.isTherapist) { %>
+                                            <div class="systemMessage">
+                                                <div style='width: 100%; font-style: italic; background-color: #3697ff !important;' class="messageSection">
+                                                    <h4 style="color: white !important;" class="actualMsg">
+                                                        You rejected this request
+                                                    </h4>
+                                                    <div class="dateandseen">
+                                                        <h4 style="color: white !important;" class="msgDate">
+                                                            <%= date %>
+                                                        </h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <% } else { %>
+                                            <div class="systemMessage">
+                                                <div style='width: 100%; font-style: italic; background-color: #3697ff !important;' class="messageSection">
+                                                    <h4 style="color: white !important;" class="actualMsg">
+                                                        <%= chat.Message %>
+                                                    </h4>
+                                                    <div class="dateandseen">
+                                                        <h4 style="color: white !important;" class="msgDate">
+                                                            <%= date %>
+                                                        </h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <% } %>
 
                                     <% } else { %>
 
@@ -476,24 +579,45 @@ Author URL: http://w3layouts.com
                                     <% } %>
                                 </div>
 
-                                <!-- This checks if a user has left a conversation, the room.status holds either true or false -->
-                                <div id="sndMsg-<%= room._id %>">
-                                    <% if (room.Status) { %> 
-                                            <div class="input-group mb-3">
-                                                <div onkeydown="modHeight('<%= room._id %>')" id="msgIn-<%= room._id %>" role="textbox" contenteditable="true" dir="ltr" class="form-control msgbox" aria-multiline="true" aria-required="true" placeholder="Recipient's username" aria-label="Recipient's username"
-                                                    aria-describedby="basic-addon2"></div>
-                                                <div class="input-group-append">
-                                                    <button name="<%= room._id %>, <%= user %>" class="msgbtn input-group-text" id="basic-addon2">send</button>
+                                <% if (userStatus.isTherapist && (room.Status == "awaiting approval" || room.Status == "declined request")) { %>
+                                    <!-- show nothing -->
+                                <% } else { %>
+                                    <div id="sndMsg-<%= room._id %>">
+                                        <% if (room.Status == "active") { %> 
+                                                <div class="input-group mb-3">
+                                                    <div onkeydown="modHeight('<%= room._id %>')" id="msgIn-<%= room._id %>" role="textbox" contenteditable="true" dir="ltr" class="form-control msgbox" aria-multiline="true" aria-required="true" placeholder="Recipient's username" aria-label="Recipient's username"
+                                                        aria-describedby="basic-addon2"></div>
+                                                    <div class="input-group-append">
+                                                        <button name="<%= room._id %>, <%= user %>" class="msgbtn input-group-text" id="basic-addon2">send</button>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                    <% } else { %>
-                                        <cfenter>
-                                            <div class="inactive-room">
-                                                <h4 class="inactive-room-text">sorry, you are no longer a participant in this room</h4>
-                                            </div>
-                                        </center>
-                                    <% } %>
-                                </div>
+                                        <% } else if (room.Status == "left") { %>
+                                            <center>
+                                                <div class="inactive-room">
+                                                    <h4 class="inactive-room-text">sorry, you are no longer a participant in this room</h4>
+                                                </div>
+                                            </center>
+                                        <% } else if (room.Status == "awaiting approval") { %>
+                                            <center>
+                                                <div class="inactive-room">
+                                                    <h4 class="inactive-room-text">You have successfully sent a request to join this room</h4>
+                                                </div>
+                                            </center>
+                                        <% } else if (room.Status == "declined request") { %>
+                                            <center>
+                                                <div class="inactive-room">
+                                                    <h4 class="inactive-room-text">Your request to join this room was declined.</h4>
+                                                </div>
+                                            </center>
+                                        <% } else { %>
+                                            <center>
+                                                <div class="inactive-room">
+                                                    <h4 class="inactive-room-text">Sorry, this room is disabled due to an error. contact the support department</h4>
+                                                </div>
+                                            </center>
+                                        <% } %>
+                                    </div>
+                                <% } %>
                             </div>
                         </div>
 

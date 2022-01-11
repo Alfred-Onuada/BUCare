@@ -1092,3 +1092,16 @@
 .eachTheraist{
     margin-bottom: 20px;
 }
+
+.requestActionBtn{
+    margin: 0px 10px;
+}
+
+.requestingClientName{
+    color: rgb(5, 70, 132);
+}
+
+.requestingClientName:hover{
+    cursor: pointer;
+    color: var(--gold);
+}

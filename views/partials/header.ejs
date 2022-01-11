@@ -144,14 +144,13 @@
                       <span class="fa fa-caret-down"></span>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                      <a class="dropdown-item" href="team">Meet The Team</a>
                       <a class="dropdown-item" href="about">Department</a>
                       <a class="dropdown-item" href="contact">Contact</a>
                     </div>
                   </li>
 
                   <li class="nav-item">
-                    <a class="nav-link" href="about">Our Therapists</a>
+                    <a class="nav-link" href="team">Our Therapists</a>
                   </li>
 
                   <li class="nav-item dropdown">
@@ -289,7 +288,7 @@
                                         <div class="styled-input">
                                           <div class="appointment-form-field">
                                             E-mail Address:
-                                            <input type="email" name="Email" placeholder="me@babcock.edu.ng" required />
+                                            <input type="email" name="Email" id="regEmail" placeholder="me@babcock.edu.ng" required disabled/>
                                           </div>
                                         </div>
                                         <div class="styled-input">
@@ -312,9 +311,9 @@
                                         </div>
 
                                         <div class="styled-input">
-                                          Telephone No:
                                           <div class="appointment-form-field">
-                                            <input type="tel" name="Telephone" placeholder="Enter Your Telephone Number"
+                                            <label for="telephone">Telephone No:</label>
+                                            <input type="tel" name="Telephone" id="telephone" placeholder="Enter Your Telephone Number"
                                               required />
                                           </div>
                                         </div>
@@ -328,7 +327,7 @@
                                           </select>
                                         </div>
 
-                                        <div class="styled-input">
+                                        <!-- <div class="styled-input">
                                           Support needs/challenges:
                                           <div class="appointment-form-field">
                                             <select onchange="getMatchingTherapist(this.value)" name="Case"
@@ -363,7 +362,7 @@
                                               <option>Select Counsellor</option>
                                             </select>
                                           </div>
-                                        </div>
+                                        </div> -->
                                       </div>
                                       <div class="appointment-btn text-lg-right">
                                         <button id="registerSubmitBtn" type="submit" value="submit"
