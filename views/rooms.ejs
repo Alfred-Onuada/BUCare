@@ -406,6 +406,11 @@ Author URL: http://w3layouts.com
 
                     <div class="hide contacts-list" id="contacts-search"></div>
 
+                    <!-- because therapist don't add clients -->
+                    <% if (userStatus.isClient) { %>
+                        <a class="fas fa-user-plus ant-icon" href="team"></a>
+                    <% } %>
+
                 </div>
                 <div id="chatBox" style="padding: 0px !important;" class="allRooms col-sm-8 col-md-8 col-lg-8 col-xl-8">
 
@@ -579,18 +584,19 @@ Author URL: http://w3layouts.com
                                     <% } %>
                                 </div>
 
-                                <% if (userStatus.isTherapist && (room.Status == "awaiting approval" || room.Status == "declined request")) { %>
-                                    <!-- show nothing -->
-                                <% } else { %>
-                                    <div id="sndMsg-<%= room._id %>">
+                                <div id="sndMsg-<%= room._id %>">
+
+                                    <% if (userStatus.isTherapist && (room.Status == "awaiting approval" || room.Status == "declined request")) { %>
+                                        <!-- show nothing -->
+                                    <% } else { %>
                                         <% if (room.Status == "active") { %> 
-                                                <div class="input-group mb-3">
-                                                    <div onkeydown="modHeight('<%= room._id %>')" id="msgIn-<%= room._id %>" role="textbox" contenteditable="true" dir="ltr" class="form-control msgbox" aria-multiline="true" aria-required="true" placeholder="Recipient's username" aria-label="Recipient's username"
-                                                        aria-describedby="basic-addon2"></div>
-                                                    <div class="input-group-append">
-                                                        <button name="<%= room._id %>, <%= user %>" class="msgbtn input-group-text" id="basic-addon2">send</button>
-                                                    </div>
+                                            <div class="input-group mb-3">
+                                                <div onkeydown="modHeight('<%= room._id %>')" id="msgIn-<%= room._id %>" role="textbox" contenteditable="true" dir="ltr" class="form-control msgbox" aria-multiline="true" aria-required="true" placeholder="Recipient's username" aria-label="Recipient's username"
+                                                    aria-describedby="basic-addon2"></div>
+                                                <div class="input-group-append">
+                                                    <button name="<%= room._id %>, <%= user %>" class="msgbtn input-group-text" id="basic-addon2">send</button>
                                                 </div>
+                                            </div>
                                         <% } else if (room.Status == "left") { %>
                                             <center>
                                                 <div class="inactive-room">
@@ -616,8 +622,9 @@ Author URL: http://w3layouts.com
                                                 </div>
                                             </center>
                                         <% } %>
-                                    </div>
-                                <% } %>
+                                    <% } %>
+                                </div>
+
                             </div>
                         </div>
 
@@ -674,6 +681,8 @@ Author URL: http://w3layouts.com
     <!-- This has to come first so the socket variable is available before the script calls it -->
     <script src="socket.io/socket.io.js"></script>
     <script src="js/script.js"></script>
+
+    <script src="https://kit.fontawesome.com/dc8ee980c4.js" crossorigin="anonymous"></script>
 
 </body>
 

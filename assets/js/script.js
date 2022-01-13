@@ -2397,6 +2397,7 @@ function acceptRequest(roomId) {
   const acceptBtn = document.getElementById("acceptbtn-"+roomId);
   const recentChat = document.getElementById("recentChats-"+roomId);
   const chatBox = document.getElementById("chatsIn-"+roomId);
+  const sendMessageBox = document.getElementById("sndMsg-"+roomId);
 
   acceptBtn.textContent = "Processing...";
   acceptBtn.opacity = .7;
@@ -2427,6 +2428,17 @@ function acceptRequest(roomId) {
                   ${response.chatDate}
                 </h4>
               </div>
+            </div>
+          </div>
+        `;
+
+        sendMessageBox.innerHTML = `
+          <div class="input-group mb-3">
+            <div onkeydown="modHeight('${roomId}')" id="msgIn-${roomId}" role="textbox" contenteditable="true" dir="ltr" class="form-control msgbox" 
+              aria-multiline="true" aria-required="true" placeholder="Recipient's username" aria-label="Recipient's username"
+              aria-describedby="basic-addon2"></div>
+            <div class="input-group-append">
+              <button name="${roomId}, ${response.userId}" class="msgbtn input-group-text" id="basic-addon2">send</button>
             </div>
           </div>
         `;

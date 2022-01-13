@@ -727,6 +727,7 @@ Router.post("/acceptjoinroomrequest", verify, async (req, res) => {
       const response = {
         message: "Congratulations! you have a new client",
         chat: lastChat.Message,
+        userId: req.user._id,
         chatDate: date
       }
       return res.status(200).send(JSON.stringify(response));
