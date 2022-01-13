@@ -845,6 +845,10 @@
         width: 100%;
         text-align: center;
     }
+    
+    .team-section{
+        padding: 15px 0px 10px 0px !important;
+    }
 }
 
 @media screen and (min-width: 481px) {
@@ -930,6 +934,10 @@
     .resetPasswordAlertBoxConatiner{
         width: 100%;
         text-align: center;
+    }
+
+    .team-section{
+        padding: 0px !important;
     }
 }
 
@@ -1023,10 +1031,6 @@
 
 .dropdown-item{
     text-transform: capitalize;
-}
-
-.team-section{
-    padding: 0px !important;
 }
 
 .sub-titlehny-edited{
