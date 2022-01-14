@@ -106,6 +106,18 @@ Router.get("/summary", verify, (req, res) => {
           .then((t_docs) => {
             if (t_docs) {
               data.therapists = t_docs;
+
+              // retrieve the total number of clients each therapist is currently and has ever handled
+              let totalAssignedTherapist = []; // array that will be used to determine your all-time client count
+              data.clients.forEach(client => {
+                totalAssignedTherapist.push(...client.Assigned_Therapists);
+              })
+
+              data.therapists.forEach(therapist => {
+                let myCLients = totalAssignedTherapist.filter(item => item == therapist.First_Name + " " + therapist.Last_Name);
+                therapist.Total_Clients_Count = myCLients.length;
+              })
+
               res.render("summary", { userStatus: req.user, info: data, pages: req.pages });
             } else {
               res.render("summary", { userStatus: req.user, info: data, pages: req.pages });

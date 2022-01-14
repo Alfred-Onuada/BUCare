@@ -96,7 +96,7 @@ Author URL: http://w3layouts.com
     <hr style="margin: 0;">
     <button style="background: none !important;" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
       aria-expanded="false" aria-controls="collapseOne">
-      Therapists
+      Therapists (<%= info.therapists.length %>)
     </button>
     <hr style="margin: 0;">
     <div id="collapseOne" class="collapse">
@@ -112,6 +112,7 @@ Author URL: http://w3layouts.com
                 <th scope="col">Telephone No</th>
                 <th scope="col">Gender</th>
                 <th scope="col">Average Rating</th>
+                <th scope="col">All-time Clients</th>
                 <th scope="col">Since</th>
                 <th scope="col" colspan="3"></th>
               </tr>
@@ -140,6 +141,9 @@ Author URL: http://w3layouts.com
                   </td>
                   <td>
                     <%= data.Average_Rating !==undefined ? data.Average_Rating.toFixed(2) : 'Not available' %>
+                  </td>
+                  <td>
+                    <%= data.Total_Clients_Count %>
                   </td>
                   <td>
                     <%= new Date(data.createdAt).toDateString() %>
@@ -178,7 +182,7 @@ Author URL: http://w3layouts.com
 
     <button style="background: none !important;" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo"
       aria-expanded="false" aria-controls="collapseTwo">
-      Clients
+      Clients (<%= info.clients.length %>)
     </button>
     <hr style="margin: 0;">
     <div id="collapseTwo" class="collapse">

@@ -66,6 +66,6 @@ module.exports = async function (req, res, next) {
   // retrieves the information to be displayed on the pages
   req.pages = await getPageInfo(req.url);
   
-  // no matter what the route still opens it just tell it you dont have an accout so it properly displays your nav
+  // no matter what the route still opens it just tell it you dont have an account so it properly displays your nav
   next();
 };

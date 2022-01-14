@@ -320,9 +320,9 @@ Router.get("/rooms", verify, (req, res) => {
         res.send(err);
       });
   } else {
-    req.errorMessage =
+    req.session.errorMessage =
       "Unauthorized access to the requested page. <br> If you believe this to be an error please file a report on the contact us page.";
-    res.redirect(307, "/");
+    return res.redirect(307, "/");
   }
 });
 

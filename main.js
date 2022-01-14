@@ -9,6 +9,7 @@ const cookieParser = require('cookie-parser');
 const fs = require('fs')
 const fileUpload = require('express-fileupload');
 const cors = require('cors');
+const expressSession = require("express-session");
 
 // when you start working with voip feature may only need it on development as heroku or the web server may already provide a secure connection
 // const https = require('https');
@@ -70,6 +71,13 @@ app.use(fileUpload());
 
 // for securing the app against csrf attack
 app.use(cors())
+
+// enables the use of session in this case primarily for error messages
+app.use(expressSession({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false
+}));
 
 // adding authetication middlewares
 const accountsManagementRoute = require('./controllers/auths/auth');

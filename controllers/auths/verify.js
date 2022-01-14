@@ -11,7 +11,7 @@ module.exports = function (req, res, next) {
 
   // if it doesnt exist
   if (!token) {
-    req.errorMessage =
+    req.session.errorMessage =
       "Unauthorized access to the requested page. <br> If you believe this to be an error please file a report on the contact us page.";
     return res.redirect(307, "/");
   }
@@ -26,11 +26,8 @@ module.exports = function (req, res, next) {
     Users.findOne({ _id: req.user._id })
       .then(async (docs) => {
         if (docs && docs.Disabled) {
-          return res
-            .status(401)
-            .send(
-              "Sorry, this account has been temporarily suspended, for more info reach out to our customer support"
-            );
+          req.session.errorMessage = "Sorry, this account has been temporarily suspended, for more info reach out to our customer support";
+          return res.redirect(307, "/");
         }
 
         if (docs) {
@@ -60,7 +57,7 @@ module.exports = function (req, res, next) {
           next();
         } else {
           // this also makes sure that is for any reason you no longer exist on the database you are also logged out
-          req.errorMessage =
+          req.session.errorMessage =
             "Unauthorized access to the requested page. <br> If you believe this to be an error please file a report on the contact us page.";
           return res.redirect(307, "/");
         }
@@ -71,13 +68,8 @@ module.exports = function (req, res, next) {
       });
   } catch (error) {
     // if token is expired
-    // i need to send back a user state because of the navbar
-    req.errorMessage =
+    req.session.errorMessage =
       "Unauthorized access to the requested page. <br> If you believe this to be an error please file a report on the contact us page.";
-    res.status(401).render("index", {
-      userStatus: req.user,
-      errorMessage: req.errorMessage,
-      pages: req.pages
-    });
+    return res.redirect(307, "/");
   }
 };

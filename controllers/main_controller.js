@@ -20,9 +20,12 @@ module.exports = (app) => {
   app.get("/", checkUser, (req, res) => {
     console.log(`Request made to : ${req.url}`);
 
+    const errorMessage = req.session.errorMessage || null;
+    req.session.errorMessage = null; // clears the message after displaying it once
+
     res.render("index", {
       userStatus: req.userInfo,
-      errorMessage: req.errorMessage,
+      errorMessage,
       pages: req.pages
     });
   });
@@ -30,11 +33,7 @@ module.exports = (app) => {
   app.get("/index", checkUser, (req, res) => {
     console.log(`Request made to : ${req.url}`);
 
-    res.render("index", {
-      userStatus: req.userInfo,
-      errorMessage: req.errorMessage,
-      pages: req.pages
-    });
+    res.redirect(307, "/");
   });
 
   app.get("/about", checkUser, (req, res) => {
