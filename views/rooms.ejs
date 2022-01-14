@@ -454,7 +454,11 @@ Author URL: http://w3layouts.com
                             <div class="msgSection">
                                 <div id="chatsIn-<%= room._id %>" class="chatsFeed">
 
-                                    <% for( let index = 0; index < room.Chats.length; index++ ) { %>
+                                    <div class="load-more-btn">
+                                        <h5 data-offset="1" id="loadMoreBtn-<%= room._id %>" onclick="loadMoreMessages('<%= room._id %>', '<%= room.Username %>')">Load older messages</h5>
+                                    </div>
+
+                                    <% for( let index = room.Chats.length-1; index >= 0; index-- ) { %>
                                     <% 
                                         chat = room.Chats[index];
                                         let hour = new Date(chat.createdAt).getHours(); 

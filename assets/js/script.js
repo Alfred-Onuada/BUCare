@@ -18,7 +18,8 @@ let displayRoom,
   leaveChatModal,
   toggleSession,
   startVideoCall,
-  startVoiceCall;
+  startVoiceCall,
+  loadMoreMessages;
 
 // there may be several pages that needs sockets so this function will be called on the body.onload from the html
 function init(userId) {
@@ -271,6 +272,189 @@ function init(userId) {
       data = { RoomId: roomId };
       xhr.send(JSON.stringify(data));
     };
+
+    loadMoreMessages = function (roomId, username) {
+      const chatsBox = document.getElementById("chatsIn-"+roomId);
+      const loadMoreBtn = document.getElementById("loadMoreBtn-"+roomId);
+      const offset = loadMoreBtn.dataset.offset;
+
+      loadMoreBtn.textContent = "Loading...";
+
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "/loadMoreMessages", true);
+      xhr.setRequestHeader('content-type', 'application/json');
+      xhr.onreadystatechange = function () {
+        if (this.readyState === 4) {
+          if (this.status === 200) {
+
+            // the message is returned in descending order because of the way chats work and th implement the offset
+            // but in order to add it to the page it will be added in reverse
+            const { chats, roomInfo, userInfo } = JSON.parse(this.responseText);
+
+            let content = '';
+            for (let index = chats.length-1; index >= 0; index--) {
+              const chat = chats[index];
+              
+              let hour = new Date(chat.createdAt).getHours(); 
+              let min = new Date(chat.createdAt).getMinutes();
+              let timeOfDay = hour <= 11 ? 'am' : 'pm';
+              hour = hour % 12;
+              // append additional zero when needed
+              hour = hour < 10 ? '0' + hour : hour;
+              min = min < 10 ? '0' + min : min;
+
+              let date = hour + ':' + min + ' ' + timeOfDay;
+
+              if (chat.SpokesPerson === userInfo.id) {
+
+                content += `
+                  <div class="outgoing">
+                      <div class="messageSection2">
+                          <h4 class="actualMsg">
+                              ${chat.Message}
+                          </h4>
+                          <div class="dateandseen">
+                              <h4 class="msgDate">
+                                  ${date}
+                              </h4>
+                `;
+                              if (chat.Status === 'sent') {
+                                content += `<i class="outgoingIn${roomId} seenicon bi bi-check2"></i>`;
+                              } else if (chat.Status === 'delivered') {
+                                content += `<i class="outgoingIn${roomId} seenicon bi bi-check2-all"></i>`;
+                              } else {
+                                content += `<i class="outgoingIn${roomId} seenicon bi bi-check2-all seen"></i>`;
+                              }
+                content += `
+                          </div>
+                      </div>
+                  </div>
+                `;
+
+              } else if (chat.SpokesPerson === 'System') {
+                  
+                  if (roomInfo.Status == "awaiting approval" && userInfo.isTherapist) {
+                    content += `
+                      <div class="systemMessage">
+                          <div class="card" style="width: 100%;">
+                              <div class="card-body">
+                                  <h5 class="card-title">New Request For Therapy Service</h5>
+                                  <p class="card-text">
+                                      Hello, Trust you are having a good day. <br>
+                                      Your expert service has once again drawn attention, <span class="requestingClientName" onclick="document.getElementById('about4${roomId}').click()">${username}</span>
+                                      has sent a request to begin therapy with you, kindly click on the either of the buttons below to responsed to him.
+                                  </p>
+                                  <div class="move-right">
+                                      <button onclick="acceptRequest('${roomId}')" id="acceptbtn-${roomId}" class="btn btn-primary requestActionBtn">Accept</button>
+                                      <button onclick="RejectModalInfo('${roomId}')" data-bs-toggle="modal" data-bs-target="#rejectRequestModal" class="btn btn-primary requestActionBtn">Reject</button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                    `;
+                  } else if (roomInfo.Status == "awaiting approval" && userInfo.isClient) {
+                    content += `
+                      <div class="systemMessage">
+                          <div style='width: 100%; font-style: italic; background-color: #3697ff !important;' class="messageSection">
+                              <h4 style="color: white !important;" class="actualMsg">
+                                  You have sent a request to join this therapist, kindly wait for him/her to accept your request
+                              </h4>
+                              <div class="dateandseen">
+                                  <h4 style="color: white !important;" class="msgDate">
+                                      ${date}
+                                  </h4>
+                              </div>
+                          </div>
+                      </div>
+                    `;
+                  } else if (roomInfo.Status == "declined request" && userInfo.isClient) {
+                    content += `
+                      <div class="systemMessage">
+                          <div style='width: 100%; font-style: italic; background-color: #3697ff !important;' class="messageSection">
+                              <h4 style="color: white !important;" class="actualMsg">
+                                  Your request to join this room was rejected.
+                              </h4>
+                              <div class="dateandseen">
+                                  <h4 style="color: white !important;" class="msgDate">
+                                      ${date}
+                                  </h4>
+                              </div>
+                          </div>
+                      </div>
+                    `;
+                  } else if (roomInfo.Status == "declined request" && userInfo.isTherapist) {
+                    content += `
+                      <div class="systemMessage">
+                          <div style='width: 100%; font-style: italic; background-color: #3697ff !important;' class="messageSection">
+                              <h4 style="color: white !important;" class="actualMsg">
+                                  You rejected this request
+                              </h4>
+                              <div class="dateandseen">
+                                  <h4 style="color: white !important;" class="msgDate">
+                                      ${date}
+                                  </h4>
+                              </div>
+                          </div>
+                      </div>
+                    `;
+                  } else {
+                    content += `
+                      <div class="systemMessage">
+                          <div style='width: 100%; font-style: italic; background-color: #3697ff !important;' class="messageSection">
+                              <h4 style="color: white !important;" class="actualMsg">
+                                  ${chat.Message}
+                              </h4>
+                              <div class="dateandseen">
+                                  <h4 style="color: white !important;" class="msgDate">
+                                      ${date}
+                                  </h4>
+                              </div>
+                          </div>
+                      </div>
+                    `;
+                  }
+
+              } else {
+                content += `
+                  <div class="incoming">
+                      <div class="messageSection">
+                          <h4 class="actualMsg">
+                              ${chat.Message}
+                          </h4>
+                          <h4 class="msgDate">
+                              ${date}
+                          </h4>
+                      </div>
+                  </div>
+                `;
+              }
+
+            }
+
+            // deletes the show more button so i can directly append to the chatbox 
+            // .parentNode because loadMoreBtn is not directly in the chatsbox
+            chatsBox.removeChild(loadMoreBtn.parentNode);
+
+            // quite dangerous but is the only way to put it in
+            const newBtn = `
+              <div class="load-more-btn">
+                <h5 data-offset="${Number.parseInt(offset) + 1}" id="loadMoreBtn-${roomId}" onclick="loadMoreMessages('${roomId}', '${username}')">Load older messages</h5>
+            </div>
+            `;
+            chatsBox.innerHTML = newBtn + content + chatsBox.innerHTML;
+
+          } else {
+            loadMoreBtn.textContent = "Load older messages";
+            showToastMsg(this.responseText);
+          }
+        }
+      }
+      const data = {
+        roomId,
+        offset
+      }
+      xhr.send(JSON.stringify(data));
+    }
 
     startVideoCall = (roomId) => {
       socket.emit("start_video_call", roomId);
@@ -1187,7 +1371,7 @@ function search() {
             let chat = room.Chats;
         
         data +=  `
-            <div class="eachContact" onclick="displayRoom('${room._id}')">
+            <div class="eachContact" onclick="displayRoom('${roomId}')">
               <div class="contactPicture">
               `;
         
@@ -1202,7 +1386,7 @@ function search() {
                   ${room.Username}
                 </h4>
                 <div class="recent">
-                  <h4 id="recentChats-${room._id}" class="recentChat">
+                  <h4 id="recentChats-${roomId}" class="recentChat">
                   `;
 
                     if (chat.length > 0) {
@@ -1213,7 +1397,7 @@ function search() {
         data += `
                   </h4>
                   <!-- This index refers to the very last chat -->
-                  <div id="dot4-${room._id}" class="hide notifcation-dot"></div>
+                  <div id="dot4-${roomId}" class="hide notifcation-dot"></div>
                 </div>
               </div>
             </div>

@@ -263,6 +263,7 @@ Router.get("/rooms", verify, (req, res) => {
             const room = rooms[index];
 
             await Chats.find({ RoomId: room._id })
+              .sort({ _id: -1 })
               .limit(15)
               .then((chats) => {
                 rooms[index].Chats = chats;

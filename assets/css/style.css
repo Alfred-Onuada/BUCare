@@ -1127,3 +1127,18 @@
     background-color: #014282;
     color: white !important;
 }
+
+.load-more-btn{
+    width: 100%;
+    text-align: center;
+}
+
+.load-more-btn > h5{
+    font-size: 20px;
+    font-weight: normal;
+}
+
+.load-more-btn > h5:hover{
+    cursor: pointer;
+    opacity: .8;
+}

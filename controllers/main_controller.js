@@ -3,6 +3,7 @@ const Rooms = require("./../models/room");
 const Clients = require('./../models/client');
 const Therapists = require('./../models/therapist');
 const TempUsers = require('./../models/tempUser');
+const Chats = require("./../models/chat");
 
 const Joi = require("@hapi/joi");
 
@@ -130,6 +131,40 @@ module.exports = (app) => {
       .catch((err) => {
         if (err) console.log(err);
       });
+  });
+
+  app.post("/loadMoreMessages", verify, async (req, res) => {
+    console.log(`Request made to : ${req.url}`);
+
+    const { roomId, offset } = req.body;
+
+    try {
+      const chats = await Chats.find({ RoomId: roomId })
+        .sort({ _id: -1 })
+        .skip(offset * 15)
+        .limit(15)
+
+      const roomInfo = await Rooms.findById(roomId);
+    
+      if (chats.length) {
+        return res.status(200).json({
+          chats,
+          roomInfo,
+          userInfo: {
+            id: req.user._id,
+            isTherapist: req.user.isTherapist,
+            isClient: req.user.isClient
+          }
+        });
+      } else {
+        return res.status(400).send("You have reached the end of the conversation");
+      }
+
+    } catch (error) {
+      console.log(error.message);
+      return res.status(500).send("Please refresh the browser and try again something went wrong");
+    }
+
   });
 
   app.post('/checkVerificationToken', async (req, res) => {
