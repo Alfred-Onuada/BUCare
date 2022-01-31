@@ -14113,7 +14113,7 @@ input,
 select,
 label,
 li {
-  -webkit-appearance: none;
+  /* -webkit-appearance: none; */
   outline: none;
   font-family: 'Nunito', sans-serif;
 }

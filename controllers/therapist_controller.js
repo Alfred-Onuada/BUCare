@@ -650,6 +650,7 @@ Router.get('/search/:query', verify, async (req, res) => {
 
 });
 
+// TODO: delete the room after the request is rejected the notification will recieved the message so the person knows what'sup
 Router.post("/rejectjoinroomrequest", verify, async (req, res) => {
   console.log(`Request made to : t${req.url}`);
 
@@ -689,7 +690,7 @@ Router.post("/acceptjoinroomrequest", verify, async (req, res) => {
     const { ClientId } = await Rooms.findById(roomId);
 
     // Update the the room to active
-    await Rooms.findByIdAndUpdate(roomId, { Status: "active" });
+    const RoomInfo = await Rooms.findByIdAndUpdate(roomId, { Status: "active" });
 
     // update the client's model - first get his ID for the client's model
     const { Email:clientEmail } = await Users.findById(ClientId);
@@ -707,7 +708,7 @@ Router.post("/acceptjoinroomrequest", verify, async (req, res) => {
       Assigned_Therapists.push(therapistName);
 
       // this is not an error the first assigned_therapist is the field the second is the value
-      await Clients.findByIdAndUpdate(ClientIdInClientModel, { Assigned_Therapists: Assigned_Therapists });
+      await Clients.findByIdAndUpdate(ClientIdInClientModel, { Assigned_Therapists: Assigned_Therapists, Case: RoomInfo.Potential_Cases });
 
       // lol I'm not doing any error check in this code hopefully i can replicate this everywhere but this code is very correct
       // because all errors are thrown to the catch block

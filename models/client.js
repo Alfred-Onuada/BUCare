@@ -33,7 +33,7 @@ const clientSchema = mongoose.Schema({
         required: true
     },
     'Case' : {
-        type: String,
+        type: Array,
     },
     'Assigned_Therapists' : {
         type: Array,

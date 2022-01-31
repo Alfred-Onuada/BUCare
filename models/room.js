@@ -13,6 +13,10 @@ const roomSchema = mongoose.Schema({
     'Status': {
         type: String,
         default: "active"
+    },
+    'Potential_Cases': {
+        type: Array,
+        require: true
     }
 }, { timestamps: true });
 

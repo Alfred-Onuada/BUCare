@@ -16,7 +16,6 @@ Author URL: http://w3layouts.com
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
 
   <!-- Template CSS -->
-  <link rel="stylesheet" href="css/template_styles/bootstrap.min.css" />
   <link rel="stylesheet" href="css/template_styles/style-starter.css" />
 
   <!-- My Styles -->
@@ -30,6 +29,24 @@ Author URL: http://w3layouts.com
   <div id="toastContainer" class="toast4UpdateInfo"></div>
 
   <%- include('./partials/header') %>
+
+  <!-- Modal -->
+  <div class="modal fade" id="SelectProblemModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="SelectProblemModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="SelectProblemModalLabel">Request a Session</h5>
+        </div>
+        <div id="modal-body" class="modal-body">
+          
+        </div>
+        <div class="modal-footer">
+          <button id="SelectProblemCloseBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button id="SelectProblemBtn" type="button" class="btn btn-primary">Proceed</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
     <!--/w3l-breadcrumb-->
     <section class="w3l-about-breadcrumb">
@@ -170,6 +187,23 @@ Author URL: http://w3layouts.com
                 </div>
                 <div class="col-md-9">
                   <h4 class="therapistBioName"><%= therapist.First_Name + " " + therapist.Last_Name %></h4>
+                  <h4 class="therapistBioQualifications">Qualification: <%= therapist.Education_Level.join(", ") %></h4>
+                  <h4 class="therapistBioSpecializations">Specialization: <%= therapist.Specialization.join(", ") %></h4>
+                  <h4 class="therapistBioRating">Rating: 
+                    <% if (therapist.Average_Rating != undefined) { %> 
+                      <div <%= "style=width:"+ ((therapist.Average_Rating / 5) * 100) +"px;" %>>
+                        <div>
+                          <span class="fa fa-star"></span>
+                          <span class="fa fa-star"></span>
+                          <span class="fa fa-star"></span>
+                          <span class="fa fa-star"></span>
+                          <span class="fa fa-star"></span>
+                        </div>
+                      </div> 
+                    <% } else { %>
+                      Not available 
+                    <% } %>
+                  </h4>
                   <% for (let j = 0; j < therapist.Brief_Bio.length; j++) { %>
                     <p class="therapistBio">
                       <%= therapist.Brief_Bio[j] %>
@@ -183,8 +217,8 @@ Author URL: http://w3layouts.com
 
                       <!-- figure out a way to show awaiting response here even after refresh if the person has booked before -->
 
-
-                      <button id="joinRoomBtn-<%= therapist._id %>" onclick="sendJoinRoomRequest('<%= therapist._id %>')" class="btn btn-style btn-primary" style="margin-right: 15px;">Book now</button>
+                      <button id="joinRoomBtn-<%= therapist._id %>-fake" data-bs-toggle="modal" data-bs-target="#SelectProblemModal" data-specialization="<%= therapist.Specialization.join(", ") %>" onclick="selectProblem(this.dataset, 'joinRoomBtn-<%= therapist._id %>')" class="btn btn-style btn-primary" style="margin-right: 15px;">Book Now</button>
+                      <button id="joinRoomBtn-<%= therapist._id %>" onclick="sendJoinRoomRequest('<%= therapist._id %>')" hidden></button>
                     <% } %>
                     <a href="therapistProfile/null" class="btn btn-white btn-primary">View Profile</a>
                   </div>

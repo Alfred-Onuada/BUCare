@@ -613,12 +613,13 @@ const roomSchema = Joi.object({
   ClientId: Joi.string().required(),
   TherapistId: Joi.string().required(),
   Status: Joi.string().required(),
+  Potential_Cases: Joi.array().required(),
 });
 
 Router.post("/sendroomrequest", verify, async (req, res) => {
   console.log(`Request made to : c${req.url}`);
 
-  const { therapistId } = req.body;
+  const { therapistId, cases } = req.body;
 
   try {
     
@@ -632,7 +633,8 @@ Router.post("/sendroomrequest", verify, async (req, res) => {
       const newRoom = {
         TherapistId: tId.toString(),
         ClientId: cId.toString(),
-        Status: "awaiting approval"
+        Status: "awaiting approval",
+        Potential_Cases: cases.split(", ")
       }
 
       await roomSchema.validateAsync(newRoom);
@@ -642,7 +644,9 @@ Router.post("/sendroomrequest", verify, async (req, res) => {
       // TODO: figure out how to accept multiple requests
       if (matchingRoom && matchingRoom.Status == "declined request") {
         return res.status(400).send("Sorry, your previous request was declined you cannot send another one")
-      } else if (matchingRoom && matchingRoom.Status != "declined request") { // I'm using the != because there are other room statuses and they are all good
+      } else if (matchingRoom && matchingRoom.Status == "awaiting approval") {
+        return res.status(400).send("Sorry, you have already sent a request previously kindly wait for it to be reviewed before sending another")
+      }else if (matchingRoom && matchingRoom.Status != "declined request") { // I'm using the != because there are other room statuses and they are all good
         return res.status(400).send("Sorry, you already have an ongoing session with this therapist");
       }
       

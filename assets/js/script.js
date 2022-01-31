@@ -893,12 +893,76 @@ function registerFunc() {
   return false;
 }
 
+function selectProblem({ specialization }, btnId) {
+
+  const modalBody = document.getElementById("modal-body");
+  const modalProceedBtn = document.getElementById("SelectProblemBtn")
+  const actualBtn = document.getElementById(btnId);
+
+  modalBody.innerHTML = "";
+
+  actualBtn.dataset.actualBtn = btnId;
+
+  let content = document.createElement('div');
+  let title = document.createElement('h4');
+  title.classList.add("problemHeading");
+  title.textContent = "Kindly pick a problem from the list that you want to register with";
+
+  content.appendChild(title);
+
+  // this is not necessarily good pratice but it allows the event listener to work
+  modalBody.appendChild(content);
+
+  let noOfSpecialization = specialization.split(", ");
+  let selectedOptions = [];
+
+  for (let index = 0; index < noOfSpecialization.length; index++) {
+    const element = noOfSpecialization[index];
+
+    const option = document.createElement('div');
+    option.classList.add("problem-option-container");
+    option.dataset.name = element;
+    option.innerHTML = `
+      <div class="mock-select">
+          <div class="mock-select-background hide"></div>
+        </div>
+      <h4 class="mock-select-label">${element}</h4>
+      `
+    
+    content.appendChild(option);
+
+    option.onclick = function () {
+      if (selectedOptions.includes(option.dataset.name) == false) {
+        selectedOptions.push(option.dataset.name);
+        option.children[0].children[0].classList.remove("hide");
+      } else {
+        option.children[0].children[0].classList.add("hide");
+        selectedOptions = selectedOptions.filter(item => item != option.dataset.name);
+      }
+    }
+
+  }
+
+  modalProceedBtn.onclick = function () {
+    if (selectedOptions.length == 0) {
+      return showToastMsg("Please select at least one problem");
+    }
+
+    // update the button to contain the selected
+    actualBtn.dataset.problems = selectedOptions.join(", ");
+
+    actualBtn.click();
+  }
+}
+
 function sendJoinRoomRequest(therapistId) {
 
   const btn = document.getElementById('joinRoomBtn-'+therapistId);
+  const fakebtn = document.getElementById('joinRoomBtn-'+therapistId + "-fake");
+  const modalBtn = document.getElementById("SelectProblemBtn");
 
-  btn.textContent = "Sending Request...";
-  btn.style.opacity = .7;
+  modalBtn.textContent = "Sending Request...";
+  modalBtn.style.opacity = .7;
 
   const xhr = new XMLHttpRequest();
   xhr.open("POST", "/c/sendroomrequest", true);
@@ -907,17 +971,19 @@ function sendJoinRoomRequest(therapistId) {
     if (this.readyState === 4) {
       if (this.status === 200) {
         showToastMsg("Your request was successfully sent, we will notify you once it is accepted. Thank you");
-        btn.textContent = "Awaiting response";
+        fakebtn.textContent = "Awaiting response";
       } else {
         showToastMsg(this.responseText);
-        btn.textContent = "Book Now";
+        fakebtn.textContent = "Book Now";
       }
 
-      btn.style.opacity = 1;
+      modalBtn.style.opacity = 1;
+      modalBtn.textContent = "Proceed";
     }
   }
   xhr.send(JSON.stringify({
-    therapistId
+    therapistId,
+    cases: btn.dataset.problems
   }))
 }
 
@@ -1257,30 +1323,49 @@ function closeProfile() {
   }, 0);
 }
 
-function beginEdit(self, isDOB = false) {
+function beginEdit(self, isDOB = false, isGender = false) {
   // self holds an instance of the exact element that was clicked lol
 
   if (isDOB) {
     self.parentNode.children[0].disabled = false;
+  } else if (isGender) {
+    // the double children is because the actual element is in another div
+    self.parentNode.children[0].children[0].disabled = false;
+    self.parentNode.children[1].children[0].disabled = false;
+
+    self.parentNode.children[2].classList.add("hide");
+    self.parentNode.children[3].classList.remove("hide");
   } else {
     self.parentNode.children[0].contentEditable = "true";
   }
 
-  self.parentNode.children[1].classList.add("hide");
-  self.parentNode.children[2].classList.remove("hide");
+  if (!isGender) {
+    self.parentNode.children[1].classList.add("hide");
+    self.parentNode.children[2].classList.remove("hide");
+  }
 }
 
-function endEdit(self, val = null, isDOB = false) {
+function endEdit(self, val = null, isDOB = false, isGender = false) {
   if (typeof self === "object") {
     // self holds an instance of the exact element that was clicked lol
 
     if (isDOB) {
       self.parentNode.children[0].disabled = true;
+    } else if (isGender) {
+    // the double children is because the actual element is in another div
+      self.parentNode.children[0].children[0].disabled = true;
+      self.parentNode.children[1].children[0].disabled = true;
+
+      self.parentNode.children[2].classList.remove("hide");
+      self.parentNode.children[4].classList.add("hide");
     } else {
       self.parentNode.children[0].contentEditable = "false";
     }
-    self.parentNode.children[1].classList.remove("hide");
-    self.parentNode.children[3].classList.add("hide");
+
+    if (!isGender) {
+      self.parentNode.children[1].classList.remove("hide");
+      self.parentNode.children[3].classList.add("hide");
+    }
 
     if (val === null) {
       self.parentNode.children[0].textContent = "Not Specified";
@@ -1291,10 +1376,15 @@ function endEdit(self, val = null, isDOB = false) {
   }
 }
 
-function loading(self) {
+function loading(self, isGender) {
   if (typeof self === "object") {
     // self holds an instance of the exact element that was clicked lol
 
+    if (isGender) {
+      self.parentNode.children[3].classList.add("hide");
+      self.parentNode.children[4].classList.remove("hide")
+      return;
+    } 
     self.parentNode.children[2].classList.add("hide");
     self.parentNode.children[3].classList.remove("hide");
   } else if (typeof self === "string") {
@@ -1419,11 +1509,14 @@ function showToastMsg(msg) {
   }, 5000);
 }
 
-function updateProfile(userId, affectedField, fieldInstance, isDOB = false) {
+function updateProfile(userId, affectedField, fieldInstance, isDOB = false, isGender = false) {
 
   let value;
   if (isDOB) {
     value = fieldInstance.parentNode.children[0].value;
+  } else if (isGender) {
+    // the double children is because the actual element is in another div
+    value = fieldInstance.parentNode.children[0].children[0].checked == true ? "Male" : "Female";
   } else {
     value = fieldInstance.parentNode.children[0].textContent.trim();
   }
@@ -1437,7 +1530,7 @@ function updateProfile(userId, affectedField, fieldInstance, isDOB = false) {
     if (this.readyState === 4) {
       if (this.status == 200) {
         // passed in newValue so as to enter Not Specified into the field if the user leaves it empty
-        endEdit(fieldInstance, this.responseText, isDOB);
+        endEdit(fieldInstance, this.responseText, isDOB, isGender);
 
         showToastMsg("Update was successful");
       } else if (this.status === 500) {
@@ -1456,7 +1549,7 @@ function updateProfile(userId, affectedField, fieldInstance, isDOB = false) {
   };
 
   xhr.send(JSON.stringify(data));
-  loading(fieldInstance);
+  loading(fieldInstance, isGender);
 }
 
 function updatePhoto(userId, affectedField, fieldInstance) {
