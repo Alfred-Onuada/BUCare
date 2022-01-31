@@ -637,11 +637,13 @@ Router.post("/sendroomrequest", verify, async (req, res) => {
 
       await roomSchema.validateAsync(newRoom);
 
-      const alreadyExists = await Rooms.findOne({  TherapistId: tId.toString(), ClientId: cId.toString() })
+      const matchingRoom = await Rooms.findOne({  TherapistId: tId.toString(), ClientId: cId.toString() })
  
-      // figure out how to accept multiple requests
-      if (alreadyExists) {
+      // TODO: figure out how to accept multiple requests
+      if (matchingRoom && matchingRoom.Status == "declined request") {
         return res.status(400).send("Sorry, your previous request was declined you cannot send another one")
+      } else if (matchingRoom && matchingRoom.Status != "declined request") { // I'm using the != because there are other room statuses and they are all good
+        return res.status(400).send("Sorry, you already have an ongoing session with this therapist");
       }
       
       Rooms(newRoom).save((err, data) => {

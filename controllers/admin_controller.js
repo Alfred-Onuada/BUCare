@@ -136,6 +136,29 @@ Router.get("/summary", verify, (req, res) => {
     });
 });
 
+// this page shows the therapists ratings
+Router.get("/ratings/:therapistId", verify, (req, res) => {
+
+  console.log(`Request made to : a${req.url}`);
+
+  if (!req.user.isAdmin) {
+    return res.status(401).send();
+  }
+
+  res.render("ratings", { userStatus: req.user, pages: req.pages })
+})
+
+// this shows all the casefiles for a client
+Router.get("/casefiles/:clientId", verify, (req, res) => {
+  console.log(`Request made to : t${req.url}`);
+
+  if (!req.user.isAdmin) {
+    return res.status(401).send();
+  }
+
+  res.render("casefiles", { userStatus: req.user, pages: req.pages })
+})
+
 // route for disabling user accounts
 Router.put("/toggleDisabledStatus", verify, (req, res) => {
   console.log(`Request made to : ${req.url}`);

@@ -9,7 +9,7 @@ Author URL: http://w3layouts.com
   <!-- Required meta tags -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <base href="../" />
+  <base href="/">
   <title>Users Summary | BUCare</title>
   <link href="//fonts.googleapis.com/css?family=Nunito:400,600,700&display=swap" rel="stylesheet" />
   <link rel="shortcut icon" href="media/imgs/template/favicon.ico" type="image/x-icon" />
@@ -114,7 +114,7 @@ Author URL: http://w3layouts.com
                 <th scope="col">Average Rating</th>
                 <th scope="col">All-time Clients</th>
                 <th scope="col">Since</th>
-                <th scope="col" colspan="3"></th>
+                <th scope="col" colspan="4"></th>
               </tr>
             </thead>
             <tbody id="therapistSection">
@@ -147,6 +147,9 @@ Author URL: http://w3layouts.com
                   </td>
                   <td>
                     <%= new Date(data.createdAt).toDateString() %>
+                  </td>
+                  <td>
+                    <a href="a/ratings/<%= data._id %>"><i class="adminIcon fas fa-external-link-alt"></i></a>
                   </td>
                   <td>
                     <a href="mailto:<%= data.Email %>"><i class="adminIcon fas fa-envelope"></i></a>
@@ -203,7 +206,7 @@ Author URL: http://w3layouts.com
                 <th scope="col">Case</th>
                 <th scope="col">Assigned therapist</th>
                 <th scope="col">Since</th>
-                <th scope="col" colspan="3"></th>
+                <th scope="col" colspan="4"></th>
               </tr>
             </thead>
             <tbody id="clientSection">
@@ -245,6 +248,9 @@ Author URL: http://w3layouts.com
                   </td>
                   <td>
                     <%= new Date(data.createdAt).toDateString() %>
+                  </td>
+                  <td>
+                    <a href="a/casefiles/<%= data._id %>"><i class="adminIcon fas fa-external-link-alt"></i></a>
                   </td>
                   <td>
                     <a href="mailto:<%= data.Email %>"><i class="adminIcon fas fa-envelope"></i></a>
