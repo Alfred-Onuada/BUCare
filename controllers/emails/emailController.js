@@ -56,8 +56,6 @@ const tempUserSchema = Joi.object({
 })
 
 Router.post('/registration', async (req, res) => {
-  console.log(`Request made to : ${req.url}`);
-
   // this produces exactly six random characters
   // const token = crypto.randomBytes(3).toString('hex');
   const token = "123456";
@@ -76,7 +74,7 @@ Router.post('/registration', async (req, res) => {
     // this makes sure to delete old data from the system
     await TempUsers.findOneAndDelete({ Email: data.Email })
       .catch(err => {
-        console.log(err.message);
+        console.error(err.message);
         return res.status(500).send("Something went wrong");
       })
 
@@ -98,7 +96,7 @@ Router.post('/registration', async (req, res) => {
 
         transporter.sendMail(mailOptions, (err, info) => {
           if (err) {
-            console.log(err);
+            console.error(err.message);
             return res.status(500).send('failed');
           } 
 
@@ -108,7 +106,7 @@ Router.post('/registration', async (req, res) => {
     })
 
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
     return res.status(500).send();
   }
 
@@ -132,14 +130,14 @@ const sendPasswordHasChangedEmail = function(email, websiteUrl) {
 
       transporter.sendMail(mailOptions, (err, info) => {
         if (err) {
-          console.log(err);
+          console.error(err.message);
           reject({status: 500, message: 'Something went wrong while sending mail. try again later'});
         } 
 
         resolve({status: 200, message: "Success"});
       })
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
       reject({status: 500, message: "Something went wrong"});
     }
   })
@@ -165,7 +163,7 @@ const sendResetEmail = function(email, websiteUrl) {
       // this makes sure to delete old data from the system
       await TempUsers.findOneAndDelete({ Email: data.Email })
         .catch(err => {
-          console.log(err.message);
+          console.error(err.message);
           reject({status: 500, message: "Something went wrong"});
         })
 
@@ -187,7 +185,7 @@ const sendResetEmail = function(email, websiteUrl) {
 
           transporter.sendMail(mailOptions, (err, info) => {
             if (err) {
-              console.log(err);
+              console.error(err.message);
               reject({status: 500, message: 'Something went wrong while sending mail. try again later'});
             } 
 
@@ -197,7 +195,7 @@ const sendResetEmail = function(email, websiteUrl) {
       })
 
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
       reject({status: 500, message: "Something went wrong"});
     }
   })

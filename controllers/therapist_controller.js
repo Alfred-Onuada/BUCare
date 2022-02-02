@@ -22,8 +22,6 @@ const chatSchema = Joi.object({
 });
 
 Router.get("/rooms", verify, (req, res) => {
-  console.log(`Request made to : t${req.url}`);
-
   Io.on("connection", (socket) => {
     // Io tags the on('connection') event to itself with a callback containing the connected socket so for every new socket that connects it
     // attaches the connection event multiple time and fires again for all the old ones and the new ones. So i kill the event after it has finished below
@@ -47,7 +45,7 @@ Router.get("/rooms", verify, (req, res) => {
           }
         })
         .catch((err) => {
-          if (err) console.log(err);
+          if (err) console.error(err.message);
         });
     };
 
@@ -60,7 +58,7 @@ Router.get("/rooms", verify, (req, res) => {
 
         Chats(data).save((err, chat_docs) => {
           if (err) {
-            console.log(err);
+            console.error(err.message);
           } else {
             Rooms.findOne({ _id: data.RoomId })
               .then((room_docs) => {
@@ -75,7 +73,7 @@ Router.get("/rooms", verify, (req, res) => {
                 socket.to(data.reciever).emit("msg", data);
               })
               .catch((err) => {
-                console.log(err);
+                console.error(err.message);
               });
           }
         });
@@ -92,7 +90,7 @@ Router.get("/rooms", verify, (req, res) => {
           socket.to(data.SpokesPerson).emit("delivered");
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err.message);
         });
     });
 
@@ -122,7 +120,7 @@ Router.get("/rooms", verify, (req, res) => {
                   }
                 })
                 .catch((err) => {
-                  if (err) console.log(err);
+                  if (err) console.error(err.message);
                 });
             }
           };
@@ -130,7 +128,7 @@ Router.get("/rooms", verify, (req, res) => {
           await loop();
         })
         .catch((err) => {
-          if (err) console.log(err);
+          if (err) console.error(err.message);
         });
     });
 
@@ -160,7 +158,7 @@ Router.get("/rooms", verify, (req, res) => {
                   }
                 })
                 .catch((err) => {
-                  if (err) console.log(err);
+                  if (err) console.error(err.message);
                 });
             }
           };
@@ -168,7 +166,7 @@ Router.get("/rooms", verify, (req, res) => {
           await loop();
         })
         .catch((err) => {
-          if (err) console.log(err);
+          if (err) console.error(err.message);
         });
     });
 
@@ -178,7 +176,7 @@ Router.get("/rooms", verify, (req, res) => {
           socket.to(room_docs.ClientId).emit("disbanded_room", roomId);
         })
         .catch((err) => {
-          if (err) console.log(err);
+          if (err) console.error(err.message);
         });
     });
 
@@ -194,7 +192,7 @@ Router.get("/rooms", verify, (req, res) => {
           Io.to(therapistId).emit("enable_session_toggle", roomId);
         })
         .catch((err) => {
-          if (err) console.log(err);
+          if (err) console.error(err.message);
         });
     });
 
@@ -212,7 +210,7 @@ Router.get("/rooms", verify, (req, res) => {
         })
         .catch((err) => {
           if (err) {
-            console.log(err);
+            console.error(err.message);
           }
         });
 
@@ -227,7 +225,7 @@ Router.get("/rooms", verify, (req, res) => {
 
         Chats(newChat).save((err, docs) => {
           if (err) {
-            console.log(err);
+            console.error(err.message);
             return res.status(500).send();
           }
 
@@ -288,7 +286,7 @@ Router.get("/rooms", verify, (req, res) => {
         })
         .catch((err) => {
           if (err) {
-            console.log(err);
+            console.error(err.message);
           }
         });
 
@@ -303,7 +301,7 @@ Router.get("/rooms", verify, (req, res) => {
 
         Chats(newChat).save((err, docs) => {
           if (err) {
-            console.log(err);
+            console.error(err.message);
             return res.status(500).send();
           }
 
@@ -327,7 +325,7 @@ Router.get("/rooms", verify, (req, res) => {
           }
         })
         .catch((err) => {
-          if (err) console.log(err);
+          if (err) console.error(err.message);
         });
     };
 
@@ -353,7 +351,7 @@ Router.get("/rooms", verify, (req, res) => {
                 rooms[index].Chats = chats;
               })
               .catch((err) => {
-                if (err) console.log(err);
+                if (err) console.error(err.message);
               });
 
             await Users.findOne({ _id: room.ClientId })
@@ -365,11 +363,11 @@ Router.get("/rooms", verify, (req, res) => {
                     rooms[index].Display_Picture = client.Display_Picture;
                   })
                   .catch((err) => {
-                    if (err) console.log(err);
+                    if (err) console.error(err.message);
                   });
               })
               .catch((err) => {
-                if (err) console.log(err);
+                if (err) console.error(err.message);
               });
           }
         };
@@ -385,11 +383,11 @@ Router.get("/rooms", verify, (req, res) => {
                 req.user.details = docs;
               })
               .catch((err) => {
-                if (err) console.log(err);
+                if (err) console.error(err.message);
               });
           })
           .catch((err) => {
-            if (err) console.log(err);
+            if (err) console.error(err.message);
           });
 
         res.render("rooms", {
@@ -410,8 +408,6 @@ Router.get("/rooms", verify, (req, res) => {
 });
 
 Router.get("/clientsList", verify, async (req, res) => {
-  console.log(`Request made to : t${req.url}`);
-
   Users.findOne({ _id: req.user._id })
     .then((docs) => {
       if (docs) {
@@ -420,7 +416,6 @@ Router.get("/clientsList", verify, async (req, res) => {
         // retrieve all the clients associated with the logged in therapist
         Clients.find({ Assigned_Therapists: therapistName })
           .then((docs) => {
-            console.log(docs);
             if (docs) {
               res.render("clientsList", { userStatus: req.user, data: docs, pages: req.pages });
             } else {
@@ -429,7 +424,7 @@ Router.get("/clientsList", verify, async (req, res) => {
             }
           })
           .catch((err) => {
-            if (err) console.log(err);
+            if (err) console.error(err.message);
           });
       } else {
         // this will only run is the one above it doesn't
@@ -437,7 +432,7 @@ Router.get("/clientsList", verify, async (req, res) => {
       }
     })
     .catch((err) => {
-      if (err) console.log(err);
+      if (err) console.error(err.message);
     });
 });
 
@@ -449,8 +444,6 @@ const reportSchema = Joi.object({
 });
 
 Router.post("/report", (req, res) => {
-  console.log(`Request made to : t${req.url}`);
-
   Users.findOne({ Email: req.body.clientEmail })
     .then(async (docs) => {
       // removes the email field to replace with id
@@ -481,13 +474,11 @@ Router.post("/report", (req, res) => {
       }
     })
     .catch((err) => {
-      if (err) console.log(err);
+      if (err) console.error(err.message);
     });
 });
 
 Router.get("/getinfo/:userId", (req, res) => {
-  console.log(`Request made to : t${req.url}`);
-
   Users.findById(req.params.userId)
     .then((docs) => {
       if (docs) {
@@ -543,8 +534,6 @@ Router.post('/addCaseFile', verify, async (req, res) => {
 });
 
 Router.get('/search/:query', verify, async (req, res) => {
-  console.log(`Request made to : t${req.url}`);
-
   const { query } = req.params;
   const { _id: userId } = req.user;
 
@@ -560,7 +549,7 @@ Router.get('/search/:query', verify, async (req, res) => {
       }
     })
     .catch(err => {
-      console.log(err);
+      console.error(err.message);
       return res.status(400).send("Something isn't right");
     })
   
@@ -582,7 +571,7 @@ Router.get('/search/:query', verify, async (req, res) => {
       }
     })
     .catch(err => {
-      console.log(err);
+      console.error(err.message);
       return res.status(400).send("Something isn't right");
     })  
 
@@ -599,7 +588,7 @@ Router.get('/search/:query', verify, async (req, res) => {
           }
         })
         .catch(err => {
-          console.log(err);
+          console.error(err.message);
           return res.status(400).send("Something isn't right");
         })
       
@@ -619,7 +608,7 @@ Router.get('/search/:query', verify, async (req, res) => {
           }
         })
         .catch(err => {
-          console.log(err);
+          console.error(err.message);
           return res.status(400).send("Something isn't right");
         })
     }
@@ -638,7 +627,7 @@ Router.get('/search/:query', verify, async (req, res) => {
           }
         })
         .catch(err => {
-          console.log(err);
+          console.error(err.message);
           return res.status(400).send("Something isn't right");
         })
     }
@@ -652,8 +641,6 @@ Router.get('/search/:query', verify, async (req, res) => {
 
 // TODO: delete the room after the request is rejected the notification will recieved the message so the person knows what'sup
 Router.post("/rejectjoinroomrequest", verify, async (req, res) => {
-  console.log(`Request made to : t${req.url}`);
-
   const { roomId, optionalComment } = req.body;
 
   try {
@@ -675,15 +662,13 @@ Router.post("/rejectjoinroomrequest", verify, async (req, res) => {
       return res.status(200).send("Your operation was successful");
     }
   } catch (error) {
-    console.log(err.message);
+    console.error(err.message);
     return res.status(500).send("Something went wrong while processing your request.")
   }
 
 })
 
 Router.post("/acceptjoinroomrequest", verify, async (req, res) => {
-  console.log(`Request made to : t${req.url}`);
-
   const { roomId } = req.body;
 
   try {
@@ -738,9 +723,49 @@ Router.post("/acceptjoinroomrequest", verify, async (req, res) => {
     }
 
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
     return res.status(400).send("Something went wrong on the server, please verify that you are making a correct request");
 
+  }
+
+});
+
+Router.put("/endtreatment", verify, async (req, res) => {
+
+  if (!req.user.isTherapist) {
+    return res.status(401).send("You do not have the required clearance to perform this operation");
+  }
+
+  try {
+    const { clientId } = req.body;
+    
+    await Clients.findByIdAndUpdate(clientId, { Status: "concluded" })
+
+    // before it gets here it must have updated
+    return res.status(200).send();
+  } catch (err) {
+    console.error(err.message);
+    return res.status(500).send();
+  }
+
+});
+
+Router.put("/reopentreatment", verify, async (req, res) => {
+
+  if (!req.user.isTherapist) {
+    return res.status(401).send("You do not have the required clearance to perform this operation");
+  }
+
+  try {
+    const { clientId } = req.body;
+    
+    await Clients.findByIdAndUpdate(clientId, { Status: "active" })
+
+    // before it gets here it must have updated
+    return res.status(200).send();
+  } catch (err) {
+    console.error(err.message);
+    return res.status(500).send();
   }
 
 });

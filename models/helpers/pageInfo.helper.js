@@ -20,7 +20,7 @@ module.exports = async function (url) {
       }
     })
     .catch((err) => {
-      console.log(err.message);
+      console.error(err.message);
       throw err;
     });
 
@@ -33,7 +33,7 @@ module.exports = async function (url) {
       }
     })
     .catch((err) => {
-      console.log(err.message);
+      console.error(err.message);
       throw err;
     });
 
@@ -49,7 +49,7 @@ module.exports = async function (url) {
         }
       })
       .catch((err) => {
-        console.log(err.message);
+        console.error(err.message);
         throw err;
       });
 
@@ -74,7 +74,7 @@ module.exports = async function (url) {
       }
     })
     .catch((err) => {
-      console.log(err.message);
+      console.error(err.message);
       throw err;
     });
   }

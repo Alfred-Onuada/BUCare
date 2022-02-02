@@ -3,8 +3,6 @@ const Therapists = require("./../../models/therapist");
 const Clients = require("./../../models/client");
 
 function updateProfile(req, res) {
-  console.log(`Request made to : ${req.url}`);
-
   const data = req.body;
 
   // prevents users from updating fields that they are not suppose to
@@ -45,7 +43,7 @@ function updateProfile(req, res) {
                 res.status(200).send(data.newValue);
               })
               .catch((err) => {
-                if (err) console.log(err);
+                if (err) console.error(err.message);
 
                 res.status(500).send("Update Failed");
               });
@@ -58,28 +56,26 @@ function updateProfile(req, res) {
                 res.status(200).send(data.newValue);
               })
               .catch((err) => {
-                if (err) console.log(err);
+                if (err) console.error(err.message);
 
                 res.status(500).send("Update Failed");
               });
           }
         })
         .catch((err) => {
-          if (err) console.log(err);
+          if (err) console.error(err.message);
 
           res.status(500).send("Update Failed");
         });
     })
     .catch((err) => {
-      if (err) console.log(err);
+      if (err) console.error(err.message);
 
       res.status(500).send("Update Failed");
     });
 }
 
 async function updatePhoto(req, res) {
-  console.log(`Request made to : ${req.url}`);
-
   const file = req.files.displayPhoto;
 
   if (file.length > 1 || file.length === 0) {

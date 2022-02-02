@@ -42,13 +42,13 @@ module.exports = function (req, res, next) {
               .then((extradocs) => {
                 req.user.Name = extradocs.First_Name != null ? extradocs.First_Name : extradocs.Email;
               })
-              .catch((err) => console.log(err));
+              .catch((err) => console.error(err.message));
           } else if (req.user.isClient) {
             await Clients.findOne({ Email: docs.Email })
               .then((extradocs) => {
                 req.user.Name = extradocs.Username != null ? extradocs.Username : extradocs.Email;
               })
-              .catch((err) => console.log(err));
+              .catch((err) => console.error(err.message));
           }
 
           // retrieves the information to be displayed on the pages
@@ -63,7 +63,7 @@ module.exports = function (req, res, next) {
         }
       })
       .catch((err) => {
-        if (err) console.log(err);
+        if (err) console.error(err.message);
         res.status(500).send("Oops! page edit failed, try again later");
       });
   } catch (error) {

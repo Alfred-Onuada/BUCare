@@ -51,7 +51,7 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
 
     })
     .catch((err) => {
-        console.log(err);
+        console.error(err.message);
     })
 
 // set a template engine

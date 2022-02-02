@@ -218,7 +218,7 @@ Router.post("/checkpwd", checkUser, async (req, res) => {
       return res.status(200).send(securityQuestion);
 
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
       return res.status(500).send("Something went wrong");
     }
 
@@ -262,7 +262,7 @@ Router.post("/checksquestion", checkUser, async (req, res) => {
       }
 
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
       return res.status(500).send("Something went wrong");
     }
 
@@ -386,7 +386,7 @@ Router.post('/changepwd', checkUser, async (req, res) => {
         }
       })
       .catch(err => {
-        console.log(err.message);
+        console.error(err.message);
         return res.status(500).send("Something went wrong");
       })
   } else {
@@ -419,7 +419,7 @@ Router.post('/checkemail', async (req, res) => {
       }
     })
     .catch(err => {
-      if (err) console.log(err.message);
+      if (err) console.error(err.message);
       return res.status(500).send("Something went wrong");
     })
 

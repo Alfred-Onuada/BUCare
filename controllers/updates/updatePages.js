@@ -21,8 +21,6 @@ function updateValue(dataHead, path, newValue) {
 }
 
 function updateHeader(req, res) {
-  console.log(`Request made to : ${req.url}`);
-
   const { newValue, affectedField, index } = req.body;
   
   // This query looks for and empty object {} which matches all the documents
@@ -41,7 +39,7 @@ function updateHeader(req, res) {
             return res.status(200).send(newValue);
           })
           .catch(err => {
-            console.log(err.message);
+            console.error(err.message);
             return res.status(400).send("Oops! page edit failed, try again later");
           });
 
@@ -50,15 +48,13 @@ function updateHeader(req, res) {
       }
     })
     .catch(err => {
-      console.log(err.message);
+      console.error(err.message);
       return res.status(400).send("Oops! page edit failed, try again later");
     });
    
 }
 
 function updateFooter(req, res) {
-  console.log(`Request made to : ${req.url}`);
-
   const { newValue, affectedField, index } = req.body;
   
   // This query looks for and empty object {} which matches all the documents
@@ -77,25 +73,23 @@ function updateFooter(req, res) {
             return res.status(200).send(newValue);
           })
           .catch(err => {
-            console.log(err.message);
+            console.error(err.message);
             return res.status(400).send("Oops! page edit failed, try again later");
           });
 
       } else {
-        console.log(err.message);
+        console.error(err.message);
         return res.status(500).send("Oops! page edit failed, try again later");
       }
     })
     .catch(err => {
-      console.log(err.message);
+      console.error(err.message);
       return res.status(500).send("Oops! page edit failed, try again later");
     });
    
 }
 
 function updateIndex(req, res) {
-  console.log(`Request made to : ${req.url}`);
-
   const { newValue, pathToDBChange } = req.body;
   const path = pathToDBChange.split(','); // avoided doing it on the frontend for security reasons
   
@@ -116,24 +110,22 @@ function updateIndex(req, res) {
             return res.status(200).send(newValue);
           })
           .catch(err => {
-            console.log(err.message);
+            console.error(err.message);
             return res.status(400).send("Oops! page edit failed, try again later");
           });
 
       } else {
-        console.log(err.message);
+        console.error(err.message);
         return res.status(500).send("Oops! page edit failed, try again later");
       }
     })
     .catch(err => {
-      console.log(err.message);
+      console.error(err.message);
       return res.status(500).send("Oops! page edit failed, try again later");
     });
 }
 
 function updateContact(req, res) {
-  console.log(`Request made to : ${req.url}`);
-
   const { newValue, pathToDBChange } = req.body;
   const path = pathToDBChange.split(','); // avoided doing it on the frontend for security reasons
   
@@ -154,17 +146,17 @@ function updateContact(req, res) {
             return res.status(200).send(newValue);
           })
           .catch(err => {
-            console.log(err.message);
+            console.error(err.message);
             return res.status(400).send("Oops! page edit failed, try again later");
           });
 
       } else {
-        console.log(err.message);
+        console.error(err.message);
         return res.status(500).send("Oops! page edit failed, try again later");
       }
     })
     .catch(err => {
-      console.log(err.message);
+      console.error(err.message);
       return res.status(500).send("Oops! page edit failed, try again later");
     });
 }

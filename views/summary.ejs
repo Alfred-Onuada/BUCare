@@ -120,7 +120,7 @@ Author URL: http://w3layouts.com
             <tbody id="therapistSection">
               <% for( let index=0; index < info.therapists.length; index++ ) { %>
                 <% let data=info.therapists[index] %>
-                <tr id="therapist-<%= data._id %>">
+                <tr class="therapistRows" id="therapist-<%= data._id %>">
                   <th scope="row">
                     <%= index+1 %>
                   </th>
@@ -212,7 +212,7 @@ Author URL: http://w3layouts.com
             <tbody id="clientSection">
               <% for( let index=0; index < info.clients.length; index++ ) { %>
                 <% let data=info.clients[index] %>
-                <tr id="client-<%= data._id %>">
+                <tr class="clientRows"  id="client-<%= data._id %>">
                   <th scope="row">
                     <%= index+1 %>
                   </th>
@@ -241,10 +241,10 @@ Author URL: http://w3layouts.com
                     <%= data.Date_of_Birth %>
                   </td>
                   <td>
-                    <%= data.Case %>
+                    <%= data.Case.join(", ") %>
                   </td>
                   <td>
-                    <%= data.Assigned_Therapists ? data.Assigned_Therapists : "No therapist selected yet" %>
+                    <%= data.Assigned_Therapists ? data.Assigned_Therapists.join(", ") : "No therapist selected yet" %>
                   </td>
                   <td>
                     <%= new Date(data.createdAt).toDateString() %>

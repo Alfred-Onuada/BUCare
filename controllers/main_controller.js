@@ -19,8 +19,6 @@ const { updateHeader, updateFooter, updateIndex, updateContact } = require("./up
 // checkuser simply returns information about the logged in user, it doesn't protect the route
 module.exports = (app) => {
   app.get("/", checkUser, (req, res) => {
-    console.log(`Request made to : ${req.url}`);
-
     const errorMessage = req.session.errorMessage || null;
     req.session.errorMessage = null; // clears the message after displaying it once
 
@@ -32,26 +30,18 @@ module.exports = (app) => {
   });
 
   app.get("/index", checkUser, (req, res) => {
-    console.log(`Request made to : ${req.url}`);
-
     res.redirect(307, "/");
   });
 
   app.get("/about", checkUser, (req, res) => {
-    console.log(`Request made to : ${req.url}`);
-
     res.render("about", { userStatus: req.userInfo, pages: req.pages });
   });
 
   app.get("/contact", checkUser, (req, res) => {
-    console.log(`Request made to : ${req.url}`);
-
     res.render("contact", { userStatus: req.userInfo, pages: req.pages });
   });
 
   app.get("/rooms", verify, (req, res) => {
-    console.log(`Request made to : ${req.url}`);
-
     // checks who is logged in
     Users.findOne({ _id: req.user._id })
       .then((docs) => {
@@ -71,8 +61,6 @@ module.exports = (app) => {
   });
 
   app.get('/getMatchingTherapist/:challenge', (req, res) => {
-    console.log(`Request made to : ${req.url}`);
-
     const challenge = req.params.challenge;
 
     Therapists.find({ Specialization: challenge })
@@ -86,7 +74,7 @@ module.exports = (app) => {
       })
       .catch(err => {
         if (err) {
-          console.log(err);
+          console.error(err.message);
           res.status(500).send();
         }
       })
@@ -96,8 +84,6 @@ module.exports = (app) => {
   // This routes are here because the header file doesnt explicitly specify /a or /t in any of it urls so these routes
   //checks the user's details and appends the appropraite prefix
   app.get("/clientsList", verify, (req, res) => {
-    console.log(`Request made to : ${req.url}`);
-
     if (req.user.isTherapist) {
       return res.redirect("/t/clientsList");
     } else {
@@ -109,8 +95,6 @@ module.exports = (app) => {
   });
 
   app.get("/summary", verify, (req, res) => {
-    console.log(`Request made to : ${req.url}`);
-
     if (req.user.isAdmin) {
       return res.redirect("/a/summary");
     } else {
@@ -121,21 +105,17 @@ module.exports = (app) => {
   });
 
   app.put("/leaveRoom", verify, (req, res) => {
-    console.log(`Request made to : ${req.url}`);
-
     // this simply changes the room status to false
     Rooms.findByIdAndUpdate(req.body.RoomId, { Status: "left" })
       .then((docs) => {
         res.status(200).send("Success");
       })
       .catch((err) => {
-        if (err) console.log(err);
+        if (err) console.error(err.message);
       });
   });
 
   app.post("/loadMoreMessages", verify, async (req, res) => {
-    console.log(`Request made to : ${req.url}`);
-
     const { roomId, offset } = req.body;
 
     try {
@@ -161,15 +141,13 @@ module.exports = (app) => {
       }
 
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
       return res.status(500).send("Please refresh the browser and try again something went wrong");
     }
 
   });
 
   app.post('/checkVerificationToken', async (req, res) => {
-    console.log(`Request made to : ${req.url}`);
-
     const { token, email } = req.body;
 
     await TempUsers.findOne({ Email: email })
@@ -201,7 +179,7 @@ module.exports = (app) => {
         }
       })
       .catch(err => {
-        console.log(err.message);
+        console.error(err.message);
         return res.status(500).send("Something went wrong");
       })
 
@@ -247,9 +225,6 @@ module.exports = (app) => {
   });
 
   app.get('/video/:roomId/:type', verify, async (req, res) => {
-    
-    console.log(`Request made to : ${req.url}`);
-
     let details = {
       roomId: req.params.roomId,
       key: process.env.API_KEY_VOIP,
@@ -283,9 +258,6 @@ module.exports = (app) => {
   })
 
   app.get("/resetpwd", checkUser, (req, res) => {
-
-    console.log(`Request made to : ${req.url}`);
-
     // block the admin from visiting the regular reset password route
     if (req.userInfo?.isAdmin) {
       return res.redirect('/a/resetpwd');
@@ -295,8 +267,6 @@ module.exports = (app) => {
   })
 
   app.get("/team", checkUser, (req, res) => {
-    console.log(`Request made to : ${req.url}`);
-
     res.render("team", { userStatus: req.userInfo, pages: req.pages })
   })
 

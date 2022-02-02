@@ -1052,6 +1052,106 @@ function logout() {
   xhr.send();
 }
 
+function prepareEndTreatment(clientId) {
+  const modalBtn = document.getElementById("endTreatmentBtn");
+  const modal = document.getElementById("endTreatmentModal");
+
+  modalBtn.dataset.clientId = clientId;
+
+  $("#endTreatmentModal").modal('show');
+}
+
+function prepareReopenTreatment(clientId) {
+  const modalBtn = document.getElementById("reopenTreatmentModalLabel");
+  const modal = document.getElementById("reopenTreatmentModal");
+
+  modalBtn.dataset.clientId = clientId;
+
+  $("#reopenTreatmentModal").modal('show');
+}
+
+function endTreatment() {
+  const modalBtn = document.getElementById("endTreatmentBtn");
+  const modalProceedBtn = document.getElementById("endTreatmentBtn");
+  const boxId = 7;
+
+  const clientId = modalBtn.dataset.clientId;
+  const statusBtn = document.getElementById("statusBtn-"+ clientId);
+
+  modalProceedBtn.textContent = "Processing...";
+  modalProceedBtn.style.opacity = .7;
+
+  const xhr = new XMLHttpRequest();
+  xhr.open("PUT", getRelativeURLSection() + "endtreatment", true);
+  xhr.setRequestHeader("content-type", "application/json");
+  xhr.onreadystatechange = function () {
+    if (this.readyState === 4) {
+
+      if (this.status === 200) {
+        displaySuccessMsg("Hurray!!!🎉🎉 you were able to complete yet another beautiful job, keep it up", boxId);
+
+        let targetContainer = document.getElementById("endTreatmentbuttonContainer");
+        targetContainer.innerHTML = `
+          <button data-toggle="modal" data-target="#reopenTreatment4report" type="button" class="btn btn-primary" onclick="prepareReopenTreatment('${clientId}')">Re-Open Treatment</button>
+        `;
+        statusBtn.textContent = "Concluded";
+        
+        // i have to edit the id so the next function (reopen) will be able to find it
+        targetContainer.id = "reopenbuttonContainer"; 
+      } else {
+        displayErrorMsg("Sorry, we were unable to process your request try again later.", boxId);
+      }
+
+      modalProceedBtn.textContent = "Yes I'm";
+      modalProceedBtn.style.opacity = 1;
+    }
+  }
+  xhr.send(JSON.stringify({ clientId }))
+
+}
+
+function reopenTreatment() {
+  const modalBtn = document.getElementById("reopenTreatmentModalLabel");
+  const modalProceedBtn = document.getElementById("reopenTreatmentBtn");
+  const boxId = 8;
+
+  const clientId = modalBtn.dataset.clientId;
+  const statusBtn = document.getElementById("statusBtn-"+ clientId);
+
+  modalProceedBtn.textContent = "Processing...";
+  modalProceedBtn.style.opacity = .7;
+
+  const xhr = new XMLHttpRequest();
+  xhr.open("PUT", getRelativeURLSection() + "reopentreatment", true);
+  xhr.setRequestHeader("content-type", "application/json");
+  xhr.onreadystatechange = function () {
+    if (this.readyState === 4) {
+
+      if (this.status === 200) {
+        displaySuccessMsg("You have successfully resumed treatment with this client. Have fun😁", boxId);
+
+        let targetContainer = document.getElementById("reopenbuttonContainer");
+        targetContainer.innerHTML = `
+          <button data-toggle="modal" data-target="#endTreatment4report" type="button" class="btn btn-primary" onclick="prepareEndTreatment('${clientId}')">End Treatment</button>
+        `;
+        statusBtn.textContent = "Active";
+        
+        // i have to edit the id so the next function (endtreatment) will be able to find it
+        targetContainer.id = "endTreatmentbuttonContainer"; 
+      } else {
+        displayErrorMsg("Sorry, we were unable to process your request try again later.", boxId);
+      }
+
+      modalProceedBtn.textContent = "Yes I'm";
+      modalProceedBtn.style.opacity = 1;
+    }
+  }
+  xhr.send(JSON.stringify({ clientId }))
+  
+}
+
+// in the end treatment delete func you can delete the window.btn and simply append a new btn to the parent of the window.btn
+
 // inserts the client id to the report modal
 function reportClient(cId) {
   var clientEmail = document.querySelector("#cEmail" + cId).textContent;
@@ -1968,7 +2068,7 @@ function prepareToDeleteUser(userId, typeOfUser) {
 }
 
 function deleteUser() {
-  let btn = document.getElementById("deleteUserBtn"); // this is the button from th modal
+  let btn = document.getElementById("deleteUserBtn"); // this is the button from the modal
 
   let userId = btn.dataset.userId;
   let typeOfUser = btn.dataset.typeOfUser;
@@ -1998,6 +2098,20 @@ function deleteUser() {
       if (this.status === 200) {
         showToastMsg("The user account has been deleted successfully");
         parent.removeChild(fieldInstance);
+
+        // update the row number
+        let tableRowsInstances;
+        if (typeOfUser === "therapist") {
+          tableRowsInstances = document.querySelectorAll(".therapistRows");
+        } else {
+          tableRowsInstances = document.querySelectorAll(".clientRows");
+        }
+
+        for (let index = 0; index < tableRowsInstances.length; index++) {
+          const row = tableRowsInstances[index];
+          
+          row.children[0].textContent = index + 1;
+        }
       } else {
         showToastMsg("Sorry, that operation failed kindly try again.");
 

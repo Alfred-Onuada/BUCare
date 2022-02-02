@@ -31,9 +31,6 @@ const therapistRegisterSchema = Joi.object({
 });
 
 Router.post("/register", verify, async (req, res) => {
-
-  console.log(`Request made to : a${req.url}`);
-
   // it uses an async function because of the encrytion processes it has
   Users.findOne({ Email: req.body.Email })
     .then(async (docs) => {
@@ -90,8 +87,6 @@ Router.post("/register", verify, async (req, res) => {
 });
 
 Router.get("/summary", verify, (req, res) => {
-  console.log(`Request made to : a${req.url}`);
-
   if (!req.user.isAdmin) {
     return res.status(401).send();
   }
@@ -124,7 +119,7 @@ Router.get("/summary", verify, (req, res) => {
             }
           })
           .catch((err) => {
-            if (err) console.log(err);
+            if (err) console.error(err.message);
           });
       } else {
         // this will only run is the one above it doesn't
@@ -132,15 +127,12 @@ Router.get("/summary", verify, (req, res) => {
       }
     })
     .catch((err) => {
-      if (err) console.log(err);
+      if (err) console.error(err.message);
     });
 });
 
 // this page shows the therapists ratings
 Router.get("/ratings/:therapistId", verify, (req, res) => {
-
-  console.log(`Request made to : a${req.url}`);
-
   if (!req.user.isAdmin) {
     return res.status(401).send();
   }
@@ -150,8 +142,6 @@ Router.get("/ratings/:therapistId", verify, (req, res) => {
 
 // this shows all the casefiles for a client
 Router.get("/casefiles/:clientId", verify, (req, res) => {
-  console.log(`Request made to : t${req.url}`);
-
   if (!req.user.isAdmin) {
     return res.status(401).send();
   }
@@ -161,8 +151,6 @@ Router.get("/casefiles/:clientId", verify, (req, res) => {
 
 // route for disabling user accounts
 Router.put("/toggleDisabledStatus", verify, (req, res) => {
-  console.log(`Request made to : ${req.url}`);
-
   if (!req.user.isAdmin) {
     return res.status(401).send();
   }
@@ -184,19 +172,19 @@ Router.put("/toggleDisabledStatus", verify, (req, res) => {
                 res.status(200).send(data.newValue);
               })
               .catch((err) => {
-                if (err) console.log(err);
+                if (err) console.error(err.message);
 
                 res.status(500).send("Update Failed");
               });
           })
           .catch((err) => {
-            if (err) console.log(err);
+            if (err) console.error(err.message);
 
             res.status(500).send("Update Failed");
           });
       })
       .catch((err) => {
-        if (err) console.log(err);
+        if (err) console.error(err.message);
 
         res.status(500).send("Update Failed");
       });
@@ -220,19 +208,19 @@ Router.put("/toggleDisabledStatus", verify, (req, res) => {
                 res.status(200).send(data.newValue);
               })
               .catch((err) => {
-                if (err) console.log(err);
+                if (err) console.error(err.message);
 
                 res.status(500).send("Update Failed");
               });
           })
           .catch((err) => {
-            if (err) console.log(err);
+            if (err) console.error(err.message);
 
             res.status(500).send("Update Failed");
           });
       })
       .catch((err) => {
-        if (err) console.log(err);
+        if (err) console.error(err.message);
 
         res.status(500).send("Update Failed");
       });
@@ -242,8 +230,6 @@ Router.put("/toggleDisabledStatus", verify, (req, res) => {
 });
 
 Router.delete("/deleteUser", verify, (req, res) => {
-  console.log(`Request made to : ${req.url}`);
-
   if (!req.user.isAdmin) {
     return res.status(401).send();
   }
@@ -290,8 +276,6 @@ Router.delete("/deleteUser", verify, (req, res) => {
 });
 
 Router.get("/getreport/:userId", verify, (req, res) => {
-  console.log(`Request made to : ${req.url}`);
-
   if (!req.user.isAdmin) {
     return res.status(401).send();
   }
@@ -367,9 +351,7 @@ Router.get("/getreport/:userId", verify, (req, res) => {
     });
 });
 
-Router.get("/resetpwd", verify, (req, res) => {
-  console.log(`Request made to : ${req.url}`);
-  
+Router.get("/resetpwd", verify, (req, res) => {  
   if (req.user.isAdmin) {
     return res.render("resetAdminPassword", { userStatus: req.user, pages: req.pages });
   } else {

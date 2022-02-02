@@ -20,8 +20,6 @@ const chatSchema = Joi.object({
 });
 
 Router.get("/rooms", verify, (req, res) => {
-  console.log(`Request made to : c${req.url}`);
-
   // the nav has to appear a bit differntly on only this page so this is how i know it is on this page
   req.user.isVisitingRooms = true;
 
@@ -48,7 +46,7 @@ Router.get("/rooms", verify, (req, res) => {
           }
         })
         .catch((err) => {
-          if (err) console.log(err);
+          if (err) console.error(err.message);
         });
     };
 
@@ -61,7 +59,7 @@ Router.get("/rooms", verify, (req, res) => {
 
         Chats(data).save((err, chat_docs) => {
           if (err) {
-            console.log(err);
+            console.error(err.message);
           } else {
             Rooms.findOne({ _id: data.RoomId })
               .then((room_docs) => {
@@ -76,7 +74,7 @@ Router.get("/rooms", verify, (req, res) => {
                 socket.to(data.reciever).emit("msg", data);
               })
               .catch((err) => {
-                console.log(err);
+                console.error(err.message);
               });
           }
         });
@@ -93,7 +91,7 @@ Router.get("/rooms", verify, (req, res) => {
           socket.to(data.SpokesPerson).emit("delivered");
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err.message);
         });
     });
 
@@ -128,7 +126,7 @@ Router.get("/rooms", verify, (req, res) => {
                   }
                 })
                 .catch((err) => {
-                  if (err) console.log(err);
+                  if (err) console.error(err.message);
                 });
             }
           };
@@ -136,7 +134,7 @@ Router.get("/rooms", verify, (req, res) => {
           await loop();
         })
         .catch((err) => {
-          if (err) console.log(err);
+          if (err) console.error(err.message);
         });
     });
 
@@ -168,7 +166,7 @@ Router.get("/rooms", verify, (req, res) => {
                   }
                 })
                 .catch((err) => {
-                  if (err) console.log(err);
+                  if (err) console.error(err.message);
                 });
             }
           };
@@ -176,7 +174,7 @@ Router.get("/rooms", verify, (req, res) => {
           await loop();
         })
         .catch((err) => {
-          if (err) console.log(err);
+          if (err) console.error(err.message);
         });
     });
 
@@ -186,7 +184,7 @@ Router.get("/rooms", verify, (req, res) => {
           socket.to(room_docs.TherapistId).emit("disbanded_room", roomId);
         })
         .catch((err) => {
-          if (err) console.log(err);
+          if (err) console.error(err.message);
         });
     });
 
@@ -201,7 +199,7 @@ Router.get("/rooms", verify, (req, res) => {
           Io.to(reciever).emit("enable_session_toggle", roomId);
         })
         .catch((err) => {
-          if (err) console.log(err);
+          if (err) console.error(err.message);
         });
     });
 
@@ -243,7 +241,7 @@ Router.get("/rooms", verify, (req, res) => {
           }
         })
         .catch((err) => {
-          if (err) console.log(err);
+          if (err) console.error(err.message);
         });
     };
 
@@ -269,7 +267,7 @@ Router.get("/rooms", verify, (req, res) => {
                 rooms[index].Chats = chats;
               })
               .catch((err) => {
-                if (err) console.log(err);
+                if (err) console.error(err.message);
               });
 
             await Users.findOne({ _id: room.TherapistId })
@@ -283,11 +281,11 @@ Router.get("/rooms", verify, (req, res) => {
                       therapist.Display_Picture != undefined ? therapist.Display_Picture : "defaults/" + therapist.First_Name.toLowerCase() + ".jpg";
                   })
                   .catch((err) => {
-                    if (err) console.log(err);
+                    if (err) console.error(err.message);
                   });
               })
               .catch((err) => {
-                if (err) console.log(err);
+                if (err) console.error(err.message);
               });
           }
         };
@@ -303,11 +301,11 @@ Router.get("/rooms", verify, (req, res) => {
                 req.user.details = docs;
               })
               .catch((err) => {
-                if (err) console.log(err);
+                if (err) console.error(err.message);
               });
           })
           .catch((err) => {
-            if (err) console.log(err);
+            if (err) console.error(err.message);
           });
 
         res.render("rooms", {
@@ -328,8 +326,6 @@ Router.get("/rooms", verify, (req, res) => {
 });
 
 Router.get("/getinfo/:userId", verify, (req, res) => {
-  console.log(`Request made to : t${req.url}`);
-
   Users.findById(req.params.userId)
     .then((docs) => {
       if (docs) {
@@ -432,7 +428,7 @@ Router.put("/ratetherapist", verify, (req, res) => {
                 therapistEmail = docs.Email;
               })
               .catch((err) => {
-                console.log(err);
+                console.error(err.message);
                 return res.status(500).send();
               });
 
@@ -488,7 +484,7 @@ Router.put("/ratetherapist", verify, (req, res) => {
 
                   })
                   .catch((err) => {
-                    console.log(err);
+                    console.error(err.message);
                     return res.status(500).send();
                   });
 
@@ -496,13 +492,13 @@ Router.put("/ratetherapist", verify, (req, res) => {
                 // respective data
               })
               .catch((err) => {
-                console.log(err);
+                console.error(err.message);
                 return res.status(500).send();
               });
           });
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err.message);
         return res.status(500).send();
       });
   } else {
@@ -534,8 +530,6 @@ Router.put('/updateRating', (req, res) => {
 });
 
 Router.get('/search/:query', verify, async (req, res) => {
-  console.log(`Request made to : t${req.url}`);
-
   const { query } = req.params;
   const { _id: userId } = req.user;
 
@@ -551,7 +545,7 @@ Router.get('/search/:query', verify, async (req, res) => {
       }
     })
     .catch(err => {
-      console.log(err);
+      console.error(err.message);
       return res.status(500).send('Something went wrong');
     })
 
@@ -574,7 +568,7 @@ Router.get('/search/:query', verify, async (req, res) => {
           }
         })
         .catch(err => {
-          console.log(err);
+          console.error(err.message);
           return res.status(500).send('Something went wrong');
         })
     }
@@ -595,7 +589,7 @@ Router.get('/search/:query', verify, async (req, res) => {
           }
         })
         .catch(err => {
-          console.log(err);
+          console.error(err.message);
           return res.status(500).send('Something went wrong');
         })
     }
@@ -617,8 +611,6 @@ const roomSchema = Joi.object({
 });
 
 Router.post("/sendroomrequest", verify, async (req, res) => {
-  console.log(`Request made to : c${req.url}`);
-
   const { therapistId, cases } = req.body;
 
   try {
@@ -676,7 +668,7 @@ Router.post("/sendroomrequest", verify, async (req, res) => {
     }
 
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
     res.status(500).send("Something went wrong processing your request try again later.");
   }
 })

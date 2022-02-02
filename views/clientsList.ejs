@@ -87,18 +87,68 @@ Author URL: http://w3layouts.com
                 </div>
             </div>
         </div>
-        <script>
-            $('#myModal4report').modal('show');
-        </script>
     </div>
     <!-- //modal-popup for registrations ends-->
+
+    <!-- Modal -->
+    <div class="modal fade" id="endTreatmentModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="endTreatmentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="endTreatmentModalLabel">Confirmation Dialog</h5>
+                </div>
+                <div class="modal-body">
+
+                    <!-- Error Alert box -->
+                    <div id="errorBox7" class="alert alert-danger hide" role="alert"></div>
+
+                    <!-- Success Alert box -->
+                    <div id="successBox7" class="alert alert-success hide" role="alert"></div>
+
+                    <center id="endTreatment-modal-body">
+                        <h3 style="font-size: 20px; font-weight: normal;">Are you sure you want to end the current client's treatment?</h3>
+                    </center>
+                </div>
+                <div class="modal-footer">
+                    <button id="endTreatmentCloseBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button onclick="endTreatment()" id="endTreatmentBtn" type="button" class="btn btn-primary">Yes, I'm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="reopenTreatmentModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="reopenTreatmentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reopenTreatmentModalLabel">Confirmation Dialog</h5>
+                </div>
+                <div class="modal-body">
+
+                    <!-- Error Alert box -->
+                    <div id="errorBox8" class="alert alert-danger hide" role="alert"></div>
+
+                    <!-- Success Alert box -->
+                    <div id="successBox8" class="alert alert-success hide" role="alert"></div>
+
+                    <center id="reopenTreatment-modal-body">
+                        <h3 style="font-size: 20px; font-weight: normal;">Do you want to resume treatment on this client?</h3>
+                    </center>
+                </div>
+                <div class="modal-footer">
+                    <button id="reopenTreatmentCloseBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button onclick="reopenTreatment()" id="reopenTreatmentBtn" type="button" class="btn btn-primary">Yes, I'm</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <center>
         <h4 class="headtext hny-title mb-0">Below are your clients summary</h4>
     </center>
     <!-- for dark mode add the table-dark class -->
 
-    <div class="container">
+    <div class="container-fluid">
         <div class="table-responsive">
             <table class="table table-hover">
                 <thead>
@@ -109,7 +159,7 @@ Author URL: http://w3layouts.com
                         <th scope="col">Telephone No</th>
                         <th scope="col">Case</th>
                         <th scope="col">Since</th>
-                        <th scope="col" colspan="2">Client Status</th>
+                        <th scope="col" colspan="3">Client Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -119,23 +169,33 @@ Author URL: http://w3layouts.com
                             <td><%= data[index].Username %></td>
                             <td id="cEmail<%= index %>"><%= data[index].Email %></td>
                             <td><%= data[index].Telephone %></td>
-                            <td><%= data[index].Case %></td>
-                            <td><%= new Date(data[index].createdAt).toUTCString() %></td>
+                            <td><%= data[index].Case.join(", ") %></td>
+                            <td><%= new Date(data[index].createdAt).toDateString() %></td>
                             <!-- disabled will show disabled -->
                             <% if (data[index].Status == 'active' || data[index].Status == 'pending case') { %>
-                                <td><button type="button" class="btn btn-success">Active</button></td>
+                                <td><button id="statusBtn-<%= data[index]._id %>" type="button" class="btn btn-success">Active</button></td>
                             <% } else if (data[index].Status == 'disabled') { %>
                                 <td><button type="button" class="btn btn-info" style="background-color: grey !important; border-color: grey !important;" disabled>Disabled</button></td>
+                            <% } else if (data[index].Status == 'concluded') { %>
+                                <td><button id="statusBtn-<%= data[index]._id %>" type="button" class="btn btn-success">Concluded</button></td>
                             <% } %>
-                            
+
+                            <!-- this button is used to completely end a treatment -->
+                            <!-- TODO: remember to send a notification along as well -->
+                            <% if (data[index].Status == "active") { %>
+                                <td id="endTreatmentbuttonContainer"><button data-toggle="modal" data-target="#endTreatment4report" type="button" class="btn btn-primary" onclick="prepareEndTreatment('<%= data[index]._id %>')">End Treatment</button></td>
+                            <% } else if (data[index].Status == "concluded") { %>
+                                <td id="reopenbuttonContainer"><button data-toggle="modal" data-target="#reopenTreatment4report" type="button" class="btn btn-primary" onclick="prepareReopenTreatment('<%= data[index]._id %>')">Re-Open Treatment</button></td>
+                            <% } %>
+
                             <% if (data[index].Status == 'pending case') { %>
-                                <td><button onclick="window.btn = this" type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal4report" onclick="reportClient('<%= index %>')" disabled>pending...</button></td>
-                            <% } else if (data[index].Status === 'active') { %>
+                                <td><button onclick="window.btn = this" type="button" class="btn btn-danger" disabled>Pending...</button></td>
+                            <% } else if (data[index].Status === 'active' || data[index].Status === 'concluded') { %>
                                 <td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal4report" onclick="window.btn = this, reportClient('<%= index %>')">Report</button></td>
                             <% } else { %>
-                              <td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal4report" onclick="window.btn = this, reportClient('<%= index %>')" disabled>Report</button></td>
+                                <td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal4report" onclick="window.btn = this, reportClient('<%= index %>')" disabled>Report</button></td>
                             <% } %>
-                            </tr>
+                        </tr>
                     <% } %>
                 </tbody>
             </table>
