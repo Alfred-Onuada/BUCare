@@ -781,6 +781,10 @@ Router.put("/endtreatment", verify, async (req, res) => {
     
     await Clients.findByIdAndUpdate(clientId, { Status: "concluded" })
 
+    const { Email:cEmail } = await Clients.findById(clientId);
+    const {_id:cId } = await Users.findOne({ Email: cEmail });
+    await Rooms.findOneAndUpdate({ ClientId: cId }, { Status: "concluded" });
+
     // before it gets here it must have updated
     return res.status(200).send();
   } catch (err) {
@@ -800,6 +804,10 @@ Router.put("/reopentreatment", verify, async (req, res) => {
     const { clientId } = req.body;
     
     await Clients.findByIdAndUpdate(clientId, { Status: "active" })
+
+    const { Email:cEmail } = await Clients.findById(clientId);
+    const {_id:cId } = await Users.findOne({ Email: cEmail });
+    await Rooms.findOneAndUpdate({ ClientId: cId }, { Status: "active" })
 
     // before it gets here it must have updated
     return res.status(200).send();

@@ -113,6 +113,7 @@ Author URL: http://w3layouts.com
                 <th scope="col">Gender</th>
                 <th scope="col">Average Rating</th>
                 <th scope="col">All-time Clients</th>
+                <th scope="col">Completed Treatments</th>
                 <th scope="col">Since</th>
                 <th scope="col" colspan="4"></th>
               </tr>
@@ -144,6 +145,9 @@ Author URL: http://w3layouts.com
                   </td>
                   <td>
                     <%= data.Total_Clients_Count %>
+                  </td>
+                  <td>
+                    <%= data.Total_Concluded_Clients_Count || 0 %>
                   </td>
                   <td>
                     <%= new Date(data.createdAt).toDateString() %>

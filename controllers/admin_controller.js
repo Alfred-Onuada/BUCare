@@ -104,7 +104,7 @@ Router.get("/summary", verify, (req, res) => {
         data.clients = c_docs;
 
         Therapists.find()
-          .then((t_docs) => {
+          .then(async (t_docs) => {
             if (t_docs) {
               data.therapists = t_docs;
 
@@ -114,10 +114,24 @@ Router.get("/summary", verify, (req, res) => {
                 totalAssignedTherapist.push(...client.Assigned_Therapists);
               })
 
-              data.therapists.forEach(therapist => {
+              data.therapists.forEach(async therapist => {
                 let myCLients = totalAssignedTherapist.filter(item => item == therapist.First_Name + " " + therapist.Last_Name);
                 therapist.Total_Clients_Count = myCLients.length;
               })
+
+              async function getTotalConcludedClients(index) {
+                let therapist = data.therapists[index];
+
+                let { _id:tId } = await Users.findOne({ Email: therapist.Email });
+                let myConcludedClients = await Rooms.find({ TherapistId: tId.toString(), Status: "concluded" });
+                therapist.Total_Concluded_Clients_Count = myConcludedClients.length;
+
+                if (index < data.therapists.length-1) {
+                  getTotalConcludedClients(++index);
+                }
+              }
+
+              await getTotalConcludedClients(0);
 
               res.render("summary", { userStatus: req.user, info: data, pages: req.pages });
             } else {
