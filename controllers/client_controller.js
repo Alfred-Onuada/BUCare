@@ -20,6 +20,11 @@ const chatSchema = Joi.object({
 });
 
 Router.get("/rooms", verify, (req, res) => {
+
+  if (!req.user.isClient) {
+    return res.status(401).send("You do not have the required clearance to perform this operation");
+  }
+
   // the nav has to appear a bit differntly on only this page so this is how i know it is on this page
   req.user.isVisitingRooms = true;
 
@@ -326,6 +331,11 @@ Router.get("/rooms", verify, (req, res) => {
 });
 
 Router.get("/getinfo/:userId", verify, (req, res) => {
+
+  if (!req.user.isClient) {
+    return res.status(401).send("You do not have the required clearance to perform this operation");
+  }
+
   Users.findById(req.params.userId)
     .then((docs) => {
       if (docs) {
@@ -373,6 +383,11 @@ const ratingSchema = Joi.object({
 });
 
 Router.put("/ratetherapist", verify, (req, res) => {
+
+  if (!req.user.isClient) {
+    return res.status(401).send("You do not have the required clearance to perform this operation");
+  }
+
   if (req.user.isClient) {
     let data = req.body;
 
@@ -506,7 +521,12 @@ Router.put("/ratetherapist", verify, (req, res) => {
   }
 });
 
-Router.put('/updateRating', (req, res) => {
+Router.put('/updateRating', verify, (req, res) => {
+
+  if (!req.user.isClient) {
+    return res.status(401).send("You do not have the required clearance to perform this operation");
+  }
+  
   const id = req.body.docsId;
   const comment = req.body.comment;
 
@@ -530,6 +550,11 @@ Router.put('/updateRating', (req, res) => {
 });
 
 Router.get('/search/:query', verify, async (req, res) => {
+
+  if (!req.user.isClient) {
+    return res.status(401).send("You do not have the required clearance to perform this operation");
+  }
+
   const { query } = req.params;
   const { _id: userId } = req.user;
 
@@ -611,6 +636,11 @@ const roomSchema = Joi.object({
 });
 
 Router.post("/sendroomrequest", verify, async (req, res) => {
+
+  if (!req.user.isClient) {
+    return res.status(401).send("You do not have the required clearance to perform this operation");
+  }
+
   const { therapistId, cases } = req.body;
 
   try {

@@ -22,6 +22,11 @@ const chatSchema = Joi.object({
 });
 
 Router.get("/rooms", verify, (req, res) => {
+
+  if (!req.user.isTherapist) {
+    return res.status(401).send("You do not have the required clearance to perform this operation");
+  }
+
   Io.on("connection", (socket) => {
     // Io tags the on('connection') event to itself with a callback containing the connected socket so for every new socket that connects it
     // attaches the connection event multiple time and fires again for all the old ones and the new ones. So i kill the event after it has finished below
@@ -408,6 +413,11 @@ Router.get("/rooms", verify, (req, res) => {
 });
 
 Router.get("/clientsList", verify, async (req, res) => {
+
+  if (!req.user.isTherapist) {
+    return res.status(401).send("You do not have the required clearance to perform this operation");
+  }
+
   Users.findOne({ _id: req.user._id })
     .then((docs) => {
       if (docs) {
@@ -443,7 +453,12 @@ const reportSchema = Joi.object({
   Case_Description: Joi.string().required(),
 });
 
-Router.post("/report", (req, res) => {
+Router.post("/report", verify, (req, res) => {
+
+  if (!req.user.isTherapist) {
+    return res.status(401).send("You do not have the required clearance to perform this operation");
+  }
+
   Users.findOne({ Email: req.body.clientEmail })
     .then(async (docs) => {
       // removes the email field to replace with id
@@ -478,7 +493,12 @@ Router.post("/report", (req, res) => {
     });
 });
 
-Router.get("/getinfo/:userId", (req, res) => {
+Router.get("/getinfo/:userId", verify, (req, res) => {
+
+  if (!req.user.isTherapist) {
+    return res.status(401).send("You do not have the required clearance to perform this operation");
+  }
+
   Users.findById(req.params.userId)
     .then((docs) => {
       if (docs) {
@@ -517,6 +537,11 @@ const caseFileSchema = Joi.object({
 });
 
 Router.post('/addCaseFile', verify, async (req, res) => {
+
+  if (!req.user.isTherapist) {
+    return res.status(401).send("You do not have the required clearance to perform this operation");
+  }
+
   let data = req.body;
 
   try {
@@ -534,6 +559,11 @@ Router.post('/addCaseFile', verify, async (req, res) => {
 });
 
 Router.get('/search/:query', verify, async (req, res) => {
+
+  if (!req.user.isTherapist) {
+    return res.status(401).send("You do not have the required clearance to perform this operation");
+  }
+
   const { query } = req.params;
   const { _id: userId } = req.user;
 
@@ -641,6 +671,11 @@ Router.get('/search/:query', verify, async (req, res) => {
 
 // TODO: delete the room after the request is rejected the notification will recieved the message so the person knows what'sup
 Router.post("/rejectjoinroomrequest", verify, async (req, res) => {
+
+  if (!req.user.isTherapist) {
+    return res.status(401).send("You do not have the required clearance to perform this operation");
+  }
+
   const { roomId, optionalComment } = req.body;
 
   try {
@@ -669,6 +704,11 @@ Router.post("/rejectjoinroomrequest", verify, async (req, res) => {
 })
 
 Router.post("/acceptjoinroomrequest", verify, async (req, res) => {
+
+  if (!req.user.isTherapist) {
+    return res.status(401).send("You do not have the required clearance to perform this operation");
+  }
+
   const { roomId } = req.body;
 
   try {

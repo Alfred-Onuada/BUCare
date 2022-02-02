@@ -31,6 +31,11 @@ const therapistRegisterSchema = Joi.object({
 });
 
 Router.post("/register", verify, async (req, res) => {
+
+  if (!req.user.isAdmin) {
+    return res.status(401).send("You do not have the required clearance to perform this operation");
+  }
+
   // it uses an async function because of the encrytion processes it has
   Users.findOne({ Email: req.body.Email })
     .then(async (docs) => {
@@ -87,8 +92,9 @@ Router.post("/register", verify, async (req, res) => {
 });
 
 Router.get("/summary", verify, (req, res) => {
+
   if (!req.user.isAdmin) {
-    return res.status(401).send();
+    return res.status(401).send("You do not have the required clearance to perform this operation");
   }
 
   let data = {};
@@ -133,8 +139,9 @@ Router.get("/summary", verify, (req, res) => {
 
 // this page shows the therapists ratings
 Router.get("/ratings/:therapistId", verify, (req, res) => {
+
   if (!req.user.isAdmin) {
-    return res.status(401).send();
+    return res.status(401).send("You do not have the required clearance to perform this operation");
   }
 
   res.render("ratings", { userStatus: req.user, pages: req.pages })
@@ -142,8 +149,9 @@ Router.get("/ratings/:therapistId", verify, (req, res) => {
 
 // this shows all the casefiles for a client
 Router.get("/casefiles/:clientId", verify, (req, res) => {
+
   if (!req.user.isAdmin) {
-    return res.status(401).send();
+    return res.status(401).send("You do not have the required clearance to perform this operation");
   }
 
   res.render("casefiles", { userStatus: req.user, pages: req.pages })
@@ -151,10 +159,11 @@ Router.get("/casefiles/:clientId", verify, (req, res) => {
 
 // route for disabling user accounts
 Router.put("/toggleDisabledStatus", verify, (req, res) => {
-  if (!req.user.isAdmin) {
-    return res.status(401).send();
-  }
 
+  if (!req.user.isAdmin) {
+    return res.status(401).send("You do not have the required clearance to perform this operation");
+  }
+  
   const data = req.body;
 
   if (data.user === "therapist") {
@@ -230,8 +239,9 @@ Router.put("/toggleDisabledStatus", verify, (req, res) => {
 });
 
 Router.delete("/deleteUser", verify, (req, res) => {
+
   if (!req.user.isAdmin) {
-    return res.status(401).send();
+    return res.status(401).send("You do not have the required clearance to perform this operation");
   }
 
   const data = req.body;
@@ -276,8 +286,9 @@ Router.delete("/deleteUser", verify, (req, res) => {
 });
 
 Router.get("/getreport/:userId", verify, (req, res) => {
+
   if (!req.user.isAdmin) {
-    return res.status(401).send();
+    return res.status(401).send("You do not have the required clearance to perform this operation");
   }
 
   let reportData = {};
@@ -352,11 +363,12 @@ Router.get("/getreport/:userId", verify, (req, res) => {
 });
 
 Router.get("/resetpwd", verify, (req, res) => {  
-  if (req.user.isAdmin) {
-    return res.render("resetAdminPassword", { userStatus: req.user, pages: req.pages });
-  } else {
-    return res.status(401).send("Unauthorized request");
+
+  if (!req.user.isAdmin) {
+    return res.status(401).send("You do not have the required clearance to perform this operation");
   }
+
+  return res.render("resetAdminPassword", { userStatus: req.user, pages: req.pages });
 })
 
 // This makes sure all normal routes called from the client route c/ will redirect backwards
@@ -387,69 +399,69 @@ Router.get("/users/logout", (req, res) => {
 // registering an admin
 
 // creating a register schema with Hapi Joi
-const adminRegisterSchema = Joi.object({
-    First_Name: Joi.string().min(2).required(),
-    Last_Name: Joi.string().min(2).required(),
-    Email: Joi.string().min(6).required().email(),
-    Telephone: Joi.number().min(6).required(),
-    Sex: Joi.string().required(),
-    Password: Joi.string().min(8).required(),
-    ConfirmPassword: Joi.string().min(8),
-    Security_Question: Joi.string().required(),
-    Answer: Joi.string().required(),
-});
+// const adminRegisterSchema = Joi.object({
+//     First_Name: Joi.string().min(2).required(),
+//     Last_Name: Joi.string().min(2).required(),
+//     Email: Joi.string().min(6).required().email(),
+//     Telephone: Joi.number().min(6).required(),
+//     Sex: Joi.string().required(),
+//     Password: Joi.string().min(8).required(),
+//     ConfirmPassword: Joi.string().min(8),
+//     Security_Question: Joi.string().required(),
+//     Answer: Joi.string().required(),
+// });
 
-Router.post("/register-admin", async (req, res) => {
-  // it uses an async function because of the encrytion processes it has
-  Users.findOne({ Email: req.body.Email })
-    .then(async (docs) => {
-      if (docs != null) {
-        return res.status(400).send("Email already exists"); // register users using AJAX request so you can get the error message in JS without overwriting the page
-      }
+// Router.post("/register-admin", async (req, res) => {
+//   // it uses an async function because of the encrytion processes it has
+//   Users.findOne({ Email: req.body.Email })
+//     .then(async (docs) => {
+//       if (docs != null) {
+//         return res.status(400).send("Email already exists"); // register users using AJAX request so you can get the error message in JS without overwriting the page
+//       }
 
-      // this is a try catch because this process might fail
-      try {
-        // Now verify user input using hapi/joi
-        await adminRegisterSchema.validateAsync(req.body);
+//       // this is a try catch because this process might fail
+//       try {
+//         // Now verify user input using hapi/joi
+//         await adminRegisterSchema.validateAsync(req.body);
 
-        // hashing the password
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(req.body.Password, salt);
+//         // hashing the password
+//         const salt = await bcrypt.genSalt(10);
+//         const hashedPassword = await bcrypt.hash(req.body.Password, salt);
 
-        // change the password that is stored in db
-        req.body.Password = hashedPassword;
+//         // change the password that is stored in db
+//         req.body.Password = hashedPassword;
 
-        // this variable holds only the fields that are available on the users model
-        var unwanted = ["Security_Question", "Answer", "ConfirmPassword"];
-        var userData = Object.keys(req.body)
-          .filter((key) => unwanted.includes(key) == false)
-          .reduce((obj, key) => {
-            obj[key] = req.body[key];
-            return obj;
-          }, {});
+//         // this variable holds only the fields that are available on the users model
+//         var unwanted = ["Security_Question", "Answer", "ConfirmPassword"];
+//         var userData = Object.keys(req.body)
+//           .filter((key) => unwanted.includes(key) == false)
+//           .reduce((obj, key) => {
+//             obj[key] = req.body[key];
+//             return obj;
+//           }, {});
 
-        // make user a client
-        userData["isAdmin"] = true;
+//         // make user a client
+//         userData["isAdmin"] = true;
 
-        var newUser = Users(userData).save((err, data) => {
-          if (err) throw err;
+//         var newUser = Users(userData).save((err, data) => {
+//           if (err) throw err;
 
-          // remove the confirmPassword field
-          delete req.body.ConfirmPassword;
+//           // remove the confirmPassword field
+//           delete req.body.ConfirmPassword;
 
-          var newTherapist = Admin(req.body).save((err, data) => {
-            if (err) throw err;
+//           var newTherapist = Admin(req.body).save((err, data) => {
+//             if (err) throw err;
 
-            return res.status(200).send("Admin has been added successfully");
-          });
-        });
-      } catch (error) {
-        return res.status(400).send(error.details[0].message); // AJAX intepretes this and display appropiate error messages
-      }
-    })
-    .catch((err) => {
-      if (err) throw err;
-    });
-});
+//             return res.status(200).send("Admin has been added successfully");
+//           });
+//         });
+//       } catch (error) {
+//         return res.status(400).send(error.details[0].message); // AJAX intepretes this and display appropiate error messages
+//       }
+//     })
+//     .catch((err) => {
+//       if (err) throw err;
+//     });
+// });
 
 module.exports = Router;
