@@ -1201,3 +1201,38 @@
     font-weight: normal;
     margin: 0px 0px 10px 0px;
 }
+
+.caseFileHeading{
+    text-align: center;
+    font-weight: 400;
+    margin: 15px 0px;
+    font-size: 20px;
+}
+
+.report-row{
+    min-height: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0px 10px;
+}
+
+.report-row:hover{
+    background-color: lightgray;
+}
+
+.report-file-name{
+    margin: 5px 0px;
+    font-size: 18px;
+    font-weight: normal;
+}
+
+.report-row > span{
+    color: #004282;
+}
+
+.case-file-modal-body > h4 {
+    font-size: 18px;
+    font-weight: normal;
+    margin: 10px 0px;
+}

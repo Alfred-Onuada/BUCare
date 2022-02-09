@@ -57,8 +57,7 @@ const tempUserSchema = Joi.object({
 
 Router.post('/registration', async (req, res) => {
   // this produces exactly six random characters
-  // const token = crypto.randomBytes(3).toString('hex');
-  const token = "123456";
+  const token = crypto.randomBytes(3).toString('hex');
   const expirationDate = new Date().getTime() + 600000; // this adds a ten minute expiration
 
   const data = {

@@ -1,21 +1,23 @@
 const Users = require("./../models/user");
 const Therapists = require("./../models/therapist");
 const Clients = require("./../models/client");
-const Admin = require("./../models/admin");
+const Admin = require("./../models/admin"); // remains unused until you uncomment the last code segment
 const Rooms = require("./../models/room");
 const Reports = require("./../models/report");
+const CaseFiles = require("./../models/caseFile");
 
 // Initialize Packages
 const Router = require("express").Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const crypto = require("crypto");
+const crypto = require("crypto"); // remains unused until you uncomment the last code segment
 
 // hapi jo helps carry out input validation
 const Joi = require("@hapi/joi");
 
 // verification route
 const verify = require("./auths/verify");
+const req = require("express/lib/request");
 
 // creating a register schema with Hapi Joi
 const therapistRegisterSchema = Joi.object({
@@ -162,13 +164,54 @@ Router.get("/ratings/:therapistId", verify, (req, res) => {
 })
 
 // this shows all the casefiles for a client
-Router.get("/casefiles/:clientId", verify, (req, res) => {
+Router.get("/casefiles/:clientId", verify, async (req, res) => {
 
   if (!req.user.isAdmin) {
     return res.status(401).send("You do not have the required clearance to perform this operation");
   }
 
-  res.render("casefiles", { userStatus: req.user, pages: req.pages })
+  try {
+    const userData = await Clients.findById(req.params.clientId);
+
+    if (!userData) {
+      return res.status(400).send("Please retry the previous action, thank you");
+    } 
+
+    const caseFilesInfo = [];
+
+    if (userData.Assigned_Therapists.length == 0) {
+      return res.render("casefiles", { userStatus: req.user, pages: req.pages, info: { name: userData.Username, Sex: userData.Sex, caseFilesInfo } })
+    }
+
+    // sorry for the IIFE lol it's just neat
+    await (async function getCaseFiles(index = 0) {
+      const therapistName = userData.Assigned_Therapists[index].split(" ");
+
+      const { _id:tId, Sex:tGender } = await Users.findOne({ First_Name: therapistName[0], Last_Name: therapistName[1] })
+      const { _id:cId } = await Users.findOne({ Email: userData.Email })
+
+      const { _id:roomId } = await Rooms.findOne({ ClientId: cId, TherapistId: tId })
+
+      const caseFilesForRoom = await CaseFiles.find({ RoomId: roomId }).sort('-1')
+
+      caseFilesInfo.push({
+        therapistName: therapistName.join(" "),
+        therapistGender: tGender,
+        reports: caseFilesForRoom
+      })
+
+      if (index < userData.Assigned_Therapists.length - 1) {
+        await getCaseFiles(++index);
+      }
+    })()
+
+    return res.render("casefiles", { userStatus: req.user, pages: req.pages, info: { name: userData.Username, Sex: userData.Sex, caseFilesInfo } })
+
+  } catch (err) {
+    console.error(err.message);
+    return res.status(500).send("Something went wrong on our side.")
+  }
+
 })
 
 // route for disabling user accounts

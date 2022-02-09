@@ -21,7 +21,7 @@ const caseFileSchema = mongoose.Schema({
     type: String,
     required: true
   }
-}, { timeStamps: true });
+}, { timestamps: true });
 
 const caseFile = mongoose.model('casefile', caseFileSchema);
 

@@ -16,10 +16,13 @@ Author URL: http://w3layouts.com
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 
 	<!-- Template CSS -->
+  <link rel="stylesheet" href="css/template_styles/bootstrap.min.css" />
 	<link rel="stylesheet" href="css/template_styles/style-starter.css">
 
 	<!-- My Styles -->
 	<link rel="stylesheet" href="css/style.css">
+  <script src="https://kit.fontawesome.com/dc8ee980c4.js" crossorigin="anonymous"></script>
+
 </head>
 
 <body>
@@ -27,6 +30,69 @@ Author URL: http://w3layouts.com
 	<div id="toastContainer" class="toast4UpdateInfo"></div>
 
 	<%- include('./partials/header') %>
+
+	<div class="modal fade" id="caseFileModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="caseFileModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="caseFileModalLabel">
+            Below is the provided report
+          </h5>
+        </div>
+        <div class="modal-body">
+					<div class="case-file-modal-body">
+						<h4 id="reportObservation"></h4>
+						<h4 id="reportInstruments"></h4>
+						<h4 id="reportRecommendation"></h4>
+						<h4 id="reportConclusion"></h4>
+					</div>
+        </div>
+        <div class="modal-footer">
+          <button id="caseFileCloseBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+	<div class="container-fluid">
+		<% if (info.caseFilesInfo.length) { %> 
+			<h4 class="caseFileHeading">Below is case files associated with <%= info.name %></h4>
+		<% } else { %>
+			<h4 class="caseFileHeading">We couldn't generate any report for <%= info.name %> as <%= info.Sex == "Male" ? "he" : "she" %> may not be in therapy currently or the therapist hasn't submitted any. <br> Check back later</h4>
+		<% } %> 
+
+		<% for (let index = 0; index < info.caseFilesInfo.length; index++) { %>
+		<button style="background: none !important;" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<%= index %>"
+			aria-expanded="false" aria-controls="collapse<%= index %>">
+			<%= info.name %>'s Therapy with <%= info.caseFilesInfo[index].therapistGender == "Male" ? "Mr." : "Mrs." %> <%= info.caseFilesInfo[index].therapistName %> (<%= info.caseFilesInfo[index].reports.length %>)
+		</button>
+		<hr style="margin: 0;">
+		<div id="collapse<%= index %>" class="collapse">
+			<div class="card card-body" style="border: 0;">
+				<% for (let i = 0; i < info.caseFilesInfo[index].reports.length; i++) { %>
+					<% let currentFile = info.caseFilesInfo[index].reports[i] %>
+					<div class="report-row">
+						<div style="display: flex;">
+							<h4 class="report-file-name" style="margin-right: 15px;"><b><%= i+1 %></b></h4>
+							<h4 class="report-file-name" onclick="triggerModalForCaseFile.call(this)" 
+								data-observation="<%= currentFile.Observation %>"
+								data-Instruments="<%= currentFile.Instruments %>"
+								data-Recommendation="<%= currentFile.Recommendation %>"
+								data-Conclusion="<%= currentFile.Conclusion %>">
+								Report from <%= new Date(currentFile.createdAt).toUTCString() %>
+							</h4>
+						</div>
+						<span title="Download this report" class="fas fa-download"></span>
+					</div>
+					<hr style="margin: 0;">
+				<% } %>
+			</div>
+		</div>
+		<% } %>
+	</div>
 
 
 	<%- include('./partials/footer') %>
