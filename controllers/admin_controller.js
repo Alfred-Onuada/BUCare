@@ -19,6 +19,10 @@ const Joi = require("@hapi/joi");
 const verify = require("./auths/verify");
 const req = require("express/lib/request");
 
+
+// functions for emails
+const { sendReportAsEmail } = require("./emails/emailController");
+
 // creating a register schema with Hapi Joi
 const therapistRegisterSchema = Joi.object({
   First_Name: Joi.string().min(2).required(),
@@ -187,7 +191,7 @@ Router.get("/casefiles/:clientId", verify, async (req, res) => {
     await (async function getCaseFiles(index = 0) {
       const therapistName = userData.Assigned_Therapists[index].split(" ");
 
-      const { _id:tId, Sex:tGender } = await Users.findOne({ First_Name: therapistName[0], Last_Name: therapistName[1] })
+      const { _id:tId, Sex:tGender } = await Users.findOne({ First_Name: therapistName[0], Last_Name: therapistName.slice(1).join(" ") })
       const { _id:cId } = await Users.findOne({ Email: userData.Email })
 
       const { _id:roomId } = await Rooms.findOne({ ClientId: cId, TherapistId: tId })
@@ -197,6 +201,7 @@ Router.get("/casefiles/:clientId", verify, async (req, res) => {
       caseFilesInfo.push({
         therapistName: therapistName.join(" "),
         therapistGender: tGender,
+        roomId: roomId,
         reports: caseFilesForRoom
       })
 
@@ -212,6 +217,68 @@ Router.get("/casefiles/:clientId", verify, async (req, res) => {
     return res.status(500).send("Something went wrong on our side.")
   }
 
+})
+
+// this route generates reports and sends them as email to the user
+Router.post("/sendreportasemail", verify, async (req, res) => {
+
+  if (!req.user.isAdmin) {
+    return res.status(401).send("You do not have the required clearance to perform this operation");
+  }
+
+  try {
+
+    const pdfData = {};
+    // sets the admin's name
+    pdfData.adminName = req.user.Name;
+
+    const { roomId, caseId } = req.body;
+    const { TherapistId, ClientId } = await Rooms.findById(roomId);
+
+    if (TherapistId && ClientId) {
+
+      const tDocs = await Users.findById(TherapistId);
+      // there is no username field directly in the users model
+      const { Email:cEmail } = await Users.findById(ClientId);
+      const cDocs = await Clients.findOne({ Email: cEmail });
+
+      pdfData.therapistName = tDocs.First_Name + " " + tDocs.Last_Name;
+      pdfData.clientName = cDocs.Username;
+
+      const reportData = await CaseFiles.findById(caseId);
+
+      pdfData.table = {
+        title: "",
+        headers: ["Observation", "Instruments", "Recommendation", "Conclusion"],
+        rows: [
+          [reportData.Observation, reportData.Instruments, reportData.Recommendation, reportData.Conclusion]
+        ]
+      }
+
+      const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      const d = new Date(reportData.createdAt);
+
+      let year = d.getFullYear();
+      let month = months[d.getMonth()];
+      let day = days[d.getDay()];
+
+      pdfData.dateFormatted = `${day + ", " + d.getDate() + " " + month + " " + year}`;
+
+      const fileName = `${pdfData.clientName}ReportFrom${pdfData.dateFormatted.replace(/,*\s/g, "")}.pdf`;
+      const response = await sendReportAsEmail(pdfData, fileName);
+
+      res.status(200).send(response);
+
+    } else {
+      res.status(400).send("Something went wrong please refresh the page and try again.");
+    }
+
+  } catch (error) {
+    res.status(500).send("Something went wrong while processing email")
+    console.error(error.message);
+  }
+  
 })
 
 // route for disabling user accounts

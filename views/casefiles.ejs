@@ -85,10 +85,13 @@ Author URL: http://w3layouts.com
 								Report from <%= new Date(currentFile.createdAt).toUTCString() %>
 							</h4>
 						</div>
-						<span title="Download this report" class="fas fa-download"></span>
+						<span title="Download this report" class="fas fa-download" onclick="sendreport('<%= info.caseFilesInfo[index].roomId %>', '<%= currentFile._id %>')"></span>
 					</div>
 					<hr style="margin: 0;">
 				<% } %>
+				<div class="download-all">
+					<span class="fas fa-download download-icon"></span> Download all reports made by <%= info.caseFilesInfo[index].therapistName %>
+				</div>
 			</div>
 		</div>
 		<% } %>

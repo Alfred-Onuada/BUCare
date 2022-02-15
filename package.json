@@ -27,6 +27,7 @@
     "mongoose": "^6.0.8",
     "nodemailer": "^6.7.1",
     "nodemailer-express-handlebars": "^4.0.0",
+    "pdfkit-table": "^0.1.85",
     "socket.io": "^4.1.2"
   },
   "devDependencies": {

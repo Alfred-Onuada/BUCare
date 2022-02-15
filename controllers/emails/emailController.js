@@ -18,6 +18,10 @@ const nodemailer = require('nodemailer');
 const hbs = require('nodemailer-express-handlebars');
 const path = require('path');
 
+// package for generating pdf
+const PDFDocument = require('pdfkit-table');
+const fs = require('fs')
+
 // initialize nodemailer
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
@@ -200,8 +204,91 @@ const sendResetEmail = function(email, websiteUrl) {
   })
 }
 
+
+function generateHeader(document) {
+  document.font("Helvetica")
+    .fontSize(15)
+		.text('BUCare, Babcock University')
+		.fontSize(10)
+    .moveUp(2)
+		.text('121103, Ilishan-Remo', { align: 'right' })
+		.text('Ogun State, Nigeria', { align: 'right' })
+    .text("www.bucare.herokuapp.com", {
+      link: "www.bucare.herokuapp.com",
+      align: 'right'
+    })
+    .moveDown();
+}
+
+function generateFooter(document) {
+  document.font("Helvetica")
+    .fontSize(10)
+    .text(`Copyright © ${new Date(Date.now()).getFullYear()} Babcock University`, { align: 'center', width: 500 });
+}
+
+function generateIntroText(document, data) {
+
+  const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const d = new Date();
+
+  let year = d.getFullYear();
+  let month = months[d.getMonth()];
+  let day = days[d.getDay()];
+
+  document.font("Helvetica")
+    .fontSize(12) 
+    .text(`${day + ", " + d.getDate() + " " + month + " " + year}`)
+    .moveDown()
+    // should contain the name of the admin that generated it
+    .text(`Hello ${data.adminName},`)
+    .moveDown()
+    .text(
+      `
+      This document provides information about ${data.clientName} as gotten from ${data.therapistName} on ${data.dateFormatted}.
+      The contents of this document was automatically generated upon your request and should not be modified manually, Thank you.`
+    )
+    .moveDown()
+}
+
+async function generateReportTable(document, data) {
+  await document.table(data.table, {
+    prepareHeader: () => document.font("Helvetica-Bold").fontSize(12),
+    prepareRow: (row, indexColumn, indexRow, rectRow, rectCell) => {
+      document.font("Helvetica").fontSize(12)
+    }
+  })
+}
+
+const sendReportAsEmail = function (data, fileName) {
+  return new Promise(async (resolve, reject) => {
+
+    try {
+      let doc = new PDFDocument({ margin: 50 });
+
+      generateHeader(doc);
+      generateIntroText(doc, data);
+      await generateReportTable(doc, data);
+      generateFooter(doc);
+
+      doc.end();
+      doc.pipe(fs.createWriteStream(__dirname + "/" + fileName));
+      
+      // if the code gets here it was succesful
+
+      // remeber to send the file to the email oo
+      return resolve(fileName);
+
+    } catch (err) {
+      console.error(err.message);
+      return reject(err.message);
+    }  
+  })
+}
+
 module.exports = { 
   Router, 
   sendResetEmail,
-  sendPasswordHasChangedEmail
+  sendPasswordHasChangedEmail,
+  sendReportAsEmail
 };

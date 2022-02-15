@@ -1231,7 +1231,17 @@
     color: #004282;
 }
 
-.case-file-modal-body > h4 {
+.download-icon{
+    color: #004282;
+}
+
+.download-all{
+    margin-top: 10px;
+    text-align: right;
+    padding-right: 10px;
+}
+
+.case-file-modal-body > h4{
     font-size: 18px;
     font-weight: normal;
     margin: 10px 0px;
