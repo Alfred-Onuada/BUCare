@@ -552,7 +552,7 @@
     flex-direction: column;
     position: absolute;
     padding-right: 20px;
-    z-index: 999;
+    z-index: 1051;
 }
 
 .myToast{

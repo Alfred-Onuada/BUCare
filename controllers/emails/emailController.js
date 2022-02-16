@@ -24,15 +24,13 @@ const fs = require('fs')
 
 // initialize nodemailer
 const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
+  name: 'bucare.site',
+  host: 'mail.bucare.site',
+  port: 465,
   secure: true,
   auth: {
-    type: 'OAuth2',
     user: process.env.EMAIL,
-    clientId: process.env.EMAIL_CLIENT_ID,
-    clientSecret: process.env.EMAIL_CLIENT_SECRET,
-    refreshToken: process.env.EMAIL_REFRESH_TOKEN,
-    accessToken: process.env.EMAIL_ACCESS_TOKEN,
+    pass: process.env.EMAIL_PASSWORD
   },
   tls: {
     rejectUnauthorized: false
@@ -87,7 +85,7 @@ Router.post('/registration', async (req, res) => {
       } else {
         // setting up the options for this email
         let mailOptions = {
-          from: `Alfred at BUCare`,
+          from: `noreply@bucare.site`,
           to: req.body.Email,
           subject: 'Confirm Email Address',
           template: 'registration',
@@ -122,7 +120,7 @@ const sendPasswordHasChangedEmail = function(email, websiteUrl) {
     try {
       // setting up the options for this email
       let mailOptions = {
-        from: `Alfred at BUCare`,
+        from: `noreply@bucare.site`,
         to: email,
         subject: 'Password Change Alert',
         template: 'passwordHasChanged',
@@ -176,7 +174,7 @@ const sendResetEmail = function(email, websiteUrl) {
         } else {
           // setting up the options for this email
           let mailOptions = {
-            from: `Alfred at BUCare`,
+            from: `noreply@bucare.site`,
             to: email,
             subject: 'Reset Password Request',
             template: 'resetPassword',
