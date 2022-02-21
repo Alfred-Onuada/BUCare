@@ -232,7 +232,10 @@ Router.post("/sendreportasemail", verify, async (req, res) => {
     // sets the admin's name
     pdfData.adminName = req.user.Name;
 
-    const { roomId, caseId } = req.body;
+    // reciever's email has to be the admin's email
+    const { Email:recieverEmail } = await Users.findById(req.user._id);
+
+    const { roomId, caseId, websiteUrl, generationType } = req.body;
     const { TherapistId, ClientId } = await Rooms.findById(roomId);
 
     if (TherapistId && ClientId) {
@@ -245,30 +248,65 @@ Router.post("/sendreportasemail", verify, async (req, res) => {
       pdfData.therapistName = tDocs.First_Name + " " + tDocs.Last_Name;
       pdfData.clientName = cDocs.Username;
 
-      const reportData = await CaseFiles.findById(caseId);
-
-      pdfData.table = {
-        title: "",
-        headers: ["Observation", "Instruments", "Recommendation", "Conclusion"],
-        rows: [
-          [reportData.Observation, reportData.Instruments, reportData.Recommendation, reportData.Conclusion]
-        ]
-      }
-
       const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
       const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-      const d = new Date(reportData.createdAt);
 
-      let year = d.getFullYear();
-      let month = months[d.getMonth()];
-      let day = days[d.getDay()];
+      let reportData = null;
+      // maybe later you will be able to specify a custom range
+      if (generationType == "single") {
+        reportData = await CaseFiles.findById(caseId);
+  
+        pdfData.table = {
+          title: "",
+          headers: ["Observation", "Instruments", "Recommendation", "Conclusion"],
+          rows: [
+            [reportData.Observation, reportData.Instruments, reportData.Recommendation, reportData.Conclusion]
+          ]
+        }
 
-      pdfData.dateFormatted = `${day + ", " + d.getDate() + " " + month + " " + year}`;
+        const d = new Date(reportData.createdAt);
+
+        let year = d.getFullYear();
+        let month = months[d.getMonth()];
+        let day = days[d.getDay()];
+  
+        pdfData.dateFormatted = `${day + ", " + d.getDate() + " " + month + " " + year}`;
+
+      } else if (generationType == "multiple") {
+        reportData = await CaseFiles.find({ RoomId: roomId });
+
+        if (reportData == null) {
+          res.status(400).send("The requested report doesn't exist");
+        }
+        let rowData = [];
+
+        for (let i = 0; i < reportData.length; i++) {
+          rowData.push([reportData[i].Observation, reportData[i].Instruments, reportData[i].Recommendation, reportData[i].Conclusion])
+        }
+
+        pdfData.table = {
+          title: "",
+          headers: ["Observation", "Instruments", "Recommendation", "Conclusion"],
+          rows: rowData
+        }
+
+        const startDate = new Date(reportData[0].createdAt);
+        const endDate = new Date(reportData[reportData.length - 1].createdAt);
+
+        let [syear, eyear] = [startDate.getFullYear(), endDate.getFullYear()];
+        let [smonth, emonth] = [months[startDate.getMonth()], months[endDate.getMonth()]];
+        let [sday, eday] = [days[startDate.getDay()], days[endDate.getDay()]];
+  
+        pdfData.dateFormatted = `${sday + ", " + startDate.getDate() + " " + smonth + " " + syear} through ${eday + ", " + endDate.getDate() + " " + emonth + " " + eyear}`;
+
+      } else {
+        res.status(400).send("Please refresh the page and try again an error occured.")
+      }
 
       const fileName = `${pdfData.clientName}ReportFrom${pdfData.dateFormatted.replace(/,*\s/g, "")}.pdf`;
-      const response = await sendReportAsEmail(pdfData, fileName);
+      const response = await sendReportAsEmail(pdfData, fileName, recieverEmail, websiteUrl);
 
-      res.status(200).send(response);
+      res.status(response.status).send(response.message);
 
     } else {
       res.status(400).send("Something went wrong please refresh the page and try again.");

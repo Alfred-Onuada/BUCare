@@ -85,12 +85,16 @@ Author URL: http://w3layouts.com
 								Report from <%= new Date(currentFile.createdAt).toUTCString() %>
 							</h4>
 						</div>
-						<span title="Download this report" class="fas fa-download" onclick="sendreport('<%= info.caseFilesInfo[index].roomId %>', '<%= currentFile._id %>')"></span>
+						<span id="icon4<%= currentFile._id %>" title="Generate this report" class="fas fa-download" onclick="sendreport('<%= info.caseFilesInfo[index].roomId %>', '<%= currentFile._id %>', 'single')"></span>
+						<div id="loader4<%= currentFile._id %>" style="right: 29px;" class="hide preloader spinner-border"></div>
 					</div>
 					<hr style="margin: 0;">
 				<% } %>
-				<div class="download-all">
-					<span class="fas fa-download download-icon"></span> Download all reports made by <%= info.caseFilesInfo[index].therapistName %>
+				<div id="icon4<%= info.caseFilesInfo[index].roomId %>" onclick="sendreport('<%= info.caseFilesInfo[index].roomId %>', null, 'multiple')" class="download-all">
+					<span class="fas fa-download download-icon"></span> Generate all reports made by <%= info.caseFilesInfo[index].therapistName %>
+				</div>
+				<div class="hide" id="loader4<%= info.caseFilesInfo[index].roomId %>">
+					<div style="right: 29px;" class="preloader spinner-border download-all"></div>
 				</div>
 			</div>
 		</div>

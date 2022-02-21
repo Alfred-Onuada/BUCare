@@ -24,8 +24,8 @@ const fs = require('fs')
 
 // initialize nodemailer
 const transporter = nodemailer.createTransport({
-  name: 'bucare.site',
-  host: 'mail.bucare.site',
+  name: 'bucare.com.ng',
+  host: 'mail.bucare.com.ng',
   port: 465,
   secure: true,
   auth: {
@@ -85,7 +85,7 @@ Router.post('/registration', async (req, res) => {
       } else {
         // setting up the options for this email
         let mailOptions = {
-          from: `noreply@bucare.site`,
+          from: `noreply@bucare.com.ng`,
           to: req.body.Email,
           subject: 'Confirm Email Address',
           template: 'registration',
@@ -120,7 +120,7 @@ const sendPasswordHasChangedEmail = function(email, websiteUrl) {
     try {
       // setting up the options for this email
       let mailOptions = {
-        from: `noreply@bucare.site`,
+        from: `noreply@bucare.com.ng`,
         to: email,
         subject: 'Password Change Alert',
         template: 'passwordHasChanged',
@@ -174,7 +174,7 @@ const sendResetEmail = function(email, websiteUrl) {
         } else {
           // setting up the options for this email
           let mailOptions = {
-            from: `noreply@bucare.site`,
+            from: `noreply@bucare.com.ng`,
             to: email,
             subject: 'Reset Password Request',
             template: 'resetPassword',
@@ -258,11 +258,57 @@ async function generateReportTable(document, data) {
   })
 }
 
-const sendReportAsEmail = function (data, fileName) {
+const sendReportAsEmail = function (data, fileName, recieverEmail, websiteUrl) {
   return new Promise(async (resolve, reject) => {
 
     try {
       let doc = new PDFDocument({ margin: 50 });
+
+      let buffers = [];
+      doc.on('data', buffers.push.bind(buffers));
+      doc.on('end', () => {
+
+        const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const d = new Date();
+      
+        let year = d.getFullYear();
+        let month = months[d.getMonth()];
+        let day = days[d.getDay()];
+
+        let pdfData = Buffer.concat(buffers);
+
+        if (pdfData) { 
+          // setting up the options for this email
+          let mailOptions = {
+            from: `noreply@bucare.com.ng`,
+            to: 'aonuada5@gmail.com',
+            subject: `Automatic Counselling Report Generated on ${day + ", " + d.getDate() + " " + month + " " + year}`,
+            template: 'report',
+            attachments: [
+              {
+                filename: fileName,
+                content: pdfData
+              }
+            ],
+            context: {
+              websiteUrl,
+              adminName: pdfData.adminName
+            }
+          };
+
+          transporter.sendMail(mailOptions, (err, info) => {
+            if (err) {
+              console.error(err);
+              return reject({status: 500, message: 'Something went wrong while sending mail. try again later'});
+            } 
+
+            // if the code gets here it was succesful
+            return resolve({ status: 200, message: `Successfully created ${fileName}`});
+
+          })
+        }
+      });
 
       generateHeader(doc);
       generateIntroText(doc, data);
@@ -270,16 +316,10 @@ const sendReportAsEmail = function (data, fileName) {
       generateFooter(doc);
 
       doc.end();
-      doc.pipe(fs.createWriteStream(__dirname + "/" + fileName));
-      
-      // if the code gets here it was succesful
-
-      // remeber to send the file to the email oo
-      return resolve(fileName);
 
     } catch (err) {
       console.error(err.message);
-      return reject(err.message);
+      return resolve({ status: 500, message: `A server error occured, most likely because of the pdf creation`});
     }  
   })
 }

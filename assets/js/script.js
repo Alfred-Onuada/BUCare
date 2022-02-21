@@ -2831,3 +2831,31 @@ function triggerModalForCaseFile() {
 
   $("#caseFileModal").modal('show')
 }
+
+function sendreport(roomId, caseId, generationType) {
+
+  const preloader = document.getElementById("loader4"+(caseId == null ? roomId : caseId));
+  const icon = document.getElementById("icon4"+(caseId == null ? roomId : caseId));
+
+  icon.classList.add("hide");
+  preloader.classList.remove("hide");
+
+  let xhr = new XMLHttpRequest();
+  xhr.open("POST", getRelativeURLSection() + "/sendreportasemail", true);
+  xhr.setRequestHeader('content-type', 'application/json');
+  xhr.onreadystatechange = function () {
+    if (this.readyState === 4) {
+      if (this.status === 200) {
+        showToastMsg("Report generation was a success and you should recieve your email soon.");
+
+      } else {
+        showToastMsg(this.responseText);
+      }
+
+      icon.classList.remove("hide");
+      preloader.classList.add("hide");
+
+    }
+  }
+  xhr.send(JSON.stringify({ roomId, caseId, generationType }))
+}
