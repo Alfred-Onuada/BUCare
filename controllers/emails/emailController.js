@@ -282,7 +282,7 @@ const sendReportAsEmail = function (data, fileName, recieverEmail, websiteUrl) {
           // setting up the options for this email
           let mailOptions = {
             from: `noreply@bucare.com.ng`,
-            to: 'aonuada5@gmail.com',
+            to: recieverEmail,
             subject: `Automatic Counselling Report Generated on ${day + ", " + d.getDate() + " " + month + " " + year}`,
             template: 'report',
             attachments: [
