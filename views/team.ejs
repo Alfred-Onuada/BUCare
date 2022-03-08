@@ -52,7 +52,15 @@ Author URL: http://w3layouts.com
     <section class="w3l-about-breadcrumb">
       <div class="breadcrumb-bg breadcrumb-bg-about py-5">
         <div class="container">
-          <h2 class="title">Meet Our Therapists</h2>
+          <h2 class="title">
+            <span id="content4Title0" data-p-t-e='team' data-p-t-d-b-c="Title"><%= pages.team[0].Title %></span>
+            <% if (userStatus && userStatus.isAdmin) { %>
+              <span id="editPreloader4Title0" class="editPreloader hide"><span></span><span></span><span></span><span></span></span>
+              <span id="pen4Title0" onclick="beginPageEdit('Title', 0)" class="adminEditIcons bi bi-pen"></span>
+              <span id="saveEdit4Title0" class="hide adminEditIcons bi bi-check2"></span>
+              <span id="closeEdit4Title0" class="hide adminEditIcons bi bi-x"></span>
+            <% } %>
+          </h2>
           <ul class="breadcrumbs-custom-path mt-3 text-center">
             <li><a href="index.html">Home</a></li>
             <li class="active"><span class="fa fa-arrow-right mx-2" aria-hidden="true"></span> Our Team </li>
@@ -68,16 +76,51 @@ Author URL: http://w3layouts.com
         <div class="container py-md-5 py-3">
           <div class="cwp4-two row">
             <div class="cwp4-text col-lg-10">
-              <h6 class="sub-titlehny">We Care</h6>
-              <h3 class="hny-title"> ...we would like to help you achieve positive outcomes in your life.</h3>
+              <h6 class="sub-titlehny">
+                <span id="content4We_Care0" data-p-t-e='team' data-p-t-d-b-c="We_Care,Title"><%= pages.team[0].We_Care.Title %></span>
+                <% if (userStatus && userStatus.isAdmin) { %>
+                  <span id="editPreloader4We_Care0" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                  <span id="pen4We_Care0" onclick="beginPageEdit('We_Care', 0)" class="black-edit adminEditIcons bi bi-pen"></span>
+                  <span id="saveEdit4We_Care0" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                  <span id="closeEdit4We_Care0" class="hide black-edit adminEditIcons bi bi-x"></span>
+                <% } %>
+              </h6>
+              <h3 class="hny-title">
+                <span id="content4We_Care1" data-p-t-e='team' data-p-t-d-b-c="We_Care,Sub_Title"><%= pages.team[0].We_Care.Sub_Title %></span>
+                <% if (userStatus && userStatus.isAdmin) { %>
+                  <span id="editPreloader4We_Care1" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                  <span id="pen4We_Care1" onclick="beginPageEdit('We_Care', 1)" class="black-edit adminEditIcons bi bi-pen"></span>
+                  <span id="saveEdit4We_Care1" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                  <span id="closeEdit4We_Care1" class="hide black-edit adminEditIcons bi bi-x"></span>
+                <% } %>
+              </h3>
               <div class="separatorhny"></div>
-              <p style="font-size: 18px !important;">Our practitioners are skilled in a range of therapeutic approaches
-                so we can specifically tailor our services to you. <br><br>
-                We understand that no two people or issues are the same, so our delivery is responsive, flexible and
-                creative, by matching our services, care and approach to your needs, so you may achieve your therapeutic
-                goals.<br><br>
-                Combined, our practitioners have experience helping students, families, adolescents, children and
-                parents, so we would like to help you achieve positive outcomes in your life.
+              <p style="font-size: 18px !important;">
+                <span id="content4We_Care2" data-p-t-e='team' data-p-t-d-b-c="We_Care,First_Paragraph"><%= pages.team[0].We_Care.First_Paragraph %></span>
+                <% if (userStatus && userStatus.isAdmin) { %>
+                  <span id="editPreloader4We_Care2" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                  <span id="pen4We_Care2" onclick="beginPageEdit('We_Care', 2)" class="black-edit adminEditIcons bi bi-pen"></span>
+                  <span id="saveEdit4We_Care2" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                  <span id="closeEdit4We_Care2" class="hide black-edit adminEditIcons bi bi-x"></span>
+                <% } %>
+              </p>
+              <p style="font-size: 18px !important;">
+                <span id="content4We_Care3" data-p-t-e='team' data-p-t-d-b-c="We_Care,Second_Paragraph"><%= pages.team[0].We_Care.Second_Paragraph %></span>
+                <% if (userStatus && userStatus.isAdmin) { %>
+                  <span id="editPreloader4We_Care3" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                  <span id="pen4We_Care3" onclick="beginPageEdit('We_Care', 3)" class="black-edit adminEditIcons bi bi-pen"></span>
+                  <span id="saveEdit4We_Care3" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                  <span id="closeEdit4We_Care3" class="hide black-edit adminEditIcons bi bi-x"></span>
+                <% } %>
+              </p>
+              <p style="font-size: 18px !important;">
+                <span id="content4We_Care4" data-p-t-e='team' data-p-t-d-b-c="We_Care,Third_Paragraph"><%= pages.team[0].We_Care.Third_Paragraph %></span>
+                <% if (userStatus && userStatus.isAdmin) { %>
+                  <span id="editPreloader4We_Care4" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                  <span id="pen4We_Care4" onclick="beginPageEdit('We_Care', 4)" class="black-edit adminEditIcons bi bi-pen"></span>
+                  <span id="saveEdit4We_Care4" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                  <span id="closeEdit4We_Care4" class="hide black-edit adminEditIcons bi bi-x"></span>
+                <% } %>
               </p>
             </div>
           </div>
@@ -88,8 +131,24 @@ Author URL: http://w3layouts.com
     <section class="w3l-team py-5 team-section" id="team">
       <div class="container py-lg-4 py-sm-3">
         <div class="header-sec text-center">
-          <h6 class="sub-titlehny-edited text-center">The Administrative Team</h6>
-          <h3 class="hny-title-edited text-center">Meet Our Admins</h3>
+          <h6 class="sub-titlehny-edited text-center">
+            <span id="content4Our_Admins0" data-p-t-e='team' data-p-t-d-b-c="Our_Admins,Title"><%= pages.team[0].Our_Admins.Title %></span>
+            <% if (userStatus && userStatus.isAdmin) { %>
+              <span id="editPreloader4Our_Admins0" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+              <span id="pen4Our_Admins0" onclick="beginPageEdit('Our_Admins', 0)" class="black-edit adminEditIcons bi bi-pen"></span>
+              <span id="saveEdit4Our_Admins0" class="hide black-edit adminEditIcons bi bi-check2"></span>
+              <span id="closeEdit4Our_Admins0" class="hide black-edit adminEditIcons bi bi-x"></span>
+            <% } %>
+          </h6>
+          <h3 class="hny-title-edited text-center">
+            <span id="content4Our_Admins1" data-p-t-e='team' data-p-t-d-b-c="Our_Admins,Sub_Title"><%= pages.team[0].Our_Admins.Sub_Title %></span>
+            <% if (userStatus && userStatus.isAdmin) { %>
+              <span id="editPreloader4Our_Admins1" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+              <span id="pen4Our_Admins1" onclick="beginPageEdit('Our_Admins', 1)" class="black-edit adminEditIcons bi bi-pen"></span>
+              <span id="saveEdit4Our_Admins1" class="hide black-edit adminEditIcons bi bi-check2"></span>
+              <span id="closeEdit4Our_Admins1" class="hide black-edit adminEditIcons bi bi-x"></span>
+            <% } %>
+          </h3>
           <div class="separatorhny"></div>
         </div>
 
@@ -116,8 +175,24 @@ Author URL: http://w3layouts.com
                 </div>
               </div>
             </div>
-            <h4><a class="therapist-name" href="#team">Elizabeth Okonkwo</a></h4>
-            <h5>Director</h5>
+            <h4><a class="therapist-name">
+              <span id="content4Our_Admins2" data-p-t-e='team' data-p-t-d-b-c="Our_Admins,Director,Name"><%= pages.team[0].Our_Admins.Director.Name %></span>
+              <% if (userStatus && userStatus.isAdmin) { %>
+                <span id="editPreloader4Our_Admins2" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                <span id="pen4Our_Admins2" onclick="beginPageEdit('Our_Admins', 2)" class="black-edit adminEditIcons bi bi-pen"></span>
+                <span id="saveEdit4Our_Admins2" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                <span id="closeEdit4Our_Admins2" class="hide black-edit adminEditIcons bi bi-x"></span>
+              <% } %>
+            </a></h4>
+            <h5>
+              <span id="content4Our_Admins3" data-p-t-e='team' data-p-t-d-b-c="Our_Admins,Director,Role"><%= pages.team[0].Our_Admins.Director.Role %></span>
+              <% if (userStatus && userStatus.isAdmin) { %>
+                <span id="editPreloader4Our_Admins3" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                <span id="pen4Our_Admins3" onclick="beginPageEdit('Our_Admins', 3)" class="black-edit adminEditIcons bi bi-pen"></span>
+                <span id="saveEdit4Our_Admins3" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                <span id="closeEdit4Our_Admins3" class="hide black-edit adminEditIcons bi bi-x"></span>
+              <% } %>
+            </h5>
           </div>
 
           <div class="col-md-3 col-6 therapist-container">
@@ -139,8 +214,24 @@ Author URL: http://w3layouts.com
                 </div>
               </div>
             </div>
-            <h4><a class="therapist-name" href="#team">Omotosho Tominiyi</a></h4>
-            <h5>Assistant Director</h5>
+            <h4><a class="therapist-name">
+              <span id="content4Our_Admins4" data-p-t-e='team' data-p-t-d-b-c="Our_Admins,Assistant_Director,Name"><%= pages.team[0].Our_Admins.Assistant_Director.Name %></span>
+              <% if (userStatus && userStatus.isAdmin) { %>
+                <span id="editPreloader4Our_Admins4" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                <span id="pen4Our_Admins4" onclick="beginPageEdit('Our_Admins', 4)" class="black-edit adminEditIcons bi bi-pen"></span>
+                <span id="saveEdit4Our_Admins4" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                <span id="closeEdit4Our_Admins4" class="hide black-edit adminEditIcons bi bi-x"></span>
+              <% } %>
+            </a></h4>
+            <h5>
+              <span id="content4Our_Admins5" data-p-t-e='team' data-p-t-d-b-c="Our_Admins,Assistant_Director,Role"><%= pages.team[0].Our_Admins.Assistant_Director.Role %></span>
+              <% if (userStatus && userStatus.isAdmin) { %>
+                <span id="editPreloader4Our_Admins5" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                <span id="pen4Our_Admins5" onclick="beginPageEdit('Our_Admins', 5)" class="black-edit adminEditIcons bi bi-pen"></span>
+                <span id="saveEdit4Our_Admins5" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                <span id="closeEdit4Our_Admins5" class="hide black-edit adminEditIcons bi bi-x"></span>
+              <% } %>
+            </h5>
           </div>
 
           <div class="col-md-3 col-6 therapist-container">
@@ -162,8 +253,24 @@ Author URL: http://w3layouts.com
                 </div>
               </div>
             </div>
-            <h4><a class="therapist-name" href="#team">Aderibigbe Damilola Eunice</a></h4>
-            <h5>Administrative Assistant</h5>
+            <h4><a class="therapist-name">
+              <span id="content4Our_Admins6" data-p-t-e='team' data-p-t-d-b-c="Our_Admins,Assistant,Name"><%= pages.team[0].Our_Admins.Assistant.Name %></span>
+              <% if (userStatus && userStatus.isAdmin) { %>
+                <span id="editPreloader4Our_Admins6" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                <span id="pen4Our_Admins6" onclick="beginPageEdit('Our_Admins', 6)" class="black-edit adminEditIcons bi bi-pen"></span>
+                <span id="saveEdit4Our_Admins6" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                <span id="closeEdit4Our_Admins6" class="hide black-edit adminEditIcons bi bi-x"></span>
+              <% } %>
+            </a></h4>
+            <h5>
+              <span id="content4Our_Admins7" data-p-t-e='team' data-p-t-d-b-c="Our_Admins,Assistant,Role"><%= pages.team[0].Our_Admins.Assistant.Role %></span>
+              <% if (userStatus && userStatus.isAdmin) { %>
+                <span id="editPreloader4Our_Admins7" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                <span id="pen4Our_Admins7" onclick="beginPageEdit('Our_Admins', 7)" class="black-edit adminEditIcons bi bi-pen"></span>
+                <span id="saveEdit4Our_Admins7" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                <span id="closeEdit4Our_Admins7" class="hide black-edit adminEditIcons bi bi-x"></span>
+              <% } %>
+            </h5>
           </div>
 
           <div class="col-md-1"></div>

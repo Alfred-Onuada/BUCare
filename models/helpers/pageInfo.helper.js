@@ -3,6 +3,7 @@ const FooterInfo = require('../pages/footer.page');
 const IndexInfo = require('../pages/index.page');
 const ContactInfo = require('../pages/contact.page');
 const AboutInfo = require('../pages/about.page');
+const TeamInfo = require('../pages/team.page');
 const Therapists = require("./../therapist");
 
 module.exports = async function (url) {
@@ -84,6 +85,21 @@ module.exports = async function (url) {
     .then(docs => {
       if (docs) {
         pageInfo.about = docs;
+      } else {
+        res.status(500).send("The page could not load properly");
+      }
+    })
+    .catch((err) => {
+      console.error(err.message);
+      throw err;
+    });
+  }
+
+  if (url == "/team") {
+    await TeamInfo.find({})
+    .then(docs => {
+      if (docs) {
+        pageInfo.team = docs;
       } else {
         res.status(500).send("The page could not load properly");
       }
