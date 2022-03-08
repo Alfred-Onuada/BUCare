@@ -218,11 +218,11 @@
 							onclick="document.getElementById('directorsMore').classList.toggle('hide');
 							this.textContent = textContent.trim() == 'Read More' ? 'Show Less' : 'Read More';">
 							Read More
-					</span>
+						</span>
 					</div>
 					<div class="col-lg-3 bottom-ab-right mt-lg-0 mt-5 pl-lg-4">
 						<!-- remeber to check if the images are default then don't delete like on the empire -->
-						<img style="min-height: 270px;" src="<%= pages.index[0].Directors_Speech.dir_image_loc %>" alt="" class="img-fluid">
+						<img style="min-height: 270px;" src="<%= pages.index[0].Directors_Speech.dir_image_loc %>" alt="" class="img-fluid director-image">
 					</div>
 
 				</div>
@@ -599,44 +599,44 @@
 		//features-->
 
 		<!-- middle -->
-		<div class="w3l-middle py-5">
+		<!-- <div class="w3l-middle py-5">
 			<div class="container py-xl-5 py-lg-3">
 				<div class="welcome-left py-3">
 					<h6 class="sub-titlehny">
-						<span id="content4Trusted_Care0" data-p-t-e='index' data-p-t-d-b-c="Trusted_Care,title"><%= pages.index[0].Trusted_Care.title %></span>
-						<% if (userStatus && userStatus.isAdmin) { %>
+						<span id="content4Trusted_Care0" data-p-t-e='index' data-p-t-d-b-c="Trusted_Care,title"><%= // pages.index[0].Trusted_Care.title %></span>
+						<% // if (userStatus && userStatus.isAdmin) { %>
 							<span id="editPreloader4Trusted_Care0" class="editPreloader hide"><span></span><span></span><span></span><span></span></span>
 							<span id="pen4Trusted_Care0" onclick="beginPageEdit('Trusted_Care', 0)" class="adminEditIcons bi bi-pen"></span>
 							<span id="saveEdit4Trusted_Care0" class="hide adminEditIcons bi bi-check2"></span>
 							<span id="closeEdit4Trusted_Care0" class="hide adminEditIcons bi bi-x"></span>
-						<% } %>
+						<% // } %>
 					</h6>
 					<h4>
-						<span id="content4Trusted_Care1" data-p-t-e='index' data-p-t-d-b-c="Trusted_Care,sub_title"><%= pages.index[0].Trusted_Care.sub_title %></span>
-						<% if (userStatus && userStatus.isAdmin) { %>
+						<span id="content4Trusted_Care1" data-p-t-e='index' data-p-t-d-b-c="Trusted_Care,sub_title"><%= // pages.index[0].Trusted_Care.sub_title %></span>
+						<% // if (userStatus && userStatus.isAdmin) { %>
 							<span id="editPreloader4Trusted_Care1" class="editPreloader hide"><span></span><span></span><span></span><span></span></span>
 							<span id="pen4Trusted_Care1" onclick="beginPageEdit('Trusted_Care', 1)" class="adminEditIcons bi bi-pen"></span>
 							<span id="saveEdit4Trusted_Care1" class="hide adminEditIcons bi bi-check2"></span>
 							<span id="closeEdit4Trusted_Care1" class="hide adminEditIcons bi bi-x"></span>
-						<% } %>
+						<% // } %>
 					</h4>
 					<div class="separatorhny"></div>
 					<p class="pr-lg-5">
-						<span id="content4Trusted_Care3" data-p-t-e='index' data-p-t-d-b-c="Trusted_Care,content"><%= pages.index[0].Trusted_Care.content %></span>
-						<% if (userStatus && userStatus.isAdmin) { %>
+						<span id="content4Trusted_Care3" data-p-t-e='index' data-p-t-d-b-c="Trusted_Care,content"><%= // pages.index[0].Trusted_Care.content %></span>
+						<% // if (userStatus && userStatus.isAdmin) { %>
 							<span id="editPreloader4Trusted_Care3" class="editPreloader hide"><span></span><span></span><span></span><span></span></span>
 							<span id="pen4Trusted_Care3" onclick="beginPageEdit('Trusted_Care', 3)" class="adminEditIcons bi bi-pen"></span>
 							<span id="saveEdit4Trusted_Care3" class="hide adminEditIcons bi bi-check2"></span>
 							<span id="closeEdit4Trusted_Care3" class="hide adminEditIcons bi bi-x"></span>
-						<% } %>
-					</p>
+						<% // } %>
+					</p> -->
 					<!--div class="buttons mt-5">
 						<a href="about" class="btn btn-white btn-primary mr-2">Read More</a>
 						<a href="contact" class="btn btn-style border-btn ml-2">Get a quote</a>
-					</div-->
+					</div
 				</div>
 			</div>
-		</div>
+		</div> -->
 		<!--//middle -->
 		
 		<!--//w3l-grids-->
@@ -700,89 +700,6 @@
 		</section>
 		//w3l-subscribe-->
 	<!-- //blog-Section -->
-		<!--//news-grids-->
-		<section class="w3l-news-sec py-5">
-			<div class="news-mainhny py-5">
-				<div class="container text-center py-lg-3">
-					<div class="title-content text-center mb-lg-5 mb-4">
-						<h6 class="sub-titlehny">Our Services</h6>
-						<h3 class="hny-title">
-							Our Departments</h3>
-						<div class="separatorhny"></div>
-					</div>
-				</div>
-				<div class="owl-news owl-carousel owl-theme">
-					<div class="item">
-						<div class="news-img position-relative">
-							<a href="#"><img src="media/imgs/template/1.jpg" class="img-fluid" alt="news image"></a>
-							<div class="title-wrap">
-								<a href="#">
-									<h4 class="title">Academic Support Services</h4>
-								</a>
-								<a href="#" class="text-right"><span class="fa fa-arrow-right"></span></a>
-							</div>
-						</div>
-					</div>
-					<div class="item">
-						<div class="news-img">
-							<a href="#"><img src="media/imgs/template/2.jpg" class="img-fluid" alt="news image"></a>
-							<div class="title-wrap">
-								<a href="#">
-									<h4 class="title">Psychosocial Support Services </h4>
-								</a>
-								<a href="#" class="text-right"><span class="fa fa-arrow-right"></span></a>
-							</div>
-						</div>
-					</div>
-					<div class="item">
-						<div class="news-img">
-							<a href="#"><img src="media/imgs/template/3.jpg" class="img-fluid" alt="news image"></a>
-							<div class="title-wrap">
-								<a href="#">
-									<h4 class="title">Social Welfare Support Services</h4>
-								</a>
-								<a href="#" class="text-right"><span class="fa fa-arrow-right"></span></a>
-							</div>
-						</div>
-					</div>
-					<div class="item">
-						<div class="news-img">
-							<a href="#"><img src="media/imgs/template/4.jpg" class="img-fluid" alt="news image"></a>
-							<div class="title-wrap">
-								<a href="#">
-									<h4 class="title">Special Duties</h4>
-								</a>
-								<a href="#" class="text-right"><span class="fa fa-arrow-right"></span></a>
-							</div>
-						</div>
-					</div>
-					<div class="item">
-						<div class="news-img">
-							<a href="#"><img src="media/imgs/template/5.jpg" class="img-fluid" alt="news image"></a>
-							<div class="title-wrap">
-								<a href="#">
-									<h4 class="title">Academic Empowerment Programmes</h4>
-								</a>
-								<a href="#" class="text-right"><span class="fa fa-arrow-right"></span></a>
-							</div>
-						</div>
-					</div>
-					<div class="item">
-						<div class="news-img">
-							<a href="#"><img src="media/imgs/template/6.jpg" class="img-fluid" alt="news image"></a>
-							<div class="title-wrap">
-								<a href="#">
-									<h4 class="title">e-Counseling</h4>
-								</a>
-								<a href="#" class="text-right"><span class="fa fa-arrow-right"></span></a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
-		<!--//news-grids-->
-
 
 		<%- include('./partials/footer') %> 
 
@@ -869,42 +786,7 @@
 			})
 		</script>
 		<!-- //script -->
-		<script>
-			$(document).ready(function () {
-				$('.owl-news').owlCarousel({
-					stagePadding: 200,
-					loop: true,
-					margin: 30,
-					nav: false,
-					responsiveClass: true,
-					autoplay: true,
-					autoplayTimeout: 5000,
-					autoplaySpeed: 1000,
-					autoplayHoverPause: false,
-					responsive: {
-						0: {
-							items: 1,
-							stagePadding: 40,
-							nav: false
-						},
-						480: {
-							items: 1,
-							stagePadding: 40,
-							nav: true
-						},
-						667: {
-							items: 2,
-							stagePadding: 50,
-							nav: true
-						},
-						1000: {
-							items: 2,
-							nav: true
-						}
-					}
-				})
-			})
-		</script>
+	
 		<!-- stats number counter-->
 		<script src="js/template_scripts/jquery.waypoints.min.js"></script>
 		<script src="js/template_scripts/jquery.countup.js"></script>

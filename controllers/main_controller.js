@@ -14,7 +14,7 @@ const Io = require("./../main");
 
 // modules for edits
 const { updatePhoto, updateProfile } = require("./updates/updateProfile");
-const { updateHeader, updateFooter, updateIndex, updateContact } = require("./updates/updatePages");
+const { updateHeader, updateFooter, updateIndex, updateContact, updateAbout } = require("./updates/updatePages");
 
 // checkuser simply returns information about the logged in user, it doesn't protect the route
 module.exports = (app) => {
@@ -213,6 +213,10 @@ module.exports = (app) => {
 
         case 'contact':
           updateContact(req, res);
+          break;
+        
+        case 'about':
+          updateAbout(req, res);
           break;
       
         default:

@@ -2,234 +2,497 @@
 Author: W3layouts
 Author URL: http://w3layouts.com
 -->
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
   <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <title>About | BUCare</title>
-  <link href="//fonts.googleapis.com/css?family=Nunito:400,600,700&display=swap" rel="stylesheet">
-	<link rel="shortcut icon" href="media/imgs/template/favicon.ico" type="image/x-icon">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+  <link href="//fonts.googleapis.com/css?family=Nunito:400,600,700&display=swap" rel="stylesheet" />
+  <link rel="shortcut icon" href="media/imgs/template/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
 
   <!-- Template CSS -->
-  <link rel="stylesheet" href="css/template_styles/style-starter.css">
+  <link rel="stylesheet" href="css/template_styles/style-starter.css" />
 
   <!-- My Styles -->
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 
 <body>
+  <%- include('./partials/header') %>
 
-	<%- include('./partials/header') %> 
-	
-	<!--/w3l-breadcrumb-->
-	<section class="w3l-about-breadcrumb">
-		<div class="breadcrumb-bg breadcrumb-bg-about py-5">
-			<div class="container">
-				<h2 class="title">Choose Confidently</h2>
-				<ul class="breadcrumbs-custom-path mt-3 text-center">
-					<li><a href="index">Home</a></li>
-					<li class="active"><span class="fa fa-arrow-right mx-2" aria-hidden="true"></span> About us </li>
-				</ul>
-			</div>
-		</div>
-	</section>
-	<!--//w3l-breadcrumb-->
-	<!--/about-->
-	<!--/w3l-ab-->
-	<div class="w3l-cwp4-sec py-5">
-		<div class="container py-md-5 py-3">
-		<div class="cwp4-two align-items-center">
-			<div class="abouthyn-inn text-center">
-			<h6 class="sub-titlehny">Here & Now, Every Day</h6>
-			<h3 class="hny-title">Healing experiences- for everyone, all the time</h3>
-			<div class="separatorhny"></div>
-			<p class="ab-para">Lorem ipsum dolor sit amet, consectetur adipisicingelit, sed do eiusmod tempor incididunt
-				ut labore et
-				dolore magna aliqua. Ut enim ad
-				minim veniam,Semper at tempufddfel. Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum
-				dolor sit amet.
-			</p>
+    <!--/w3l-breadcrumb-->
+    <section class="w3l-about-breadcrumb">
+      <div class="breadcrumb-bg breadcrumb-bg-about py-5">
+        <div class="container">
+          <h2 class="title">
+            <span id="content4Title0" data-p-t-e='about' data-p-t-d-b-c="Title"><%= pages.about[0].Title %></span>
+            <% if (userStatus && userStatus.isAdmin) { %>
+              <span id="editPreloader4Title0" class="editPreloader hide"><span></span><span></span><span></span><span></span></span>
+              <span id="pen4Title0" onclick="beginPageEdit('Title', 0)" class="adminEditIcons bi bi-pen"></span>
+              <span id="saveEdit4Title0" class="hide adminEditIcons bi bi-check2"></span>
+              <span id="closeEdit4Title0" class="hide adminEditIcons bi bi-x"></span>
+            <% } %>
+          </h2>
+          <ul class="breadcrumbs-custom-path mt-3 text-center">
+            <li><a href="index">Home</a></li>
+            <li class="active">
+              <span class="fa fa-arrow-right mx-2" aria-hidden="true"></span>
+              About us
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!--//w3l-breadcrumb-->
+    <!--/about-->
+    <!--/w3l-ab-->
+    <div class="w3l-cwp4-sec py-5">
+      <div class="container py-md-5 py-3">
+        <div class="cwp4-two align-items-center">
+          <div class="abouthyn-inn text-center">
+            <h6 class="sub-titlehny">
+              <span id="content4First_Section0" data-p-t-e='about' data-p-t-d-b-c="First_Section,Title"><%= pages.about[0].First_Section.Title %></span>
+              <% if (userStatus && userStatus.isAdmin) { %>
+                <span id="editPreloader4First_Section0" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                <span id="pen4First_Section0" onclick="beginPageEdit('First_Section', 0)" class="black-edit adminEditIcons bi bi-pen"></span>
+                <span id="saveEdit4First_Section0" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                <span id="closeEdit4First_Section0" class="hide black-edit adminEditIcons bi bi-x"></span>
+              <% } %>
+            </h6>
+            <h3 class="hny-title">
+              <span id="content4First_Section1" data-p-t-e='about' data-p-t-d-b-c="First_Section,Sub_Title"><%= pages.about[0].First_Section.Sub_Title %></span>
+              <% if (userStatus && userStatus.isAdmin) { %>
+                <span id="editPreloader4First_Section1" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                <span id="pen4First_Section1" onclick="beginPageEdit('First_Section', 1)" class="black-edit adminEditIcons bi bi-pen"></span>
+                <span id="saveEdit4First_Section1" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                <span id="closeEdit4First_Section1" class="hide black-edit adminEditIcons bi bi-x"></span>
+              <% } %>
+            </h3>
+            <div class="separatorhny"></div>
+            <p class="ab-para">
+              <span id="content4First_Section2" data-p-t-e='about' data-p-t-d-b-c="First_Section,Content"><%= pages.about[0].First_Section.Content %></span>
+              <% if (userStatus && userStatus.isAdmin) { %>
+                <span id="editPreloader4First_Section2" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                <span id="pen4First_Section2" onclick="beginPageEdit('First_Section', 2)" class="black-edit adminEditIcons bi bi-pen"></span>
+                <span id="saveEdit4First_Section2" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                <span id="closeEdit4First_Section2" class="hide black-edit adminEditIcons bi bi-x"></span>
+              <% } %>
+            </p>
 
-			<div class="buttons mt-5">
-				<a href="#" class="btn btn-style btn-primary">Read More</a>
+            <p class="ab-para hide" id="First_SectionMore">
+              <span id="content4First_Section3" data-p-t-e='about' data-p-t-d-b-c="First_Section,Extra"><%= pages.about[0].First_Section.Extra %></span>
+              <% if (userStatus && userStatus.isAdmin) { %>
+                <span id="editPreloader4First_Section3" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                <span id="pen4First_Section3" onclick="beginPageEdit('First_Section', 3)" class="black-edit adminEditIcons bi bi-pen"></span>
+                <span id="saveEdit4First_Section3" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                <span id="closeEdit4First_Section3" class="hide black-edit adminEditIcons bi bi-x"></span>
+              <% } %>
+            </p>
 
-			</div>
-			</div>
+            <div class="buttons mt-5">
+              <a style="color: White;" class="btn btn-style btn-primary"
+                onclick="document.getElementById('First_SectionMore').classList.toggle('hide');
+                this.textContent = textContent.trim() == 'Read More' ? 'Show Less' : 'Read More';">Read More</a>
+            </div>
 
-		</div>
-		</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--/w3l-ab-->
 
-	</div>
-	<!--/w3l-ab-->
-	<!--/w3l-ab-features-->
-	<section class="w3l-ab-features py-5">
-		<div class="container py-md-5 py-3">
-		<div class="row features-w3pvt-main align-items-center" id="features">
-			<div class="col-lg-6 feature-gird pb-lg-5">
-			<h6 class="sub-titlehny mb-2">What We Do</h6>
-			<h3 class="hny-title mb-4">We are always Health Give of best service</h3>
-			<div class="separatorhny"></div>
-			<p class="pr-lg-5">Lorem ipsum viverra feugiat. Pellen tesque libero ut justo,
-				ultrices in ligula. Semper at tempufddfel. Lorem ipsum dolor sit amet consectetur adipisicing
-				elit. Non quae, fugiat consequatur voluptatem nihil ad. Lorem ipsum dolor sit amet.</p>
-			<div class="buttons mt-5">
-				<a href="#" class="btn btn-style btn-primary">Read More</a>
-			</div>
-			</div>
-			<div class="col-lg-6 feature-gird pr-lg-5 mt-md-0 mt-4 pb-lg-5">
-			<img src="media/imgs/template/5.jpg" alt="" class="img-fluid" />
-			</div>
-			<div class="col-lg-6 feature-gird mt-5">
-			<img src="media/imgs/template/3.jpg" alt="" class="img-fluid" />
-			</div>
-			<div class="col-lg-6 feature-gird mt-5 pl-lg-5">
-			<h6 class="sub-titlehny mb-2">What We Offer</h6>
-			<h3 class="hny-title mb-4">The Best Medics, Doctors & Physicians</h3>
-			<div class="separatorhny"></div>
-			<p class="pr-lg-5">Lorem ipsum viverra feugiat. Pellen tesque libero ut justo,
-				ultrices in ligula. Semper at tempufddfel. Lorem ipsum dolor sit amet consectetur adipisicing
-				elit.</p>
-			<div class="buttons mt-5">
-				<a href="#" class="btn btn-style btn-primary">Read More</a>
-			</div>
-			</div>
+    <!--//news-grids-->
+    <section class="w3l-news-sec py-5">
+      <div class="news-mainhny py-5">
+        <div class="container text-center py-lg-3">
+          <div class="title-content text-center mb-lg-5 mb-4">
+            <h6 class="sub-titlehny">
+              <span id="content4Our_Services0" data-p-t-e='about' data-p-t-d-b-c="Our_Services,Title"><%= pages.about[0].Our_Services.Title %></span>
+              <% if (userStatus && userStatus.isAdmin) { %>
+                <span id="editPreloader4Our_Services0" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                <span id="pen4Our_Services0" onclick="beginPageEdit('Our_Services', 0)" class="black-edit adminEditIcons bi bi-pen"></span>
+                <span id="saveEdit4Our_Services0" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                <span id="closeEdit4Our_Services0" class="hide black-edit adminEditIcons bi bi-x"></span>
+              <% } %>
+            </h6>
+            <h3 class="hny-title">
+              <span id="content4Our_Services1" data-p-t-e='about' data-p-t-d-b-c="Our_Services,Sub_Title"><%= pages.about[0].Our_Services.Sub_Title %></span>
+              <% if (userStatus && userStatus.isAdmin) { %>
+                <span id="editPreloader4Our_Services1" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                <span id="pen4Our_Services1" onclick="beginPageEdit('Our_Services', 1)" class="black-edit adminEditIcons bi bi-pen"></span>
+                <span id="saveEdit4Our_Services1" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                <span id="closeEdit4Our_Services1" class="hide black-edit adminEditIcons bi bi-x"></span>
+              <% } %>
+            </h3>
+            <div class="separatorhny"></div>
+          </div>
+        </div>
+        <div class="owl-news owl-carousel owl-theme">
+          <div class="item">
+            <div class="news-img position-relative">
+              <a href="#"><img src="media/imgs/template/1.jpg" class="img-fluid" alt="news image" /></a>
+              <div class="title-wrap">
+                <a href="#">
+                  <h4 class="title">Academic Support Services</h4>
+                </a>
+                <a href="#" class="text-right"><span class="fa fa-arrow-right"></span></a>
+              </div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="news-img">
+              <a href="#"><img src="media/imgs/template/2.jpg" class="img-fluid" alt="news image" /></a>
+              <div class="title-wrap">
+                <a href="#">
+                  <h4 class="title">Psychosocial Support Services</h4>
+                </a>
+                <a href="#" class="text-right"><span class="fa fa-arrow-right"></span></a>
+              </div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="news-img">
+              <a href="#"><img src="media/imgs/template/3.jpg" class="img-fluid" alt="news image" /></a>
+              <div class="title-wrap">
+                <a href="#">
+                  <h4 class="title">Social Welfare Support Services</h4>
+                </a>
+                <a href="#" class="text-right"><span class="fa fa-arrow-right"></span></a>
+              </div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="news-img">
+              <a href="#"><img src="media/imgs/template/4.jpg" class="img-fluid" alt="news image" /></a>
+              <div class="title-wrap">
+                <a href="#">
+                  <h4 class="title">Special Duties</h4>
+                </a>
+                <a href="#" class="text-right"><span class="fa fa-arrow-right"></span></a>
+              </div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="news-img">
+              <a href="#"><img src="media/imgs/template/5.jpg" class="img-fluid" alt="news image" /></a>
+              <div class="title-wrap">
+                <a href="#">
+                  <h4 class="title">Academic Empowerment Programmes</h4>
+                </a>
+                <a href="#" class="text-right"><span class="fa fa-arrow-right"></span></a>
+              </div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="news-img">
+              <a href="#"><img src="media/imgs/template/6.jpg" class="img-fluid" alt="news image" /></a>
+              <div class="title-wrap">
+                <a href="#">
+                  <h4 class="title">e-Counseling</h4>
+                </a>
+                <a href="#" class="text-right"><span class="fa fa-arrow-right"></span></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--//news-grids-->
 
-		</div>
-		</div>
-	</section>
-	<!--//-->
-	<!--/w3l-faq-block-->
-	<div class="w3l-faq-block py-5" id="faq">
-		<div class="container py-md-5">
-		<div class="row w3l-faq">
-			<div class="faq-page col-lg-6 mb-lg-0 mb-4">
-			<div class="text-left mb-4">
-				<h6 class="sub-titlehny">
-				FaQs
-				</h6>
-				<h3 class="hny-title">We Are Always Health Give Of Best Service
-				</h3>
-				<div class="separatorhny"></div> 
-			</div>
-			<ul>
-				<li>
-				<input type="checkbox" checked>
-				<i></i>
-				<h4>Tempore Adipisicing elit</h4>
-				<p>Sit amet consectetur adipisicing elit. Voluptates amet earum velit nobis aliquam
-					laboriosam nihil debitis animi vitae eos nisi laudantium. Tempore reiciendis ipsam culpa, qui
-					voluptates eveniet, incidunt officiis eaque iste minima autem.</p>
-				</li>
-				<li>
-				<input type="checkbox" checked>
-				<i></i>
-				<h4>Consectetur adipisicing elit</h4>
-				<p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptates amet earum velit nobis aliquam
-					laboriosam nihil quasi fuga, ad corrupti libero omnis sapiente
-					non assumenda excepturi aperiam animi vitae eos nisi laudantium. Tempore reiciendis ipsam culpa, qui
-					voluptates eveniet, incidunt officiis eaque iste minima autem.</p>
-				</li>
-				<li>
-				<input type="checkbox" checked>
-				<i></i>
-				<h4>Lorem ipsum dolor elit</h4>
-				<p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptates amet earum velit nobis aliquam
-					laboriosam nihil debitis facere voluptatibus consectetur quae quasi fuga, ad corrupti libero omnis
-					sapiente
-					non assumenda excepturi aperiam iste minima autem.</p>
-				</li>
+    <!--/w3l-ab-features-->
+    <section class="w3l-ab-features py-5">
+      <div class="container py-md-5 py-3">
+        <div class="row features-w3pvt-main align-items-center" id="features">
+          <div class="col-lg-6 feature-gird pb-lg-5">
+            <h6 class="sub-titlehny mb-2">
+              <span id="content4What_We_Do0" data-p-t-e='about' data-p-t-d-b-c="What_We_Do,Title"><%= pages.about[0].What_We_Do.Title %></span>
+              <% if (userStatus && userStatus.isAdmin) { %>
+                <span id="editPreloader4What_We_Do0" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                <span id="pen4What_We_Do0" onclick="beginPageEdit('What_We_Do', 0)" class="black-edit adminEditIcons bi bi-pen"></span>
+                <span id="saveEdit4What_We_Do0" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                <span id="closeEdit4What_We_Do0" class="hide black-edit adminEditIcons bi bi-x"></span>
+              <% } %>
+            </h6>
+            <h3 class="hny-title mb-4">
+              <span id="content4What_We_Do1" data-p-t-e='about' data-p-t-d-b-c="What_We_Do,Sub_Title"><%= pages.about[0].What_We_Do.Sub_Title %></span>
+              <% if (userStatus && userStatus.isAdmin) { %>
+                <span id="editPreloader4What_We_Do1" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                <span id="pen4What_We_Do1" onclick="beginPageEdit('What_We_Do', 1)" class="black-edit adminEditIcons bi bi-pen"></span>
+                <span id="saveEdit4What_We_Do1" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                <span id="closeEdit4What_We_Do1" class="hide black-edit adminEditIcons bi bi-x"></span>
+              <% } %>
+            </h3>
+            <div class="separatorhny"></div>
+            <p class="pr-lg-5">
+              <span id="content4What_We_Do2" data-p-t-e='about' data-p-t-d-b-c="What_We_Do,Content"><%= pages.about[0].What_We_Do.Content %></span>
+              <% if (userStatus && userStatus.isAdmin) { %>
+                <span id="editPreloader4What_We_Do2" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                <span id="pen4What_We_Do2" onclick="beginPageEdit('What_We_Do', 2)" class="black-edit adminEditIcons bi bi-pen"></span>
+                <span id="saveEdit4What_We_Do2" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                <span id="closeEdit4What_We_Do2" class="hide black-edit adminEditIcons bi bi-x"></span>
+              <% } %>
+            </p>
+          </div>
+          <div class="col-lg-6 feature-gird pr-lg-5 mt-md-0 mt-4 pb-lg-5">
+            <img src="media/imgs/template/5.jpg" alt="" class="img-fluid" />
+          </div>
+          <div class="col-lg-6 feature-gird mt-5">
+            <img src="media/imgs/template/3.jpg" alt="" class="img-fluid" />
+          </div>
+          <div class="col-lg-6 feature-gird mt-5 pl-lg-5">
+            <h6 class="sub-titlehny mb-2">
+              <span id="content4What_We_Offer0" data-p-t-e='about' data-p-t-d-b-c="What_We_Offer,Title"><%= pages.about[0].What_We_Offer.Title %></span>
+              <% if (userStatus && userStatus.isAdmin) { %>
+                <span id="editPreloader4What_We_Offer0" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                <span id="pen4What_We_Offer0" onclick="beginPageEdit('What_We_Offer', 0)" class="black-edit adminEditIcons bi bi-pen"></span>
+                <span id="saveEdit4What_We_Offer0" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                <span id="closeEdit4What_We_Offer0" class="hide black-edit adminEditIcons bi bi-x"></span>
+              <% } %>
+            </h6>
+            <h3 class="hny-title mb-4">
+              <span id="content4What_We_Offer1" data-p-t-e='about' data-p-t-d-b-c="What_We_Offer,Sub_Title"><%= pages.about[0].What_We_Offer.Sub_Title %></span>
+              <% if (userStatus && userStatus.isAdmin) { %>
+                <span id="editPreloader4What_We_Offer1" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                <span id="pen4What_We_Offer1" onclick="beginPageEdit('What_We_Offer', 1)" class="black-edit adminEditIcons bi bi-pen"></span>
+                <span id="saveEdit4What_We_Offer1" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                <span id="closeEdit4What_We_Offer1" class="hide black-edit adminEditIcons bi bi-x"></span>
+              <% } %>
+            </h3>
+            <div class="separatorhny"></div>
+            <p class="pr-lg-5">
+              <span id="content4What_We_Offer2" data-p-t-e='about' data-p-t-d-b-c="What_We_Offer,Content"><%= pages.about[0].What_We_Offer.Content %></span>
+              <% if (userStatus && userStatus.isAdmin) { %>
+                <span id="editPreloader4What_We_Offer2" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                <span id="pen4What_We_Offer2" onclick="beginPageEdit('What_We_Offer', 2)" class="black-edit adminEditIcons bi bi-pen"></span>
+                <span id="saveEdit4What_We_Offer2" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                <span id="closeEdit4What_We_Offer2" class="hide black-edit adminEditIcons bi bi-x"></span>
+              <% } %>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--//-->
+    <!--/w3l-faq-block-->
+    <div class="w3l-faq-block py-5" id="faq">
+      <div class="container py-md-5">
+        <div class="row w3l-faq">
+          <div class="faq-page col-lg-6 mb-lg-0 mb-4">
+            <div class="text-left mb-4">
+              <h6 class="sub-titlehny">
+                <span id="content4FaQs0" data-p-t-e='about' data-p-t-d-b-c="FaQs,Title"><%= pages.about[0].FaQs.Title %></span>
+                <% if (userStatus && userStatus.isAdmin) { %>
+                  <span id="editPreloader4FaQs0" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                  <span id="pen4FaQs0" onclick="beginPageEdit('FaQs', 0)" class="black-edit adminEditIcons bi bi-pen"></span>
+                  <span id="saveEdit4FaQs0" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                  <span id="closeEdit4FaQs0" class="hide black-edit adminEditIcons bi bi-x"></span>
+                <% } %>
+              </h6>
+              <h3 class="hny-title">
+                <span id="content4FaQs1" data-p-t-e='about' data-p-t-d-b-c="FaQs,Sub_Title"><%= pages.about[0].FaQs.Sub_Title %></span>
+                <% if (userStatus && userStatus.isAdmin) { %>
+                  <span id="editPreloader4FaQs1" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                  <span id="pen4FaQs1" onclick="beginPageEdit('FaQs', 1)" class="black-edit adminEditIcons bi bi-pen"></span>
+                  <span id="saveEdit4FaQs1" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                  <span id="closeEdit4FaQs1" class="hide black-edit adminEditIcons bi bi-x"></span>
+                <% } %>
+              </h3>
+              <div class="separatorhny"></div>
+            </div>
+            <ul>
+              <li>
+                <input type="checkbox" checked />
+                <i></i>
+                <h4>
+                  <span id="content4FaQs2" data-p-t-e='about' data-p-t-d-b-c="FaQs,First_Accordion,Title"><%= pages.about[0].FaQs.First_Accordion.Title %></span>
+                  <% if (userStatus && userStatus.isAdmin) { %>
+                    <span id="editPreloader4FaQs2" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                    <span id="pen4FaQs2" onclick="beginPageEdit('FaQs', 2)" class="black-edit adminEditIcons bi bi-pen"></span>
+                    <span id="saveEdit4FaQs2" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                    <span id="closeEdit4FaQs2" class="hide black-edit adminEditIcons bi bi-x"></span>
+                  <% } %>
+                </h4>
+                <p>
+                  <span id="content4FaQs3" data-p-t-e='about' data-p-t-d-b-c="FaQs,First_Accordion,Content"><%= pages.about[0].FaQs.First_Accordion.Content %></span>
+                  <% if (userStatus && userStatus.isAdmin) { %>
+                    <span id="editPreloader4FaQs3" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                    <span id="pen4FaQs3" onclick="beginPageEdit('FaQs', 3)" class="black-edit adminEditIcons bi bi-pen"></span>
+                    <span id="saveEdit4FaQs3" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                    <span id="closeEdit4FaQs3" class="hide black-edit adminEditIcons bi bi-x"></span>
+                  <% } %>
+                </p>
+              </li>
+              <li>
+                <input type="checkbox" checked />
+                <i></i>
+                <h4>
+                  <span id="content4FaQs4" data-p-t-e='about' data-p-t-d-b-c="FaQs,Second_Accordion,Title"><%= pages.about[0].FaQs.Second_Accordion.Title %></span>
+                  <% if (userStatus && userStatus.isAdmin) { %>
+                    <span id="editPreloader4FaQs4" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                    <span id="pen4FaQs4" onclick="beginPageEdit('FaQs', 4)" class="black-edit adminEditIcons bi bi-pen"></span>
+                    <span id="saveEdit4FaQs4" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                    <span id="closeEdit4FaQs4" class="hide black-edit adminEditIcons bi bi-x"></span>
+                  <% } %>
+                </h4>
+                <p>
+                  <span id="content4FaQs5" data-p-t-e='about' data-p-t-d-b-c="FaQs,Second_Accordion,Content"><%= pages.about[0].FaQs.Second_Accordion.Content %></span>
+                  <% if (userStatus && userStatus.isAdmin) { %>
+                    <span id="editPreloader4FaQs5" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                    <span id="pen4FaQs5" onclick="beginPageEdit('FaQs', 5)" class="black-edit adminEditIcons bi bi-pen"></span>
+                    <span id="saveEdit4FaQs5" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                    <span id="closeEdit4FaQs5" class="hide black-edit adminEditIcons bi bi-x"></span>
+                  <% } %>
+                </p>
+              </li>
+              <li>
+                <input type="checkbox" checked />
+                <i></i>
+                <h4>
+                  <span id="content4FaQs6" data-p-t-e='about' data-p-t-d-b-c="FaQs,Third_Accordion,Title"><%= pages.about[0].FaQs.Third_Accordion.Title %></span>
+                  <% if (userStatus && userStatus.isAdmin) { %>
+                    <span id="editPreloader4FaQs6" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                    <span id="pen4FaQs6" onclick="beginPageEdit('FaQs', 6)" class="black-edit adminEditIcons bi bi-pen"></span>
+                    <span id="saveEdit4FaQs6" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                    <span id="closeEdit4FaQs6" class="hide black-edit adminEditIcons bi bi-x"></span>
+                  <% } %>
+                </h4>
+                <p>
+                  <span id="content4FaQs7" data-p-t-e='about' data-p-t-d-b-c="FaQs,Third_Accordion,Content"><%= pages.about[0].FaQs.Third_Accordion.Content %></span>
+                  <% if (userStatus && userStatus.isAdmin) { %>
+                    <span id="editPreloader4FaQs7" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                    <span id="pen4FaQs7" onclick="beginPageEdit('FaQs', 7)" class="black-edit adminEditIcons bi bi-pen"></span>
+                    <span id="saveEdit4FaQs7" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                    <span id="closeEdit4FaQs7" class="hide black-edit adminEditIcons bi bi-x"></span>
+                  <% } %>
+                </p>
+              </li>
+            </ul>
+          </div>
+          <div class="faq-img-right col-lg-6 pl-lg-5">
+            <img src="media/imgs/template/2.jpg" alt="" class="img-fluid" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--//w3l-faq-block-->
 
-			</ul>
-			</div>
-			<div class="faq-img-right col-lg-6 pl-lg-5">
-			<img src="media/imgs/template/2.jpg" alt="" class="img-fluid" />
-			</div>
-		</div>
-		</div>
-	</div>
-	<!--//w3l-faq-block-->
-	
-	<%- include('./partials/footer') %> 
+    <%- include('./partials/footer') %>
 
-	<!-- //copyright -->
-	<!-- Template JavaScript -->
-	<script src="js/template_scripts/jquery-3.3.1.min.js"></script>
-	<script src="js/template_scripts/theme-change.js"></script>
+      <!-- //copyright -->
+      <!-- Template JavaScript -->
+      <script src="js/template_scripts/jquery-3.3.1.min.js"></script>
+      <script src="js/template_scripts/theme-change.js"></script>
 
-	<!-- js for portfolio lightbox -->
-	<script src="js/template_scripts/owl.carousel.js"></script>
-	<!-- script for testimonials -->
-	<script>
-		$(document).ready(function () {
-		$('.owl-testimonial').owlCarousel({
-			loop: true,
-			margin: 0,
-			nav: true,
-			responsiveClass: true,
-			autoplay: true,
-			autoplayTimeout: 5000,
-			autoplaySpeed: 1000,
-			autoplayHoverPause: false,
-			responsive: {
-			0: {
-				items: 1,
-				nav: false
-			},
-			480: {
-				items: 1,
-				nav: false
-			},
-			667: {
-				items: 1,
-				nav: true
-			},
-			1000: {
-				items: 1,
-				nav: true
-			}
-			}
-		})
-		})
-	</script>
-	<!-- //script for testimonials -->
-	<!--/MENU-JS-->
-	<script>
-		$(window).on("scroll", function () {
-		var scroll = $(window).scrollTop();
+      <!-- js for portfolio lightbox -->
+      <script src="js/template_scripts/owl.carousel.js"></script>
+      <!-- script for testimonials -->
+      <script>
+        $(document).ready(function () {
+          $(".owl-testimonial").owlCarousel({
+            loop: true,
+            margin: 0,
+            nav: true,
+            responsiveClass: true,
+            autoplay: true,
+            autoplayTimeout: 5000,
+            autoplaySpeed: 1000,
+            autoplayHoverPause: false,
+            responsive: {
+              0: {
+                items: 1,
+                nav: false,
+              },
+              480: {
+                items: 1,
+                nav: false,
+              },
+              667: {
+                items: 1,
+                nav: true,
+              },
+              1000: {
+                items: 1,
+                nav: true,
+              },
+            },
+          });
+        });
+      </script>
+      <!-- //script for testimonials -->
+      <!--/MENU-JS-->
+      <script>
+        $(window).on("scroll", function () {
+          var scroll = $(window).scrollTop();
 
-		if (scroll >= 80) {
-			$("#site-header").addClass("nav-fixed");
-		} else {
-			$("#site-header").removeClass("nav-fixed");
-		}
-		});
+          if (scroll >= 80) {
+            $("#site-header").addClass("nav-fixed");
+          } else {
+            $("#site-header").removeClass("nav-fixed");
+          }
+        });
 
-		//Main navigation Active Class Add Remove
-		$(".navbar-toggler").on("click", function () {
-		$("header").toggleClass("active");
-		});
-		$(document).on("ready", function () {
-		if ($(window).width() > 991) {
-			$("header").removeClass("active");
-		}
-		$(window).on("resize", function () {
-			if ($(window).width() > 991) {
-			$("header").removeClass("active");
-			}
-		});
-		});
-	</script>
-	<!--//MENU-JS-->
-	<script src="js/template_scripts/bootstrap.bundle.min.js"></script>
-	<script src="js/template_scripts/bootstrap.min.js"></script>
+        //Main navigation Active Class Add Remove
+        $(".navbar-toggler").on("click", function () {
+          $("header").toggleClass("active");
+        });
+        $(document).on("ready", function () {
+          if ($(window).width() > 991) {
+            $("header").removeClass("active");
+          }
+          $(window).on("resize", function () {
+            if ($(window).width() > 991) {
+              $("header").removeClass("active");
+            }
+          });
+        });
+      </script>
 
-	<!-- My Script -->
-	<script src="js/script.js"></script>
+      <script>
+        $(document).ready(function () {
+          $(".owl-news").owlCarousel({
+            stagePadding: 200,
+            loop: true,
+            margin: 30,
+            nav: false,
+            responsiveClass: true,
+            autoplay: true,
+            autoplayTimeout: 5000,
+            autoplaySpeed: 1000,
+            autoplayHoverPause: false,
+            responsive: {
+              0: {
+                items: 1,
+                stagePadding: 40,
+                nav: false,
+              },
+              480: {
+                items: 1,
+                stagePadding: 40,
+                nav: true,
+              },
+              667: {
+                items: 2,
+                stagePadding: 50,
+                nav: true,
+              },
+              1000: {
+                items: 2,
+                nav: true,
+              },
+            },
+          });
+        });
+      </script>
+      <!--//MENU-JS-->
+      <script src="js/template_scripts/bootstrap.bundle.min.js"></script>
+      <script src="js/template_scripts/bootstrap.min.js"></script>
 
+      <!-- My Script -->
+      <script src="js/script.js"></script>
 </body>
 
 </html>

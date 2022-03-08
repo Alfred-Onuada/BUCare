@@ -1062,6 +1062,9 @@
     height: fit-content;
     margin: 0px 0px 15px 0px;
 }
+.director-image{
+    border-radius: 5px;
+}
 
 .therapist-name{
     font-size: 20px !important;

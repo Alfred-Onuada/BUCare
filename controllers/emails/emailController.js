@@ -24,7 +24,7 @@ const fs = require('fs')
 
 // initialize nodemailer
 const transporter = nodemailer.createTransport({
-  name: 'bucare.com.ng',
+  name: "www.bucare.com.ng",
   host: 'mail.bucare.com.ng',
   port: 465,
   secure: true,
@@ -85,7 +85,7 @@ Router.post('/registration', async (req, res) => {
       } else {
         // setting up the options for this email
         let mailOptions = {
-          from: `noreply@bucare.com.ng`,
+          from: `"BUCare Info" <noreply@bucare.com.ng>`,
           to: req.body.Email,
           subject: 'Confirm Email Address',
           template: 'registration',
@@ -97,18 +97,19 @@ Router.post('/registration', async (req, res) => {
 
         transporter.sendMail(mailOptions, (err, info) => {
           if (err) {
-            console.error(err.message);
+            console.error("error: ", err.message);
             return res.status(500).send('failed');
           } 
 
-          res.status(200).send('success');
+          console.log("success: ",info)
+          return res.status(200).send('success');
         })
       }
     })
 
   } catch (error) {
     console.error(error.message);
-    return res.status(500).send();
+    return res.status(400).send();
   }
 
 })
