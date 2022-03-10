@@ -24,17 +24,19 @@ const fs = require('fs')
 
 // initialize nodemailer
 const transporter = nodemailer.createTransport({
-  name: "www.bucare.com.ng",
-  host: 'mail.bucare.com.ng',
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.EMAIL,
-    pass: process.env.EMAIL_PASSWORD
-  },
-  tls: {
-    rejectUnauthorized: false
-  }
+  host: 'smtp.gmail.com',
+		secure: true,
+		auth: {
+			type: 'OAuth2',
+			user: process.env.EMAIL,
+			clientId: process.env.CLIENT_ID,
+			clientSecret: process.env.CLIENT_SECRET,
+			refreshToken: process.env.REFRESH_TOKEN,
+			accessToken: process.env.ACCESS_TOKEN,
+		},
+		tls: {
+			rejectUnauthorized: false
+		}
 });
 
 // point to the template folder for email template
