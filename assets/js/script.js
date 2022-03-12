@@ -1388,9 +1388,9 @@ function modHeight(id) {
   var msgBox = document.querySelector("#msgIn-" + id);
 
   if (msgBox.clientHeight > 36) {
-    chatsFeed.style.height = "479px";
+    chatsFeed.style.height = "449px";
   } else {
-    chatsFeed.style.height = "500px";
+    chatsFeed.style.height = "470px";
   }
 }
 
