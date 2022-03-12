@@ -256,53 +256,22 @@
 	
 			</div>
 			<div class="owl-testimonial owl-carousel owl-theme">
-				<div class="item">
-				<div class="slider-info">
-					<div class="img-circle">
-					<img src="defaults/male_placeholder.jpg" class="img-fluid rounded" alt="client image">
+				<% for( let index = 0; index < pages.index[0].Testimonial.data.length; index++ ) { %>
+					<% const data = pages.index[0].Testimonial.data[index] %>
+					<div class="item">
+						<div class="slider-info">
+							<div class="img-circle">
+							<img src="defaults/male_placeholder.jpg" class="img-fluid rounded" alt="client image">
+							</div>
+							<div class="message-info">
+							<span class="fa fa-quote-left mr-2"></span>
+							<div class="message text-white"><%= data.message %></div>
+							<div class="name text-white"><%= data.patient_name %></div>
+							<div class="desp text-white"><%= data.patient_location %></div>
+							</div>
+						</div>
 					</div>
-					<div class="message-info">
-					<span class="fa fa-quote-left mr-2"></span>
-					<div class="message text-white">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea sit id accusantium
-						officia quod quasi necessitatibus perspiciatis Harum error provident
-						quibusdam tenetur.Nulla mollis dapibus nunc, ut rhoncus turpis sodales quis.</div>
-					<div class="name text-white">- Johnson</div>
-					<div class="desp text-white">Patient, City</div>
-					</div>
-				</div>
-				</div>
-				<div class="item">
-				<div class="slider-info">
-					<div class="img-circle">
-					<img src="defaults/female_placeholder.jpg" class="img-fluid rounded" alt="client image">
-					</div>
-					<div class="message-info">
-					<span class="fa fa-quote-left mr-2"></span>
-					<div class="message text-white">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea sit id
-						accusantium
-						officia quod quasi necessitatibus perspiciatis Harum error provident
-						quibusdam tenetur.Nulla mollis dapibus nunc, ut rhoncus turpis sodales quis. </div>
-					<div class="name  text-white">- Sami Wade</div>
-					<div class="desp  text-white">Patient ,City</div>
-					</div>
-				</div>
-				</div>
-				<div class="item">
-				<div class="slider-info">
-					<div class="img-circle">
-					<img src="defaults/male_placeholder.jpg" class="img-fluid rounded" alt="client image">
-					</div>
-					<div class="message-info">
-					<span class="fa fa-quote-left mr-2"></span>
-					<div class="message text-white">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea sit id
-						accusantium
-						officia quod quasi necessitatibus perspiciatis Harum error provident
-						quibusdam tenetur. Nulla mollis dapibus nunc, ut rhoncus turpis sodales quis. </div>
-					<div class="name  text-white">- Smith Roy</div>
-					<div class="desp  text-white">Patient ,City</div>
-					</div>
-				</div>
-				</div>
+				<% } %>
 			</div>
 			</div>
 			<!-- /main-slider -->

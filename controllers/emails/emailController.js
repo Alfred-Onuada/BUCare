@@ -111,7 +111,7 @@ Router.post('/registration', async (req, res) => {
 
   } catch (error) {
     console.error(error.message);
-    return res.status(400).send();
+    return res.status(400).send("Please contact support with the following message: "+ error.message);
   }
 
 })
@@ -123,7 +123,7 @@ const sendPasswordHasChangedEmail = function(email, websiteUrl) {
     try {
       // setting up the options for this email
       let mailOptions = {
-        from: `noreply@bucare.com.ng`,
+        from: `"BUCare Info" <noreply@bucare.com.ng>`,
         to: email,
         subject: 'Password Change Alert',
         template: 'passwordHasChanged',
@@ -177,7 +177,7 @@ const sendResetEmail = function(email, websiteUrl) {
         } else {
           // setting up the options for this email
           let mailOptions = {
-            from: `noreply@bucare.com.ng`,
+            from: `"BUCare Info" <noreply@bucare.com.ng>`,
             to: email,
             subject: 'Reset Password Request',
             template: 'resetPassword',
@@ -284,7 +284,7 @@ const sendReportAsEmail = function (data, fileName, recieverEmail, websiteUrl) {
         if (pdfData) { 
           // setting up the options for this email
           let mailOptions = {
-            from: `noreply@bucare.com.ng`,
+            from: `"BUCare Info" <noreply@bucare.com.ng>`,
             to: recieverEmail,
             subject: `Automatic Counselling Report Generated on ${day + ", " + d.getDate() + " " + month + " " + year}`,
             template: 'report',

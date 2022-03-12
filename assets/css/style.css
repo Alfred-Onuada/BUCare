@@ -102,6 +102,14 @@
     height: -moz-fit-content;
 }
 
+.room-title{
+    text-align: center;
+    font-weight: 400;
+    font-size: 18px;
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 10px 0px;
+}
+
 .rooms-inner {
     border: 1px solid rgb(220, 220, 250);
     background-color: white;
