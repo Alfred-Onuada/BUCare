@@ -1003,9 +1003,11 @@ function loginFunc() {
     if (this.readyState === 4) {
       switch (this.status) {
         case 200:
+          const { isAdmin } = JSON.parse(this.responseText);
+
           displaySuccessMsg("Logged In Successfully", boxId);
           setTimeout(() => {
-            window.open("rooms", "_self");
+            isAdmin ? window.open("summary", "_self") : window.open("rooms", "_self");
           }, 3600);
 
           loginForm.reset();

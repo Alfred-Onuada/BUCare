@@ -115,7 +115,7 @@ Author URL: http://w3layouts.com
                 <th scope="col">All-time Clients</th>
                 <th scope="col">Completed Treatments</th>
                 <th scope="col">Since</th>
-                <th scope="col" colspan="4"></th>
+                <th scope="col" colspan="3"></th>
               </tr>
             </thead>
             <tbody id="therapistSection">
@@ -141,7 +141,7 @@ Author URL: http://w3layouts.com
                     <%= data.Sex %>
                   </td>
                   <td>
-                    <%= data.Average_Rating !==undefined ? data.Average_Rating.toFixed(2) : 'Not available' %>
+                    <%= data.Average_Rating !== undefined ? data.Average_Rating.toFixed(2) : 'Not available' %>
                   </td>
                   <td>
                     <%= data.Total_Clients_Count %>
@@ -151,9 +151,6 @@ Author URL: http://w3layouts.com
                   </td>
                   <td>
                     <%= new Date(data.createdAt).toDateString() %>
-                  </td>
-                  <td>
-                    <a href="a/ratings/<%= data._id %>" target="_blank"><i class="adminIcon fas fa-external-link-alt"></i></a>
                   </td>
                   <td>
                     <a href="mailto:<%= data.Email %>"><i class="adminIcon fas fa-envelope"></i></a>

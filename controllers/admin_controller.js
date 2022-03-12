@@ -157,16 +157,6 @@ Router.get("/summary", verify, (req, res) => {
     });
 });
 
-// this page shows the therapists ratings
-Router.get("/ratings/:therapistId", verify, (req, res) => {
-
-  if (!req.user.isAdmin) {
-    return res.status(401).send("You do not have the required clearance to perform this operation");
-  }
-
-  res.render("ratings", { userStatus: req.user, pages: req.pages })
-})
-
 // this shows all the casefiles for a client
 Router.get("/casefiles/:clientId", verify, async (req, res) => {
 
@@ -213,7 +203,7 @@ Router.get("/casefiles/:clientId", verify, async (req, res) => {
     return res.render("casefiles", { userStatus: req.user, pages: req.pages, info: { name: userData.Username, Sex: userData.Sex, caseFilesInfo } })
 
   } catch (err) {
-    console.error(err.message);
+    console.error(err);
     return res.status(500).send("Something went wrong on our side.")
   }
 

@@ -149,15 +149,15 @@ Router.post("/login", async (req, res) => {
       });
 
       // write token to cookies storage in client browser
-      return res
-        .writeHead(200, {
-          "Set-Cookie": `tk=${token}; HttpOnly; path=/; expires=${new Date(
-            new Date().getTime() + 2592000000
-          ).toUTCString()}`,
-          "Access-Control-Allow-Credentials": "true",
-        })
-        .send(); // i cant send data but probably from the status code the front end will know its successful
+      res.cookie('tk', `${token}`, {
+        httpOnly: true,
+        path: '/',
+        expires: new Date(new Date().getTime() + 2592000000),
+      });
+      res.setHeader('Access-Control-Allow-Credentials', 'true');
 
+      res.status(200).json({isAdmin: docs.isAdmin}); 
+      
       // the path=/ makes it available to all pages
       // the HttpOnly; makes it secure so front end Js cant access it
       // expires = current day + 30days in milliseonds
