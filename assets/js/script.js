@@ -806,7 +806,14 @@ function checkStudent() {
 
           }
         } else {
-          displayErrorMsg("Sorry something went wrong", boxId);
+          displayErrorMsg(this.responseText, boxId);
+          
+          if (this.responseText.includes("This email is already registered, please proceed to login")) {
+            setTimeout(() => {
+              modalCloseBtn.click();
+              $('#myModal4Login').modal('show');
+            }, 2000);
+          }
         }
 
         emailSubBtn.textContent = "Submit";

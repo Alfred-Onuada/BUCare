@@ -6,6 +6,7 @@ const env = require('dotenv').config();
 
 // db models
 const TempUsers = require('./../../models/tempUser');
+const Users = require('./../../models/user');
 
 // hapi is used for validation
 const Joi = require("@hapi/joi");
@@ -74,12 +75,16 @@ Router.post('/registration', async (req, res) => {
     
     await tempUserSchema.validateAsync(data);
 
+    // checks to confirm the email doesn't exist - this can be done in the model but i dont want to begin adding a 
+    // patterns
+    const user = await Users.findOne({ Email: data.Email });
+
+    if (user) {
+      throw Error("This email is already registered, please proceed to login");
+    }
+
     // this makes sure to delete old data from the system
     await TempUsers.findOneAndDelete({ Email: data.Email })
-      .catch(err => {
-        console.error(err.message);
-        return res.status(500).send("Something went wrong");
-      })
 
     await TempUsers(data).save((err, data) => {
       if (err) {
@@ -111,7 +116,7 @@ Router.post('/registration', async (req, res) => {
 
   } catch (error) {
     console.error(error.message);
-    return res.status(400).send("Please contact support with the following message: "+ error.message);
+    return res.status(400).send(error.message);
   }
 
 })
