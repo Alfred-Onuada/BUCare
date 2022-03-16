@@ -15,6 +15,9 @@ const Joi = require("@hapi/joi");
 // verification route
 const verify = require("./auths/verify");
 
+// email router
+const { sendNotification } = require('./emails/emailController');
+
 const chatSchema = Joi.object({
   RoomId: Joi.string().required(),
   SpokesPerson: Joi.string().required(),
@@ -270,7 +273,7 @@ Router.get("/rooms", verify, (req, res) => {
           if (docs) {
             const data = {
               RoomId: docs._id,
-              Message: `Voice chat started at <a href="/video/${roomId}/video" target="_blank">Here</a>`
+              Message: `Video chat started at <a href="/video/${roomId}/video" target="_blank">Here</a>`
             }
             Io.to(docs.TherapistId).emit('voip_started', data);
             Io.to(docs.ClientId).emit('voip_started', data);
@@ -681,6 +684,8 @@ Router.post("/rejectjoinroomrequest", verify, async (req, res) => {
   try {
     const rData = await Rooms.findByIdAndUpdate(roomId, { Status: "declined request" });
 
+    const { Email:clientEmail } = await Users.findOne({ Email: clientEmail });
+
     if (optionalComment != null) {
       const data = {
         RoomId: roomId,
@@ -690,6 +695,9 @@ Router.post("/rejectjoinroomrequest", verify, async (req, res) => {
 
       Chats(data).save((err, data) => {
         if (err) throw err;
+
+        // send a notification to the client
+        const emailStatus = sendNotification(clientEmail, "reject")
 
         return res.status(200).send();
       })
@@ -757,6 +765,10 @@ Router.post("/acceptjoinroomrequest", verify, async (req, res) => {
         userId: req.user._id,
         chatDate: date
       }
+
+      // send notification to user
+      const emailStatus = await sendNotification(clientEmail, "accept");
+
       return res.status(200).send(JSON.stringify(response));
     } else {
       return res.status(500).send("Something went wrong on the server, not your fault");

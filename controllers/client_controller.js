@@ -13,6 +13,9 @@ const Joi = require("@hapi/joi");
 // verification route
 const verify = require("./auths/verify");
 
+// email router
+const { sendNotification } = require('./emails/emailController');
+
 const chatSchema = Joi.object({
   RoomId: Joi.string().required(),
   SpokesPerson: Joi.string().required(),
@@ -228,7 +231,7 @@ Router.get("/rooms", verify, (req, res) => {
           if (docs) {
             const data = {
               RoomId: docs._id,
-              Message: `Voice chat started at <a href="/video/${roomId}/video" target="_blank">Here</a>`
+              Message: `Video chat started at <a href="/video/${roomId}/video" target="_blank">Here</a>`
             }
             Io.to(docs.TherapistId).emit('voip_started', data);
             Io.to(docs.ClientId).emit('voip_started', data);
@@ -684,10 +687,13 @@ Router.post("/sendroomrequest", verify, async (req, res) => {
           Message: "New request to join room was made"
         }
 
-        Chats(requestChat).save((err, data) => {
+        Chats(requestChat).save(async (err, data) => {
           if (err) {
             throw err;
           }
+
+          // send an email notification to the therapist
+          const emailStatus = await sendNotification(therapistDocs.Email, 'new client');
 
           return res.status(200).send();
         })

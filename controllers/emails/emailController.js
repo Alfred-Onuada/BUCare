@@ -332,9 +332,47 @@ const sendReportAsEmail = function (data, fileName, recieverEmail, websiteUrl) {
   })
 }
 
+const sendNotification = function (email, purpose) {
+  return new Promise((resolve, reject) => {
+
+    let purposeInWord = '';
+    let websiteUrl = 'https://bucare.com.ng' // change this
+    if (purpose.includes("accept")) {
+      purposeInWord = 'Your request to start therapy was accepted';
+    } else if (purpose.includes("reject")) {
+      purposeInWord = 'Your request to start therapy was rejected';
+    } else if (purpose.includes("new email")) {
+      purposeInWord = 'You recieved a new request to join therapy';
+    }
+
+    // setting up the options for this email
+    let mailOptions = {
+      from: `"BUCare Info" <noreply@bucare.com.ng>`,
+      to: email,
+      subject: `${purposeInWord}`,
+      template: 'roomActions',
+      context: {
+        purposeInWord,
+        websiteUrl
+      }
+    };
+
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        console.error(err.message);
+        // this is technically ignored
+        reject({status: 500, message: 'Something went wrong while sending mail. try again later'});
+      } 
+
+      resolve({status: 200, message: "Success"});
+    })
+  })
+}
+
 module.exports = { 
   Router, 
   sendResetEmail,
   sendPasswordHasChangedEmail,
-  sendReportAsEmail
+  sendReportAsEmail,
+  sendNotification
 };
