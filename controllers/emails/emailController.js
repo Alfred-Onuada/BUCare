@@ -341,10 +341,10 @@ const sendNotification = function (email, purpose) {
       purposeInWord = 'Your request to start therapy was accepted';
     } else if (purpose.includes("reject")) {
       purposeInWord = 'Your request to start therapy was rejected';
-    } else if (purpose.includes("new email")) {
+    } else if (purpose.includes("new client")) {
       purposeInWord = 'You recieved a new request to join therapy';
     }
-
+    
     // setting up the options for this email
     let mailOptions = {
       from: `"BUCare Info" <noreply@bucare.com.ng>`,
