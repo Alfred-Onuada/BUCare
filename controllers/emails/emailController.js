@@ -105,7 +105,7 @@ Router.post('/registration', async (req, res) => {
         transporter.sendMail(mailOptions, (err, info) => {
           if (err) {
             console.error("error: ", err.message);
-            return res.status(500).send('failed');
+            return res.status(500).send(err.message);
           } 
 
           console.log("success: ",info)
