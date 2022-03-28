@@ -279,9 +279,6 @@ Author URL: http://w3layouts.com
       </div>
     </section>
 
-
-    <!-- TODO: skip the therapist profile for now work on the registration then finish off with the therapist profile -->
-    <!-- TODO: make sure to add Mrs. elizabeth as a therapist  -->
     <% if (pages.therapists) { %>
       <section class="container py-xl-2 py-3 my-5">
         <% for (let i = 0; i < pages.therapists.length; i++) { %>
@@ -312,15 +309,34 @@ Author URL: http://w3layouts.com
                     <% } %>
                   </h4>
                   <% for (let j = 0; j < therapist.Brief_Bio.length; j++) { %>
-                    <p class="therapistBio">
+                    <p class="therapistBio" id="content4<%= therapist.Email + j %>" data-p-t-e='therapist' data-p-t-d-b-c="<%= therapist.Email %>,Brief_Bio,<%= j %>">
                       <%= therapist.Brief_Bio[j] %>
                     </p>
+                    <% if (userStatus && userStatus.isAdmin) { %>
+                      <span id="editPreloader4<%= therapist.Email + j %>" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                      <span id="pen4<%= therapist.Email + j %>" onclick="beginPageEdit('<%= therapist.Email + j %>', '')" class="black-edit adminEditIcons bi bi-pen"></span>
+                      <span id="saveEdit4<%= therapist.Email + j %>" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                      <span id="closeEdit4<%= therapist.Email + j %>" class="hide black-edit adminEditIcons bi bi-x"></span>
+                    <% } %>
                   <% } %>
+
+                  <!-- if you don't have up to 3 paragraphs and the user is an admin -->
+                  <% if (therapist.Brief_Bio.length < 3 && userStatus && userStatus.isAdmin) { %>
+                    <% for (let i = 0; i < 3; i++) { %>
+                      <p class="therapistBio" id="content4<%= therapist.Email + i %>" data-p-t-e='therapist' data-p-t-d-b-c="<%= therapist.Email %>,Brief_Bio,<%= i %>">
+                        Enter some bio description
+                      </p>
+                      <% if (userStatus && userStatus.isAdmin) { %>
+                        <span id="editPreloader4<%= therapist.Email + i %>" class="black-edit-loader editPreloader hide"><span></span><span></span><span></span><span></span></span>
+                        <span id="pen4<%= therapist.Email + i %>" onclick="beginPageEdit('<%= therapist.Email + i %>', '')" class="black-edit adminEditIcons bi bi-pen"></span>
+                        <span id="saveEdit4<%= therapist.Email + i %>" class="hide black-edit adminEditIcons bi bi-check2"></span>
+                        <span id="closeEdit4<%= therapist.Email + i %>" class="hide black-edit adminEditIcons bi bi-x"></span>
+                      <% } %>
+                    <% } %>
+                  <% } %>
+
                   <div class="buttons mt-3 move-right">
                     <% if (userStatus && userStatus.isClient) { %>
-                      <!-- only logged in users are allowed to book therapists -->
-
-
 
                       <!-- figure out a way to show awaiting response here even after refresh if the person has booked before -->
 

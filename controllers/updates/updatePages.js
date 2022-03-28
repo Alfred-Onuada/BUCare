@@ -4,6 +4,7 @@ const indexInfo = require('./../../models/pages/index.page');
 const contactInfo = require('./../../models/pages/contact.page');
 const aboutInfo = require('./../../models/pages/about.page');
 const teamInfo = require('./../../models/pages/team.page');
+const therapistInfo = require('./../../models/therapist');
 
 // though this data is generated within the source code use joi to still validate it
 // in case of errors
@@ -235,11 +236,51 @@ function updateTeam(req, res) {
     });
 }
 
+function updateTherapist(req, res) {
+  const { newValue, pathToDBChange } = req.body;
+  let path = pathToDBChange.split(','); // avoided doing it on the frontend for security reasons
+  
+  // This query looks for and empty object {} which matches all the documents
+  // but because there will only be one document per model it matches the correct one
+  therapistInfo.findOne({ Email: path[0]})
+    .then(docs => {
+      if (docs) {
+
+        // path[0] contained the email so i have to reset the path variable
+        path = path.slice(1);
+
+        docs = updateValue(docs, path, newValue);
+
+        const affectedField = path[0]; // the affected field will be the first entry in the path
+        const newData = docs[affectedField]; // the newData will be the value after passing through the updateValue function
+      
+        // make the edit
+        therapistInfo.findByIdAndUpdate(docs._id, { [affectedField]: newData })
+          .then(docs => {
+            return res.status(200).send(newValue);
+          })
+          .catch(err => {
+            console.error(err.message);
+            return res.status(400).send("Oops! page edit failed, try again later");
+          });
+
+      } else {
+        console.error(err.message);
+        return res.status(500).send("Oops! page edit failed, try again later");
+      }
+    })
+    .catch(err => {
+      console.error(err.message);
+      return res.status(500).send("Oops! page edit failed, try again later");
+    });
+}
+
 module.exports = {
   updateHeader,
   updateFooter,
   updateIndex,
   updateContact,
   updateAbout,
-  updateTeam
+  updateTeam,
+  updateTherapist
 }

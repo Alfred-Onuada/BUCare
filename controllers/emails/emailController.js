@@ -92,7 +92,7 @@ Router.post('/registration', async (req, res) => {
       } else {
         // setting up the options for this email
         let mailOptions = {
-          from: `"BUCare Info" <noreply@bucare.com.ng>`,
+          from: `"BUCare Info" <bucares.app@gmail.com>`,
           to: req.body.Email,
           subject: 'Confirm Email Address',
           template: 'registration',
@@ -105,7 +105,7 @@ Router.post('/registration', async (req, res) => {
         transporter.sendMail(mailOptions, (err, info) => {
           if (err) {
             console.error("error: ", err.message);
-            return res.status(500).send(err.message);
+            return res.status(500).send('failed');
           } 
 
           console.log("success: ",info)
@@ -128,7 +128,7 @@ const sendPasswordHasChangedEmail = function(email, websiteUrl) {
     try {
       // setting up the options for this email
       let mailOptions = {
-        from: `"BUCare Info" <noreply@bucare.com.ng>`,
+        from: `"BUCare Info" <bucares.app@gmail.com>`,
         to: email,
         subject: 'Password Change Alert',
         template: 'passwordHasChanged',
@@ -182,7 +182,7 @@ const sendResetEmail = function(email, websiteUrl) {
         } else {
           // setting up the options for this email
           let mailOptions = {
-            from: `"BUCare Info" <noreply@bucare.com.ng>`,
+            from: `"BUCare Info" <bucares.app@gmail.com>`,
             to: email,
             subject: 'Reset Password Request',
             template: 'resetPassword',
@@ -289,7 +289,7 @@ const sendReportAsEmail = function (data, fileName, recieverEmail, websiteUrl) {
         if (pdfData) { 
           // setting up the options for this email
           let mailOptions = {
-            from: `"BUCare Info" <noreply@bucare.com.ng>`,
+            from: `"BUCare Info" <bucares.app@gmail.com>`,
             to: recieverEmail,
             subject: `Automatic Counselling Report Generated on ${day + ", " + d.getDate() + " " + month + " " + year}`,
             template: 'report',
@@ -347,7 +347,7 @@ const sendNotification = function (email, purpose) {
     
     // setting up the options for this email
     let mailOptions = {
-      from: `"BUCare Info" <noreply@bucare.com.ng>`,
+      from: `"BUCare Info" <bucares.app@gmail.com>`,
       to: email,
       subject: `${purposeInWord}`,
       template: 'roomActions',
