@@ -1,3 +1,4 @@
 api_testing.rest
 node_modules/
 .vscode/
+.env
