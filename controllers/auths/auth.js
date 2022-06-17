@@ -168,13 +168,9 @@ Router.post("/login", async (req, res) => {
 });
 
 Router.get("/logout", (req, res) => {
-  // this route just sets the token to 'invalid' which is not a valid token
-  return res
-    .writeHead(200, {
-      "Set-Cookie": `tk=invalid; HttpOnly; path=/`,
-      "Access-Control-Allow-Credentials": "true",
-    })
-    .send(); // AJAX will recieve status code and force the browser to reload to another page
+  res.cookie('tk', '', { expires: new Date(0) }); // this basically removes the token from the cookies
+
+  return res.status(200).send(); 
 });
 
 // confirms password during reset password
