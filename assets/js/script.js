@@ -1544,7 +1544,7 @@ function search() {
             let chat = room.Chats;
         
         data +=  `
-            <div class="eachContact" onclick="displayRoom('${roomId}')">
+            <div class="eachContact" onclick="displayRoom('${room._id}')">
               <div class="contactPicture">
               `;
         
