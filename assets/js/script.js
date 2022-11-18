@@ -1559,7 +1559,7 @@ function search() {
                   ${room.Username}
                 </h4>
                 <div class="recent">
-                  <h4 id="recentChats-${roomId}" class="recentChat">
+                  <h4 id="recentChats-${room._id}" class="recentChat">
                   `;
 
                     if (chat.length > 0) {
@@ -1570,7 +1570,7 @@ function search() {
         data += `
                   </h4>
                   <!-- This index refers to the very last chat -->
-                  <div id="dot4-${roomId}" class="hide notifcation-dot"></div>
+                  <div id="dot4-${room._id}" class="hide notifcation-dot"></div>
                 </div>
               </div>
             </div>
