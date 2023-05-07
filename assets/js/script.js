@@ -2831,8 +2831,6 @@ function acceptRequest(roomId) {
 }
 
 function triggerModalForCaseFile() {
-
-  console.log(this)
   document.getElementById("reportObservation").textContent = "Observation: " + this.dataset.observation;
   document.getElementById("reportInstruments").textContent = "Instruments: " + this.dataset.instruments;
   document.getElementById("reportRecommendation").textContent = "Recommendation: " + this.dataset.recommendation;

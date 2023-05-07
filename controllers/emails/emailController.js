@@ -25,19 +25,11 @@ const fs = require('fs')
 
 // initialize nodemailer
 const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-		secure: true,
-		auth: {
-			type: 'OAuth2',
-			user: process.env.EMAIL,
-			clientId: process.env.CLIENT_ID,
-			clientSecret: process.env.CLIENT_SECRET,
-			refreshToken: process.env.REFRESH_TOKEN,
-			accessToken: process.env.ACCESS_TOKEN,
-		},
-		tls: {
-			rejectUnauthorized: false
-		}
+  service: 'Gmail',
+  auth: {
+    user: process.env.EMAIL,
+    pass: process.env.EMAIL_PASS
+  }
 });
 
 // point to the template folder for email template
@@ -108,7 +100,6 @@ Router.post('/registration', async (req, res) => {
             return res.status(500).send('failed');
           } 
 
-          console.log("success: ",info)
           return res.status(200).send('success');
         })
       }
